@@ -12,6 +12,11 @@ This repo contains code for a plagiarism detector software :developed and mainta
 
 ### Project status : In Progress
 #### - Phase A : complete
-      mock_ui.pdf    uploaded
-      plan.pdf       uploaded
-      use_cases.pdf  uploaded
+      mock_ui.pdf                         uploaded
+      plan.pdf                            uploaded
+      use_cases.pdf                       uploaded
+
+#### - Phase B : complete
+      phase_b_uml.pdf    uploaded         uploaded
+      phase_b_interfaces_info.pdf         uploaded
+      interfaces_code\*.java              uploaded
