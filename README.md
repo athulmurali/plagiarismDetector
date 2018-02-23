@@ -20,3 +20,9 @@ This repo contains code for a plagiarism detector software :developed and mainta
       phase_b_uml.pdf    uploaded         uploaded
       phase_b_interfaces_info.pdf         uploaded
       interfaces_code\*.java              uploaded
+
+#### - Phase C : In Progresss
+      Basic environment setups being done 
+      
+
+Please go through the wiki pages for more info 
