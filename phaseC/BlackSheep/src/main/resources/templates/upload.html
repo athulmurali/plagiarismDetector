@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Upload files</h1>
+
+<form method="POST" enctype="multipart/form-data" id="sourceForm">
+    <h4>Source files</h4>
+    <input type="file" name="files" multiple="multiple"/><br/><br/>
+    <pre>
+        <span id="resultSource"></span>
+    </pre>
+</form>
+
+<br/>
+
+<form method="POST" enctype="multipart/form-data" id="suspectForm">
+    <h4>Suspect files</h4>
+    <input type="file" name="files" multiple="multiple"/><br/><br/>
+    <pre>
+        <span id="resultSuspect"></span>
+    </pre>
+    <br/><br/>
+    <input type="submit" value="Check plagiarism" id="btnChkPlg"/>
+</form>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="text/javascript" src="../static/js/upload.js"></script>
+
+</body>
+</html>
