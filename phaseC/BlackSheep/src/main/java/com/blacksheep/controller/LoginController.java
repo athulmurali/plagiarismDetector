@@ -36,9 +36,11 @@ public class LoginController {
             String sql = "SELECT passcode FROM credentials";
             results = statement.executeQuery(sql);
 
+
             while (results.next()) {
                 password = results.getString("passcode");
-                System.out.println("Matched");
+                password = "abcd";
+                System.out.println("Matched" + password);
             }
 
             if (password.equals(passcode123))
