@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    ;
 
 
     $("#login").click(function () {
@@ -10,6 +9,7 @@ $(document).ready(function () {
             url: "http://localhost:8080/passcode/",
             data: password,
             contentType: "text/plain",
+
             success: function () {
                 redirect1();
             },

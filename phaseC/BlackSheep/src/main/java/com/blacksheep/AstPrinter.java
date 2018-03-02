@@ -29,7 +29,9 @@ public class AstPrinter {
     }
 
     public void print(RuleContext ctx) {
-        explore(ctx, 0);
+
+        System.out.println(ctx.getChild(0).getText());
+        //explore(ctx, 0);
     }
 
     private void explore(RuleContext ctx, int indentation) {
@@ -38,11 +40,13 @@ public class AstPrinter {
                 && ctx.getChild(0) instanceof ParserRuleContext;
         if (!toBeIgnored) {
             String ruleName = Python3Parser.ruleNames[ctx.getRuleIndex()];
+            String ruleName1 = ctx.getText();
+            int line = ctx.getChildCount();
             for (int i = 0; i < indentation; i++) {
-               // System.out.print("  ");
+                System.out.print("  ");
             }
             arr.add(ruleName);
-//            System.out.println(ruleName);
+               System.out.println(line);
         }
         for (int i=0;i<ctx.getChildCount();i++) {
             ParseTree element = ctx.getChild(i);
@@ -52,6 +56,5 @@ public class AstPrinter {
         }
 
     }
-
 
 }
