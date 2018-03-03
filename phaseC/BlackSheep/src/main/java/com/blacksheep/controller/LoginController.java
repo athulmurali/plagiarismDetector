@@ -77,9 +77,11 @@ public class LoginController {
             statement = connection.createStatement();
             results = statement.executeQuery(CREDENTIALS_QUERY);
 
+
             while (results.next()) {
                 savedPasscode = results.getString(PASSCODE);
                 logger.info("Matched {0}", savedPasscode);
+
             }
 
             if (savedPasscode != null && savedPasscode.equals(inputPasscode))

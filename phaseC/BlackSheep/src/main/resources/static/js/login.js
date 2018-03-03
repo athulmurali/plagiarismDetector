@@ -1,6 +1,5 @@
 $(document).ready(function () {
 
-
     $("#login").click(function () {
         var password = $("#password").val();
 
@@ -29,5 +28,4 @@ $(document).ready(function () {
     function redirect2() {
         window.location = "../templates/Error.html";
     }
-
-});
+}
