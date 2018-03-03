@@ -100,4 +100,19 @@ public class LoginController {
         }
         return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
     }
+
+
+    /**
+     * Validates the credentials input by the user, just a string match
+     *
+     * @param passcode123 : passcode entered by the user
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/passcodeString")
+    public ResponseEntity<String> validateLoginString(@RequestBody String passcode123) {
+
+        if (PASSCODE.equals(passcode123))
+            return ResponseEntity.status(HttpStatus.OK).build();
+        else
+            return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+    }
 }

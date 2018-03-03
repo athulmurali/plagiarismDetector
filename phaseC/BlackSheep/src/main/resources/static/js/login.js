@@ -6,7 +6,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: "POST",
-            url: "http://localhost:8080/passcode/",
+            url: "http://localhost:8080/passcodeString/",
             data: password,
             contentType: "text/plain",
 

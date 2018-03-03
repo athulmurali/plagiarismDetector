@@ -13,6 +13,8 @@ import java.util.List;
  */
 public class CreateAST {
 
+    private boolean ignoringWrappers = true;
+
     /**
      * Syntax tree in the form of a list
      */
@@ -42,9 +44,14 @@ public class CreateAST {
      *
      * @param ctx : Rule context containing the syntax tree and other information related to the source code
      */
-    public void print(RuleContext ctx) {
+    public String print(RuleContext ctx) {
 
         explore(ctx, 0);
+
+        System.out.println(ctx.getChild(0).getText());
+        //explore(ctx, 0);
+
+        return ctx.getChild(0).getText().trim();
     }
 
     /**
@@ -55,19 +62,33 @@ public class CreateAST {
      * @param indentation : Indentation of the current root
      */
     private void explore(RuleContext ctx, int indentation) {
-        boolean toBeIgnored =  ctx.getChildCount() == 1
+        boolean toBeIgnored = ignoringWrappers
+                && ctx.getChildCount() == 1
                 && ctx.getChild(0) instanceof ParserRuleContext;
-
         if (!toBeIgnored) {
             String ruleName = Python3Parser.ruleNames[ctx.getRuleIndex()];
-            ruleSyntaxTree.add(ruleName);
+            for (int i = 0; i < indentation; i++) {
+                System.out.print("  ");
+            }
+            System.out.println(ruleName);
         }
-
         for (int i=0;i<ctx.getChildCount();i++) {
             ParseTree element = ctx.getChild(i);
             if (element instanceof RuleContext) {
                 explore((RuleContext)element, indentation + (toBeIgnored ? 0 : 1));
             }
         }
+
     }
+
+    /**
+     * A method to ignore wrapper
+     *
+     * @param ignoringWrappers, true or false
+     */
+    public void setIgnoringWrappers(boolean ignoringWrappers) {
+        this.ignoringWrappers = ignoringWrappers;
+    }
+
+
 }
