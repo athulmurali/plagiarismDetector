@@ -16,42 +16,73 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * This class contains the implementation for the file upload use case
+ */
 @RestController
 public class UploadController {
+
+    /**
+     * Logger instance
+     */
     private final Logger logger = LoggerFactory.getLogger(UploadController.class);
-    private static String SOURCE_PATH = "D:/Manpreet/sem2/MSD/Project/workspace/temp/source/";
-    private static String SUSPECT_PATH = "D:/Manpreet/sem2/MSD/Project/workspace/temp/suspect/";
 
+    /**
+     * Receives the source files and sends them to the upload method
+     *
+     * @param files : source files to be uploaded
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/upload/source")
-    public ResponseEntity<?> uploadFileSource(@RequestParam("files") MultipartFile[] files) {
+    public ResponseEntity uploadFileSource(@RequestParam("files") MultipartFile[] files) {
+        String path = getUploadLocation();
+        path = path + "/src/main/resources/python/";
 
-        return uploadFiles(SOURCE_PATH, files);
+        return uploadFiles(path, files);
     }
 
+    /**
+     * Receives the suspect files and sends them to the upload method
+     *
+     * @param files : suspect files to be uploaded
+     */
     @RequestMapping(method = RequestMethod.POST, value = "/upload/suspect")
-    public ResponseEntity<?> uploadFileSuspect(@RequestParam("files") MultipartFile[] files) {
+    public ResponseEntity uploadFileSuspect(@RequestParam("files") MultipartFile[] files) {
+        String path = getUploadLocation();
+        path = path + "/src/main/resources/python/";
 
-        return uploadFiles(SUSPECT_PATH, files);
+        return uploadFiles(path, files);
     }
 
-    public ResponseEntity<?> uploadFiles(String savePath, MultipartFile[] files) {
-
-        String uploadedFileName = Arrays.stream(files).map(x -> x.getOriginalFilename())
-                .filter(x -> !StringUtils.isEmpty(x)).collect(Collectors.joining(" , "));
-
-        if (StringUtils.isEmpty(uploadedFileName)) {
-            return new ResponseEntity("please select a file!", HttpStatus.BAD_REQUEST);
-        }
+    /**
+     * Uploads the files to the specified location
+     *
+     * @param savePath : file save location
+     * @param files : files to the saved
+     */
+    private ResponseEntity<?> uploadFiles(String savePath, MultipartFile[] files) {
 
         try {
+            String uploadedFileName = Arrays.stream(files).map(x -> x.getOriginalFilename())
+                    .filter(x -> !StringUtils.isEmpty(x)).collect(Collectors.joining(" , "));
+
+            if (StringUtils.isEmpty(uploadedFileName)) {
+                return new ResponseEntity<>("Please select a file!", HttpStatus.BAD_REQUEST);
+            }
+
             saveUploadedFiles(Arrays.asList(files), savePath);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity("Successfully uploaded - " + uploadedFileName, HttpStatus.OK);
+        logger.info("Upload success");
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    /**
+     * Saves the uploaded files to the specified location
+     *
+     * @param savePath : file save location
+     * @param files : files to the saved
+     */
     private void saveUploadedFiles(List<MultipartFile> files, String savePath) throws IOException {
         for (MultipartFile file : files) {
             if (file.isEmpty()) {
@@ -61,5 +92,16 @@ public class UploadController {
             Path path = Paths.get(savePath + file.getOriginalFilename());
             Files.write(path, bytes);
         }
+    }
+
+    /**
+     * Returns the absolute path of the file save location
+     *
+     */
+    private String getUploadLocation(){
+        Path workingDirectory = Paths.get("").toAbsolutePath();
+        String path = workingDirectory.toString();
+        path = path.replaceAll("\\\\", "/");
+        return path;
     }
 }

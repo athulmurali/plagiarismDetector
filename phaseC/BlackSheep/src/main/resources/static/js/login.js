@@ -1,13 +1,14 @@
-function start() {
+$(document).ready(function () {
 
     $("#login").click(function () {
         var password = $("#password").val();
 
         $.ajax({
             type: "POST",
-            url: "http://localhost:8080/passcode/",
+            url: "http://localhost:8080/passcodeString/",
             data: password,
             contentType: "text/plain",
+
             success: function () {
                 redirect1();
             },
@@ -28,5 +29,3 @@ function start() {
         window.location = "../templates/Error.html";
     }
 }
-
-$(start);
