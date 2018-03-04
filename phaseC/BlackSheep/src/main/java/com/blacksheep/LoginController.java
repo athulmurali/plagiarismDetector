@@ -1,13 +1,10 @@
-package com.blacksheep.controller;
+package com.blacksheep;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.*;
 
@@ -19,17 +16,19 @@ public class LoginController {
     /**
      * The connection string for the database connection
      */
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/login";
-
+    //private static final String DB_URL = "jdbc:mysql://localhost:3306/login";
+    private static final String DB_URL = "us-cdbr-iron-east-05.cleardb.net";
     /**
      * The username for the database connection
      */
-    private static final String DB_USERNAME = "root";
+    //private static final String DB_USERNAME = "root";
+    private static final String DB_USERNAME = "b928185529d66a";
 
     /**
      * The password for the database connection
      */
-    private static final String PASSWORD = "root";
+   // private static final String PASSWORD = "root";
+    private static final String PASSWORD = "heroku_e2a6ca627db81ee";
 
     /**
      * The import driver for the database connection
@@ -45,6 +44,11 @@ public class LoginController {
      * Key for the valid response
      */
     public static final String PASSCODE = "passcode";
+
+    /**
+     * Username to check
+     */
+    public static final String USERNAME = "mike";
 
     /**
      * Logger instance
@@ -72,7 +76,7 @@ public class LoginController {
         Statement statement = null;
         ResultSet results = null;
         try {
-            Class.forName(DB_DRIVER);
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = DriverManager.getConnection(DB_URL, DB_USERNAME, PASSWORD);
             statement = connection.createStatement();
             results = statement.executeQuery(CREDENTIALS_QUERY);
@@ -95,6 +99,7 @@ public class LoginController {
                     results.close();
                 if(results != null)
                 statement.close();
+                if(connection != null)
                 connection.close();
             } catch (SQLException e) {
                 logger.error("ERROR", e);
@@ -117,4 +122,21 @@ public class LoginController {
         else
             return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
     }
+
+
+    /**
+     * Validates the credentials input by the user, just a string match
+     *
+     * @param cred : Json of user and passcode entered by the user
+     */
+    @RequestMapping(method = RequestMethod.POST, value = "/passcodeStringjson")
+    @ResponseBody
+    public ResponseEntity<Cred> validateLoginStringJson(@RequestBody Cred cred) {
+
+        if (PASSCODE.equals(cred.getPassword()) && USERNAME.equals(cred.getUser()))
+            return ResponseEntity.status(HttpStatus.OK).build();
+        else
+            return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+    }
+
 }
