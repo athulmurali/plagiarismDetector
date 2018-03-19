@@ -4,12 +4,18 @@
 
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet/less" type="text/css" href="styles.less" />
-    <script src="//cdnjs.cloudflare.com/ajax/libs/less.js/3.0.0/less.min.js" ></script>
-</head>
-<body><div class="value">0</div>
-<input type="range" min="0" max="100" step="1" value="0">
+    <!--<link rel="stylesheet/less" type="text/css" href="styles.less" />-->
+    <link rel="stylesheet" type="text/css" href="configPlagiarismPercentage.css"  />
 
+    <script src = "../js/configPlagiarismPercentage.js"></script>
+</head>
+<body>
+<div class = "header" style="text-align: center">
+    <p align="center"><h1>How strict ?</h1></p>
+</div>
+<br>
+<div   id = "rangeValueDisplay" class="value">0</div>
+<input id="rangeSelector" type="range" min="0" max="100" step="1" value="0">
 
 </body>
 </html>
