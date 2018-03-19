@@ -47,8 +47,6 @@ public class LoginController {
         try {
 
             String CREDENTIALS_QUERY = "SELECT  * FROM credentials where userid = ? " + "AND  " + "password = ?";
-
-            logger.info(CREDENTIALS_QUERY);
             IDBConfigUtil dbConfigUtil = new DBConfigUtil();
 
             connection = DriverManager.getConnection(dbConfigUtil.getDbURL(), dbConfigUtil.getDbUser(), dbConfigUtil.getDbPass());
@@ -61,8 +59,15 @@ public class LoginController {
             int count = 0;
             while (results.next()) count++;
 
-            if (count == 1) return ResponseEntity.status(HttpStatus.OK).build();
-            else return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            if (count == 1) {
+                logger.info("userId & password matched");
+                return ResponseEntity.status(HttpStatus.OK).build();
+            }
+            else
+            {
+                logger.info("login check: userId & password pair not found");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
         }
         finally {
             try {
