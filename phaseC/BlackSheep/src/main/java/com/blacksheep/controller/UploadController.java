@@ -1,20 +1,28 @@
 package com.blacksheep.controller;
 
+import com.amazonaws.SDKGlobalConfiguration;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.blacksheep.ConfigUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
+import java.io.InputStream;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This class contains the implementation for the file upload use case
@@ -23,85 +31,142 @@ import java.util.stream.Collectors;
 public class UploadController {
 
     /**
+     * Id of the logged in user
+     */
+    private String USERID = "Mike";
+
+    /**
+     * Suffix for the folder names
+     */
+    private static final String SUFFIX = "/";
+
+    /**
      * Logger instance
      */
     private final Logger logger = LoggerFactory.getLogger(UploadController.class);
 
     /**
-     * Receives the source files and sends them to the upload method
+     * Receives the student1 files and sends them to the upload method
      *
      * @param files : source files to be uploaded
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/upload/source")
+    @RequestMapping(method = RequestMethod.POST, value = "/upload/student1")
     public ResponseEntity uploadFileSource(@RequestParam("files") MultipartFile[] files) {
-        String path = getUploadLocation();
-        path = path + "/src/main/resources/python/";
 
-        return uploadFiles(path, files);
+        if(files.length == 0)
+            return new ResponseEntity<>("Please select a file!", HttpStatus.BAD_REQUEST);
+
+        return uploadFiles("student1", files);
     }
 
     /**
-     * Receives the suspect files and sends them to the upload method
+     * Receives the student2 files and sends them to the upload method
      *
      * @param files : suspect files to be uploaded
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/upload/suspect")
+    @RequestMapping(method = RequestMethod.POST, value = "/upload/student2")
     public ResponseEntity uploadFileSuspect(@RequestParam("files") MultipartFile[] files) {
-        String path = getUploadLocation();
-        path = path + "/src/main/resources/python/";
 
-        return uploadFiles(path, files);
+        if(files.length == 0)
+            return new ResponseEntity<>("Please select a file!", HttpStatus.BAD_REQUEST);
+
+        return uploadFiles("student2", files);
     }
 
     /**
-     * Uploads the files to the specified location
+     * Uploads the files to the AWS S3 instance
      *
-     * @param savePath : file save location
-     * @param files : files to the saved
+     * @param name :
+     *                   prefix of the folder on AWS
+     *
+     * @param files :
+     *              files to the saved
      */
-    private ResponseEntity<?> uploadFiles(String savePath, MultipartFile[] files) {
-
+    private ResponseEntity<?> uploadFiles(String name, MultipartFile[] files) {
         try {
-            String uploadedFileName = Arrays.stream(files).map(x -> x.getOriginalFilename())
-                    .filter(x -> !StringUtils.isEmpty(x)).collect(Collectors.joining(" , "));
+            ObjectMetadata metaData = new ObjectMetadata();
+            ConfigUtil configUtil = new ConfigUtil();
+            AWSCredentials credentials = new BasicAWSCredentials(configUtil.getAwsAccessKey(), configUtil.getAwsSecretKey());
 
-            if (StringUtils.isEmpty(uploadedFileName)) {
-                return new ResponseEntity<>("Please select a file!", HttpStatus.BAD_REQUEST);
+            // create a client connection based on credentials
+            System.setProperty(SDKGlobalConfiguration.ENABLE_S3_SIGV4_SYSTEM_PROPERTY, "true");
+            AmazonS3 s3client = new AmazonS3Client(credentials);
+            s3client.setRegion(Region.getRegion(Regions.US_EAST_1));
+
+            String bucketName = configUtil.getAwsBucketName();
+
+            // create folder into bucket
+            String folder = USERID + SUFFIX + name;
+
+            deleteFolder(bucketName, folder, s3client);
+            createFolder(bucketName, folder, s3client);
+
+            for (MultipartFile file : files) {
+                if (file.isEmpty()) {
+                    continue;
+                }
+                // upload file to folder and set it to public
+                String fileName = folder + SUFFIX + file.getOriginalFilename();
+
+                byte[] bytes = file.getBytes();
+                metaData.setContentLength(bytes.length);
+                ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+                PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName, byteArrayInputStream, metaData).withCannedAcl(CannedAccessControlList.PublicRead);
+                s3client.putObject(putObjectRequest);
             }
 
-            saveUploadedFiles(Arrays.asList(files), savePath);
         } catch (IOException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            logger.error(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         logger.info("Upload success");
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     /**
-     * Saves the uploaded files to the specified location
+     * This method first creates the folder with the specified name in the specified AWS bucket
      *
-     * @param savePath : file save location
-     * @param files : files to the saved
+     * @param bucketName:
+     *                  Name of the AWS bucket
+     * @param folderName :
+     *                   Name of the prefix in the AWS bucket
+     * @param client:
+     *              AWS S3 client
      */
-    private void saveUploadedFiles(List<MultipartFile> files, String savePath) throws IOException {
-        for (MultipartFile file : files) {
-            if (file.isEmpty()) {
-                continue;
-            }
-            byte[] bytes = file.getBytes();
-            Path path = Paths.get(savePath + file.getOriginalFilename());
-            Files.write(path, bytes);
-        }
+    public void createFolder(String bucketName, String folderName, AmazonS3 client) {
+        // create meta-data for your folder and set content-length to 0
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(0);
+
+        // create empty content
+        InputStream emptyContent = new ByteArrayInputStream(new byte[0]);
+
+        // create a PutObjectRequest passing the folder name suffixed by /
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName,
+                folderName + SUFFIX, emptyContent, metadata);
+
+        // send request to S3 to create folder
+        client.putObject(putObjectRequest);
     }
 
     /**
-     * Returns the absolute path of the file save location
+     * This method first deletes all the files in given folder and than the
+     * folder itself
      *
+     * @param bucketName:
+     *                  Name of the AWS bucket
+     * @param folderName :
+     *                   Name of the prefix in the AWS bucket
+     * @param client:
+     *              AWS S3 client
      */
-    private String getUploadLocation(){
-        Path workingDirectory = Paths.get("").toAbsolutePath();
-        String path = workingDirectory.toString();
-        path = path.replaceAll("\\\\", "/");
-        return path;
+    public void deleteFolder(String bucketName, String folderName, AmazonS3 client) {
+        List fileList =
+                client.listObjects(bucketName, folderName).getObjectSummaries();
+        for (Object file : fileList) {
+            S3ObjectSummary f = (S3ObjectSummary) file;
+            client.deleteObject(bucketName, f.getKey());
+        }
+        client.deleteObject(bucketName, folderName);
     }
 }
