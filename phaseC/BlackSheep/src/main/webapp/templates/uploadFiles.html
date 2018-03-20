@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Black Sheep : Upload Files</title>
     <link rel="stylesheet" type="text/css" href="./uploadFiles.css"  />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="../js/upload.js" type="text/javascript"></script>
 
 </head>
 <body>
@@ -17,13 +19,13 @@
         <div class="split left">
     <div class="centered">
         <h2>Student</h2>
-        <form action="/action_page.php">
+        <form method="POST" enctype="multipart/form-data" id="suspectForm">
 
-            <input type="file" name="pic" accept="image/*" >
+            <input type="file" name="files" multiple="multiple"/>
             <br>
-            <div class = "uploadButton">
-                <input type="submit" name="Upload">
-            </div>
+            <!--<div class = "uploadButton">-->
+                <!--<input type="submit" name="Upload" id="btnUploadSource">-->
+            <!--</div>-->
         </form>
     </div>
 </div>
@@ -31,12 +33,12 @@
 <div class="split right">
     <div class="centered">
         <h2>Suspects</h2>
-        <form action="/action_page.php">
+        <form method="POST" enctype="multipart/form-data" id="sourceForm">
 
-            <input type="file" name="pic" accept="image/*" >
+            <input type="file" name="files" multiple="multiple"/>
             <br>
            <div class = "uploadButton">
-               <input type="submit" name="Upload">
+               <input type="submit" name="Upload" id="btnChkPlg">
            </div>
         </form>
     </div>
