@@ -15,7 +15,7 @@ body {
     height: 100px;
     line-height: 60px;
     margin: 40px auto;
-    letter-spacing: -.07em;
+    letter-spacing: -0.07em;
     text-shadow: white 2px 2px 2px;
 }
 input[type="range"] {
@@ -36,12 +36,82 @@ input[type="range"]::-webkit-slider-thumb {
     border-radius: 50%;
     border: 2px solid white;
     cursor: pointer;
-    transition: .3s ease-in-out;
-}​
- input[type="range"]::-webkit-slider-thumb:hover {
-     background-color: white;
-     border: 2px solid #e74c3c;
- }
+    transition: 0.3s ease-in-out;
+}
+​ input[type="range"]::-webkit-slider-thumb:hover {
+    background-color: white;
+    border: 2px solid #e74c3c;
+}
 input[type="range"]::-webkit-slider-thumb:active {
     transform: scale(1.6);
 }
+
+
+/*css less required */
+/*Below css fx are for the new Go button added ! */
+/*@circle-size: 100px;*/
+/*@outside-circle-size: @circle-size + 10px;*/
+/*@outside-circle-border: 2px;*/
+/*@outside-circle-margin: ((@outside-circle-size / 2) + @outside-circle-border) * -1;*/
+
+/*.button{*/
+/*text-align: center;*/
+/*text-transform: uppercase;*/
+/*text-decoration: none;*/
+/*font-size: 14px;*/
+/*font-weight: 100;*/
+/*font-family: "Segoe UI";*/
+/*letter-spacing: 1px;*/
+
+/*&:before{*/
+/*border-radius: @circle-size;*/
+/*border: @outside-circle-border solid #468cdc;*/
+/*box-shadow: 0 0 15px rgba(0, 255, 204, 0.15), 0 0 15px rgba(0, 255, 204, 0.15) inset;*/
+/*content: "";*/
+/*display: block;*/
+/*position: absolute;*/
+/*left: 50%;*/
+/*top: 50%;*/
+/*height: @outside-circle-size;*/
+/*width: @outside-circle-size;*/
+/*margin-left: @outside-circle-margin;*/
+/*margin-top: @outside-circle-margin;*/
+/*opacity: 1;*/
+/*transform: scale(1);*/
+/*transition: all 300ms;*/
+/*}*/
+
+/*&:hover:before{*/
+/*transform: scale(1.05);*/
+/*}*/
+
+/*&.circle{*/
+/*background: #23466e;*/
+/*border: none;*/
+/*border-radius: 900px;*/
+/*color: #e4ecfa;*/
+/*cursor: pointer;*/
+/*display: block;*/
+/*width: @circle-size;*/
+/*height: @circle-size;*/
+/*line-height: @circle-size;*/
+/*position: relative;*/
+/*margin: auto;*/
+/*margin-top: 25px;*/
+/*transition: 0.5s;*/
+
+/*&:hover {*/
+/*background: #3e70aa;*/
+/*padding: -2px;*/
+/*}*/
+/*}*/
+/*}*/
+
+/*.container{*/
+/*background-color: rgb(5, 40, 60);*/
+/*position: fixed;*/
+/*width: 100%;*/
+/*height: 100%;*/
+/*top: 0;*/
+/*overflow: auto;*/
+/*}*/
