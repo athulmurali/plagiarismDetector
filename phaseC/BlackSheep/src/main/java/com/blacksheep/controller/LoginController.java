@@ -66,7 +66,7 @@ public class LoginController {
             else
             {
                 logger.info("login check: userId & password pair not found");
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
             }
         }
         finally {

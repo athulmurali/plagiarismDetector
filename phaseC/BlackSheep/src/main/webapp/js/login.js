@@ -14,9 +14,10 @@ $(document).ready(function () {
             url: "/userLogin",
             data: JSON.stringify(cred),
             contentType: 'application/json',
-            success: function () {
-                redirect1();
-                console.log("here");
+
+            success: function (response) {
+                    console.log("Success");
+                    redirect1();
             },
             error: function (e) {
                 console.log('page not found' + e);
@@ -27,8 +28,9 @@ $(document).ready(function () {
     });
 
     function redirect1() {
-        window.location = "../templates/uploadFiles.html";
-        console.log("reDirected to a new window");
+
+        console.log("in redirect");
+        window.location = "../templates/configPlagiarismPercentage.html";
     }
 
     function redirect2() {
