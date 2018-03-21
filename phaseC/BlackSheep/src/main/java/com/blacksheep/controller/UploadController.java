@@ -1,17 +1,16 @@
 package com.blacksheep.controller;
 
-import com.amazonaws.SDKGlobalConfiguration;
+import com.amazonaws.AmazonClientException;
 import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Region;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.blacksheep.ConfigUtil;
+import com.blacksheep.util.AWSConfigUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -84,22 +83,22 @@ public class UploadController {
      */
     private ResponseEntity<?> uploadFiles(String name, MultipartFile[] files) {
         try {
-            ObjectMetadata metaData = new ObjectMetadata();
-            ConfigUtil configUtil = new ConfigUtil();
-            AWSCredentials credentials = new BasicAWSCredentials(configUtil.getAwsAccessKey(), configUtil.getAwsSecretKey());
+            AWSConfigUtil util = new AWSConfigUtil();
+            AWSCredentials credentials = new BasicAWSCredentials(util.getAwsAccessKey(),
+                    util.getAwsSecretKey());
 
-            // create a client connection based on credentials
-            System.setProperty(SDKGlobalConfiguration.ENABLE_S3_SIGV4_SYSTEM_PROPERTY, "true");
-            AmazonS3 s3client = new AmazonS3Client(credentials);
-            s3client.setRegion(Region.getRegion(Regions.US_EAST_1));
+            AmazonS3 s3 = AmazonS3ClientBuilder.standard()
+                    .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                    .withRegion("us-east-2")
+                    .build();
 
-            String bucketName = configUtil.getAwsBucketName();
+            String bucketName = util.getAwsBucketName();
 
             // create folder into bucket
             String folder = USERID + SUFFIX + name;
 
-            deleteFolder(bucketName, folder, s3client);
-            createFolder(bucketName, folder, s3client);
+            deleteFolder(bucketName, folder, s3);
+            createFolder(bucketName, folder, s3);
 
             for (MultipartFile file : files) {
                 if (file.isEmpty()) {
@@ -107,12 +106,12 @@ public class UploadController {
                 }
                 // upload file to folder and set it to public
                 String fileName = folder + SUFFIX + file.getOriginalFilename();
-
+                ObjectMetadata metaData = new ObjectMetadata();
                 byte[] bytes = file.getBytes();
                 metaData.setContentLength(bytes.length);
                 ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
                 PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, fileName, byteArrayInputStream, metaData).withCannedAcl(CannedAccessControlList.PublicRead);
-                s3client.putObject(putObjectRequest);
+                s3.putObject(putObjectRequest);
             }
 
         } catch (IOException e) {
