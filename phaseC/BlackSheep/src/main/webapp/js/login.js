@@ -1,9 +1,8 @@
 $(document).ready(function () {
 
     $("#login").click(function () {
-        // var password = $("#password").val();
+        // var password = $("#password").val();n
         // var user = $("#uname").val();
-
         var cred = {
 
             "user":$("#uname").val(),
@@ -12,13 +11,13 @@ $(document).ready(function () {
 
         $.ajax({
             type: "POST",
-            url: "/passcodeStringjson",
+            url: "/userLogin",
             data: JSON.stringify(cred),
             contentType: 'application/json',
-            success: function () {
 
-                console.log("Here");
-                redirect1();
+            success: function (response) {
+                    console.log("Success");
+                    redirect1();
             },
             error: function (e) {
                 console.log('page not found' + e);
@@ -29,8 +28,9 @@ $(document).ready(function () {
     });
 
     function redirect1() {
+
         console.log("in redirect");
-        window.location = "../templates/uploadFiles.html";
+        window.location = "../templates/configPlagiarismPercentage.html";
     }
 
     function redirect2() {

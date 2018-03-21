@@ -20,4 +20,5 @@ public class Cred {
     public String getPassword() {
         return password;
     }
+
 }
