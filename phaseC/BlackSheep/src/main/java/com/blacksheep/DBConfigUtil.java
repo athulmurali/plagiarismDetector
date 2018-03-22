@@ -1,8 +1,7 @@
 package com.blacksheep;
 
 import com.blacksheep.controller.LoginController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.util.Properties;
@@ -17,7 +16,7 @@ public class DBConfigUtil implements IDBConfigUtil {
     // Location of the db config with fileName:
     private static final String fileName = "config.properties";
 
-    private final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private final Logger logger = Logger.getLogger(LoginController.class);
 
     public String getDbURL() {
         return dbURL;

@@ -11,8 +11,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.blacksheep.util.AWSConfigUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +41,7 @@ public class UploadController {
     /**
      * Logger instance
      */
-    private final Logger logger = LoggerFactory.getLogger(UploadController.class);
+    private final Logger logger = Logger.getLogger(UploadController.class);
 
     /**
      * Receives the student1 files and sends them to the upload method

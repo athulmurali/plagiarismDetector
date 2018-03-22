@@ -3,8 +3,7 @@ package com.blacksheep.controller;
 import com.blacksheep.Cred;
 import com.blacksheep.DBConfigUtil;
 import com.blacksheep.IDBConfigUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,7 @@ import java.sql.*;
 public class LoginController {
 
 
-    private final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private final Logger logger = Logger.getLogger(LoginController.class);
 
     /**
      * Dummy method to test the whether the server is running or not
