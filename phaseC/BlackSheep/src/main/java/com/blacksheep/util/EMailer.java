@@ -29,14 +29,14 @@ public class EMailer{
 
     Properties emailProp;
 
-    String[] TEAM = {
+    private static final String[] TEAM = {
             "muralidharan.a@husky.neu.edu",
             "havanagi.p@husky.neu.edu",
             "tong.p@husky.neu.edu",
             "lnu.m@husky.neu.edu"}; // list of team members to be notified
 
     // default from address for team notification
-    String DEFAULTFROM= "blacksheepdetector@gmail.com";
+    private static final  String DEFAULT_FROM = "blacksheepdetector@gmail.com";
 
 
     /**
@@ -92,7 +92,7 @@ public class EMailer{
                 emailProp.getProperty("mail.smtp.host"),
                 emailProp.getProperty("mail.smtp.user"),
                 emailProp.getProperty("mail.smtp.password"));
-        Address addresses[] = new InternetAddress[recipients.length];
+        Address[] addresses = new InternetAddress[recipients.length];
         if (recipients.length > 0) {
             for (int i = 0; i < recipients.length; i++) {
                 addresses[i] = new InternetAddress(recipients[i]);
@@ -112,7 +112,7 @@ public class EMailer{
      */
     public void emailTeam(String body, String subject) throws MessagingException {
 
-            this.sendEmail(body,subject,DEFAULTFROM,TEAM);
+            this.sendEmail(body,subject, DEFAULT_FROM,TEAM);
 
     }
 

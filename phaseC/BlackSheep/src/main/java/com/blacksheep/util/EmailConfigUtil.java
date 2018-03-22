@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -20,12 +19,24 @@ import java.util.Properties;
  */
 public class EmailConfigUtil {
 
+
     //name of the config file
-    private static final String fileName = "emailConfig.properties";
+    private static final String FILE_NAME = "emailConfig.properties";
 
     //logger instance
     private static final Logger logger = LoggerFactory.getLogger(EmailConfigUtil.class);
 
+
+    /**
+     * Private constructor to hide implicit public constructor
+     */
+    private EmailConfigUtil(){
+    }
+
+    /**
+     *
+     * @return an obj of Properties required for email config
+     */
     public static Properties returnProperties() {
 
         logger.debug("Loading emailConfig.properties");
@@ -33,18 +44,11 @@ public class EmailConfigUtil {
         try {
             ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
-            File file = new File(classloader.getResource(fileName).getFile());
+            File file = new File(classloader.getResource(FILE_NAME).getFile());
             FileInputStream fileInput = new FileInputStream(file);
 
-            if (fileInput == null) {
-                logger.error("File not found " + fileName);
-                return null;
-            }
-
             emailProp.load(fileInput);
-        } catch (FileNotFoundException e) {
-            logger.error(e.getMessage());
-        } catch (IOException e) {
+        } catch ( IOException e) {
             logger.error(e.getMessage());
         }
         return emailProp;

@@ -59,12 +59,15 @@ public class EMailerTest {
     @Test
     public void invalidRecipientTest() {
         boolean exceptionThrown = false;
+        String sender   = "BlackSheepDetector";
         String[] invalidEMailList = new String[]{"afaddress"}; // list of invalid toAddresses
         String body = "Test for invalid test cases";
+        String subject  = "Test mail server";
+
 
         try {
-            emailerObj.sendEmail("test", "subject",
-                    "BlackSheepDetector", invalidEMailList);
+            emailerObj.sendEmail(body, subject,
+                    sender, invalidEMailList);
         }
         catch (MessagingException e) {
             exceptionThrown = true; //SendFailedException is a Messaging exception
