@@ -5,10 +5,10 @@ import com.blacksheep.parser.Python3Parser;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.util.stream.Collectors;
 
 /**
  * This class contains the implementation for creating AST using ANTLR
@@ -33,6 +33,25 @@ public class ParserFacade {
      */
     public Python3Parser.File_inputContext parse(File file) throws IOException {
         String code = readFile(file, Charset.forName("UTF-8"));
+        Python3Lexer lexer = new Python3Lexer(new ANTLRInputStream(code));
+
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+
+        Python3Parser parser = new Python3Parser(tokens);
+
+        return parser.file_input();
+    }
+
+    /**
+     * Converts the input file into a tokens and returns the Input context of the source code AST
+     *
+     * @param inputStream : file input stream
+     */
+    public Python3Parser.File_inputContext parse(InputStream inputStream) throws IOException {
+        String code = new BufferedReader(new InputStreamReader(inputStream))
+                .lines().collect(Collectors.joining("\n"));
+
+
         Python3Lexer lexer = new Python3Lexer(new ANTLRInputStream(code));
 
         CommonTokenStream tokens = new CommonTokenStream(lexer);
