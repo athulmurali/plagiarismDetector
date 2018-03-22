@@ -1,7 +1,6 @@
 package com.blacksheep;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 
@@ -14,7 +13,7 @@ public class NameChangePlagiarism {
     /**
      * Logger instance
      */
-    private final Logger logger = LoggerFactory.getLogger(NameChangePlagiarism.class);
+    private final Logger logger = Logger.getLogger(NameChangePlagiarism.class);
 
     /**
      * Compares two syntax trees and provides the match percentage between the two source codes

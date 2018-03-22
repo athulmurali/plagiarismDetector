@@ -1,11 +1,9 @@
 package com.blacksheep.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -22,7 +20,7 @@ public class AWSConfigUtil {
     /**
      * Logger instance
      */
-    private final Logger logger = LoggerFactory.getLogger(AWSConfigUtil.class);
+    private final Logger logger = Logger.getLogger(AWSConfigUtil.class);
 
     /**
      * AWS access secret key
@@ -106,20 +104,13 @@ public class AWSConfigUtil {
             File file = new File(classloader.getResource(fileName).getFile());
             FileInputStream fileInput = new FileInputStream(file);
 
-            if (fileInput == null) {
-                logger.error("File not found " + fileName);
-                return;
-            }
-
             prop.load(fileInput);
 
             setAwsAccessKey(prop.getProperty("aws.access.key"));
             setAwsSecretKey(prop.getProperty("aws.secret.key"));
             setAwsBucketName(prop.getProperty("aws.bucket.name"));
 
-        } catch (FileNotFoundException e) {
-            logger.error(e.getMessage());
-        } catch (IOException e) {
+        } catch (IOException|NullPointerException e) {
             logger.error(e.getMessage());
         }
     }
