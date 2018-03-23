@@ -14,16 +14,17 @@ public class NameChangePlagiarismDemo {
     public static void main(String[] args) throws IOException {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         ParserFacade parserFacade = new ParserFacade();
-        CreateAST sourceAST = new CreateAST();
-        CreateAST suspectAST = new CreateAST();
+//        CreateAST sourceAST = new CreateAST();
+//        CreateAST suspectAST = new CreateAST();
+
 
         RuleContext sourceContext = parserFacade.parse(new File(classloader.getResource("python/simple1.py").getFile()));
         RuleContext suspectContext = parserFacade.parse(new File(classloader.getResource("python/simple2.py").getFile()));
 
-        List<String> sourceTree = sourceAST.getRuleSyntaxTree(sourceContext);
-        List<String> suspectTree = suspectAST.getRuleSyntaxTree(suspectContext);
+//        List<String> sourceTree = sourceAST.getRuleSyntaxTree(sourceContext);
+//        List<String> suspectTree = suspectAST.getRuleSyntaxTree(suspectContext);
 
         NameChangePlagiarism check = new NameChangePlagiarism();
-        check.check(sourceTree,suspectTree);
+        check.check(sourceContext,suspectContext);
     }
 }
