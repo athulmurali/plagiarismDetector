@@ -8,23 +8,28 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.blacksheep.CodeMovementPlagiarism;
-import com.blacksheep.NameChangePlagiarism;
-import com.blacksheep.ParserFacade;
+import com.blacksheep.*;
 import com.blacksheep.parser.CreateJson;
 import com.blacksheep.parser.Matches;
+import com.blacksheep.util.Utility;
 import org.antlr.v4.runtime.RuleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 
 @RestController
 public class ResultsController {
+
+    private ByteArrayOutputStream baos1;
+    private ByteArrayOutputStream baos2;
 
     /**
      * Id of the logged in user
@@ -39,7 +44,7 @@ public class ResultsController {
     /**
      * Logger instance
      */
-    private final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private final Logger logger = LoggerFactory.getLogger(ResultsController.class);
 
 
     /**
@@ -50,7 +55,6 @@ public class ResultsController {
     public List<CreateJson> inputStream() {
 
         List<CreateJson> ljson = new ArrayList<>();
-        List<InputStream> objectData1 = new ArrayList<>();
 
         try {
             AWSCredentials credentials = null;
@@ -86,8 +90,10 @@ public class ResultsController {
                 S3ObjectSummary f1 = (S3ObjectSummary) file1;
                 S3Object object1 = s3.getObject(new GetObjectRequest(bucketName, f1.getKey()));
                 String last1 = f1.getKey().substring(f1.getKey().lastIndexOf('/') + 1);
-                objectData1.add(object1.getObjectContent());
-                RuleContext sourceContext1 = parserFacade.parse(objectData1.get(0));
+                InputStream stream1 = object1.getObjectContent();
+                baos1 = Utility.backupInput(stream1);
+                InputStream parserStream1 = new ByteArrayInputStream(baos1.toByteArray());
+                RuleContext sourceContext1 = parserFacade.parse(parserStream1);
 
                 for (Object file2 : student2List) {
 
@@ -96,26 +102,45 @@ public class ResultsController {
 
                     String last2 = f2.getKey().substring(f2.getKey().lastIndexOf('/') + 1);
 
-                    objectData1.add(object2.getObjectContent());
+                    InputStream stream2 = object2.getObjectContent();
+                    baos2 = Utility.backupInput(stream2);
 
-                    RuleContext sourceContext2 = parserFacade.parse(objectData1.get(1));
+                    InputStream parserStream2 = new ByteArrayInputStream(baos2.toByteArray());
+                    RuleContext sourceContext2 = parserFacade.parse(parserStream2);
 
                     List<Matches> Listmatches = new ArrayList<>();
 
                     CodeMovementPlagiarism cmp = new CodeMovementPlagiarism();
                     NameChangePlagiarism ncp = new NameChangePlagiarism();
+                    CommentPlagiarism cp = new CommentPlagiarism();
+                    CRCPlagiarism crc = new CRCPlagiarism();
 
-                    List<List<String>> list1 = cmp.getDetectResult(sourceContext1, sourceContext2);
+                    InputStream crcStream1 = new ByteArrayInputStream(baos1.toByteArray());
+                    InputStream crcStream2 = new ByteArrayInputStream(baos2.toByteArray());
 
-                    createMatches(list1,"CodeMovement Change", Listmatches);
+                    double percentage = 0;
 
-//                    List<List<String>> list2 = cmp.getDetectResult(sourceContext1, sourceContext2);
-//                    createMatches(list2,"CommentsMatch", Listmatches);
+                    List<List<String>> list4 = crc.getDetectResult(crcStream1, crcStream2);
 
-                    List<List<String>> list2 = ncp.check(sourceContext1, sourceContext2);
-                    createMatches(list2,"Name Change", Listmatches);
+                    if(list4.get(0).size() > 0){
+                        percentage = 100.0;
+                        createMatches(list4,"CRC Match", Listmatches);
+                    }
+                    else{
+                        List<List<String>> list1 = cmp.getDetectResult(sourceContext1, sourceContext2);
+                        createMatches(list1,"CodeMovement Match", Listmatches);
 
-                    double percentage = calculateWeightedPercentage(Double.parseDouble(list1.get(2).get(0)),Double.parseDouble(list2.get(2).get(0)));
+                        List<List<String>> list2 = ncp.check(sourceContext1, sourceContext2);
+                        createMatches(list2,"Structure Match", Listmatches);
+
+                        InputStream commentStream1 = new ByteArrayInputStream(baos1.toByteArray());
+                        InputStream commentStream2 = new ByteArrayInputStream(baos2.toByteArray());
+                        List<List<String>> list3 = cp.getDetectResult(commentStream1,commentStream2);
+                        createMatches(list3,"Comments Match", Listmatches);
+
+                        percentage = calculateWeightedPercentage(Double.parseDouble(list1.get(2).get(0)),
+                                Double.parseDouble(list1.get(2).get(0)),Double.parseDouble(list3.get(2).get(0)));
+                    }
 
                     cj1 = new CreateJson(last1,last2,percentage,Listmatches);
                     ljson.add(cj1);
@@ -173,13 +198,12 @@ public class ResultsController {
      * @param value2 the percentage from second comparison strategy
      * @return double, returns the weighted percentage
      */
-    public double calculateWeightedPercentage(double value1,double value2){
+    public double calculateWeightedPercentage(double value1,double value2, double value3){
 
-        double value3 = 40;
+        // double value3 = 40;
         double value4 = 40;
 
         return (0.25 * value1) +(0.25*value2 ) +(0.25 * value3)+(0.25 * value4);
 
     }
-
 }

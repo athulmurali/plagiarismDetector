@@ -62,9 +62,9 @@ public class ResultControllerTest {
     public void CheckPercentage() {
         ResultsController rc = new ResultsController();
 
-        double v1 = 40, v2 = 40;
+        double v1 = 40, v2 = 40,v3=40;
 
-        assertEquals(40.0,rc.calculateWeightedPercentage(v1,v2),0);
+        assertEquals(40.0,rc.calculateWeightedPercentage(v1,v2,v3),0);
 
     }
 
