@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.blacksheep.CodeMovementPlagiarism;
+import com.blacksheep.NameChangePlagiarism;
 import com.blacksheep.ParserFacade;
 import com.blacksheep.parser.CreateJson;
 import com.blacksheep.parser.Matches;
@@ -100,13 +101,19 @@ public class ResultsController {
                     RuleContext sourceContext2 = parserFacade.parse(objectData1.get(1));
 
                     List<Matches> Listmatches = new ArrayList<>();
+
                     CodeMovementPlagiarism cmp = new CodeMovementPlagiarism();
+                    NameChangePlagiarism ncp = new NameChangePlagiarism();
+
                     List<List<String>> list1 = cmp.getDetectResult(sourceContext1, sourceContext2);
 
                     createMatches(list1,"CodeMovement Change", Listmatches);
 
-                    List<List<String>> list2 = cmp.getDetectResult(sourceContext1, sourceContext2);
-                    createMatches(list2,"CommentsMatch", Listmatches);
+//                    List<List<String>> list2 = cmp.getDetectResult(sourceContext1, sourceContext2);
+//                    createMatches(list2,"CommentsMatch", Listmatches);
+
+                    List<List<String>> list2 = ncp.check(sourceContext1, sourceContext2);
+                    createMatches(list2,"Name Change", Listmatches);
 
                     double percentage = calculateWeightedPercentage(Double.parseDouble(list1.get(2).get(0)),Double.parseDouble(list2.get(2).get(0)));
 

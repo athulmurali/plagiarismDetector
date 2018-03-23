@@ -18,13 +18,13 @@ public class CreateAST {
     /**
      * Syntax tree in the form of a list
      */
-    private List<String> ruleSyntaxTree = new ArrayList<>();
+    private List<RuleContext> ruleSyntaxTree = new ArrayList<>();
 
     /**
      * Returns the syntax tree in the list form
      *
      */
-    public List<String> getRuleSyntaxTree() {
+    public List<RuleContext> getRuleSyntaxTree() {
         return ruleSyntaxTree;
     }
 
@@ -34,7 +34,7 @@ public class CreateAST {
      * @param ctx : Context of the source code
      *
      */
-    public List<String> getRuleSyntaxTree(RuleContext ctx) {
+    public List<RuleContext> getRuleSyntaxTree(RuleContext ctx) {
         explore(ctx, 0);
         return ruleSyntaxTree;
     }
@@ -68,8 +68,10 @@ public class CreateAST {
         if (!toBeIgnored) {
             String ruleName = Python3Parser.ruleNames[ctx.getRuleIndex()];
             for (int i = 0; i < indentation; i++) {
+
                 System.out.print("  ");
             }
+            ruleSyntaxTree.add(ctx);
             System.out.println(ruleName);
         }
         for (int i=0;i<ctx.getChildCount();i++) {
@@ -77,6 +79,7 @@ public class CreateAST {
             if (element instanceof RuleContext) {
                 explore((RuleContext)element, indentation + (toBeIgnored ? 0 : 1));
             }
+
         }
 
     }
