@@ -48,7 +48,7 @@ public class CreateAST {
 
         explore(ctx, 0);
 
-        System.out.println(ctx.getChild(0).getText());
+        //System.out.println(ctx.getChild(0).getText());
         //explore(ctx, 0);
 
         return ctx.getChild(0).getText().trim();
@@ -67,12 +67,12 @@ public class CreateAST {
                 && ctx.getChild(0) instanceof ParserRuleContext;
         if (!toBeIgnored) {
             String ruleName = Python3Parser.ruleNames[ctx.getRuleIndex()];
-            for (int i = 0; i < indentation; i++) {
-
-                System.out.print("  ");
-            }
+//            for (int i = 0; i < indentation; i++) {
+//
+//                System.out.print("  ");
+//            }
             ruleSyntaxTree.add(ctx);
-            System.out.println(ruleName);
+            //System.out.println(ruleName);
         }
         for (int i=0;i<ctx.getChildCount();i++) {
             ParseTree element = ctx.getChild(i);

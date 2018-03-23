@@ -2,6 +2,7 @@ package com.blacksheep;
 
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
@@ -57,7 +58,7 @@ public class CommentPlagiarism {
      * @param input2:  Inputstream of the second source file
      * @return The lines numbers that match in the two source files and match percent
      */
-    public List<List<String>> getDetectResult(InputStream input1, InputStream input2) {
+    public List<List<String>> getDetectResult(InputStream input1, InputStream input2) throws IOException {
         logger.debug("Comment plagiarism check started");
 
         List<String> visitedFile1 = new ArrayList<>();
@@ -122,6 +123,10 @@ public class CommentPlagiarism {
         } catch (Exception e) {
             logger.error("Comment Plagiarism error", e);
             return result;
+        }
+        finally {
+            input1.close();
+            input2.close();
         }
     }
 
