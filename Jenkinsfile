@@ -7,7 +7,7 @@ pipeline {
                echo "Building"
 	       sh 'mvn -f phaseC/BlackSheep/pom.xml'
                sh 'mvn compile'
-               sh 'mvn package’
+               sh 'mvn package'
            }
        }
        stage('Test'){
