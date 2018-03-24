@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Plagiarism interface
  */
-interface Plagiarism {
+public interface Plagiarism {
 
     /**
      * get the detect result
