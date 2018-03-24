@@ -1,7 +1,10 @@
-package com.blacksheep;
+package com.blacksheep.strategy;
 
+import com.blacksheep.util.CalculateEditDistance;
+import org.antlr.v4.runtime.RuleContext;
 import org.apache.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
@@ -9,7 +12,7 @@ import java.util.*;
 /**
  * This class contains the implementation of Plagiarism check for comments in two source files
  */
-public class CommentPlagiarism {
+public class CommentPlagiarism implements Plagiarism {
     /**
      * The threshold to acceptable plagiarism
      */
@@ -192,5 +195,27 @@ public class CommentPlagiarism {
             multiLineFound1 = getCommentsFromSource(codeLines1, size, i, comments1, lineNumbers1, multiLineFound1);
             multiLineFound2 = getCommentsFromSource(codeLines2, size, i, comments2, lineNumbers2, multiLineFound2);
         }
+    }
+
+    /**
+     * get the detect result
+     * @param f1 Rulecontext of the file that needs to detect
+     * @param f2 Rulecontext of the file that needs to compare with
+     * @return a list of three string lists that contain the line numbers of
+     *   similar codes in two files and the similar percentage
+     */
+    public List<List<String>> getDetectResult(RuleContext f1, RuleContext f2) throws IOException{
+        return null;
+    }
+
+    /**
+     * get the detect result
+     * @param f1 A file that needs to detect
+     * @param f2 A file that needs to compare with
+     * @return a list of three string lists that contain the line numbers of
+     *   similar codes in two files and the similar percentage
+     */
+    public List<List<String>> getDetectResult(File f1, File f2) throws IOException{
+        return null;
     }
 }

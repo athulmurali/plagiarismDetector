@@ -1,10 +1,11 @@
 package com.blacksheep;
 
+import com.blacksheep.parser.ParserFacade;
+import com.blacksheep.strategy.NameChangePlagiarism;
 import org.antlr.v4.runtime.RuleContext;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * This class contains the driver method to get the match percent between two files
@@ -25,6 +26,6 @@ public class NameChangePlagiarismDemo {
 //        List<String> suspectTree = suspectAST.getRuleSyntaxTree(suspectContext);
 
         NameChangePlagiarism check = new NameChangePlagiarism();
-        check.check(sourceContext,suspectContext);
+        check.getDetectResult(sourceContext,suspectContext);
     }
 }

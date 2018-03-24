@@ -1,12 +1,12 @@
-package com.blacksheep;
+package com.blacksheep.strategy;
 
+import com.blacksheep.strategy.CommentPlagiarism;
+import com.blacksheep.strategy.Plagiarism;
 import com.blacksheep.util.Utility;
+import org.antlr.v4.runtime.RuleContext;
 import org.apache.log4j.Logger;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -15,7 +15,7 @@ import java.util.zip.CRC32;
 /**
  * This class contains the implementation for MD5 algorithm to check if the two source files are exactly the same
  */
-public class CRCPlagiarism {
+public class CRCPlagiarism implements Plagiarism {
     /**
      * Logger instance
      */
@@ -86,6 +86,27 @@ public class CRCPlagiarism {
             input1.close();
             input2.close();
         }
+    }
+    /**
+     * get the detect result
+     * @param f1 A file that needs to detect
+     * @param f2 A file that needs to compare with
+     * @return a list of three string lists that contain the line numbers of
+     *   similar codes in two files and the similar percentage
+     */
+    public List<List<String>> getDetectResult(File f1, File f2) throws IOException{
+        return null;
+    }
+
+    /**
+     * get the detect result
+     * @param f1 Rulecontext of the file that needs to detect
+     * @param f2 Rulecontext of the file that needs to compare with
+     * @return a list of three string lists that contain the line numbers of
+     *   similar codes in two files and the similar percentage
+     */
+    public List<List<String>> getDetectResult(RuleContext f1, RuleContext f2) throws IOException{
+        return null;
     }
 }
 

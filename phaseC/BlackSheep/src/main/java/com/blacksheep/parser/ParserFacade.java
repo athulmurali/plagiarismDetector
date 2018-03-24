@@ -1,4 +1,4 @@
-package com.blacksheep;
+package com.blacksheep.parser;
 
 import com.blacksheep.parser.Python3Lexer;
 import com.blacksheep.parser.Python3Parser;

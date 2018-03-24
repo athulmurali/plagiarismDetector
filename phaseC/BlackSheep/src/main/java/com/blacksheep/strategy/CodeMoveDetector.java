@@ -1,6 +1,6 @@
 package com.blacksheep.strategy;
 
-import com.blacksheep.ParserFacade;
+import com.blacksheep.parser.ParserFacade;
 import com.blacksheep.parser.Python3Parser;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -20,8 +21,21 @@ import java.util.List;
 public class CodeMoveDetector implements Plagiarism{
     List<List<Integer>> similarLines;
 
-    CodeMoveDetector() {
+    public CodeMoveDetector() {
         similarLines = new ArrayList<>();
+    }
+
+    /**
+     * get the detect result
+     * @param f1 InputStream of the file that needs to detect
+     * @param f2 InputStream of the file that needs to compare with
+     * @return a list of three string lists that contain the line numbers of
+     *   similar codes in two files and the similar percentage
+     */
+    @Override
+    public List<List<String>> getDetectResult(InputStream f1, InputStream f2) throws IOException {
+        // not to be implemented
+        return null;
     }
 
     /**
@@ -37,34 +51,6 @@ public class CodeMoveDetector implements Plagiarism{
         RuleContext t1 = parserFacade.parse(f1);
         RuleContext t2 = parserFacade.parse(f2);
         return getDetectResult(t1, t2);
-    }
-
-    /**
-     * get the percentage of similarity of two files
-     * @param f1 A file that needs to detect
-     * @param f2 A file that needs to compare with
-     * @return a double that indicates the percentage of similarity
-     */
-    @Override
-    public double getSimilarPercentage(File f1, File f2) throws IOException {
-        ParserFacade parserFacade = new ParserFacade();
-        RuleContext t1 = parserFacade.parse(f1);
-        RuleContext t2 = parserFacade.parse(f2);
-        return getSimilarPercentage(t1, t2);
-    }
-
-    /**
-     * get the line numbers of similar lines in two files
-     * @param f1 A RuleContext(ast) that needs to detect
-     * @param f1 A RuleContext(ast) that needs to compare with
-     * @return a list of two lists contain line numbers of similar codes in two files
-     */
-    @Override
-    public List<List<Integer>> getSimilarLines(File f1, File f2) throws IOException {
-        ParserFacade parserFacade = new ParserFacade();
-        RuleContext t1 = parserFacade.parse(f1);
-        RuleContext t2 = parserFacade.parse(f2);
-        return getSimilarLines(t1, t2);
     }
 
     /**
