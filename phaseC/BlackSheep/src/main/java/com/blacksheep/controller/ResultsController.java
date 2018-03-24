@@ -17,7 +17,9 @@ import com.blacksheep.util.Utility;
 import org.antlr.v4.runtime.RuleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayInputStream;
@@ -48,14 +50,52 @@ public class ResultsController {
     private final Logger logger = LoggerFactory.getLogger(ResultsController.class);
 
 
+    private boolean structure = false;
+    private boolean comment = false;
+    private boolean codemove = false;
+
+    /**
+     * Controller to take values of the optional Strategy
+     * @param c, Types JSON
+     * @return a list of JSON Objects
+     */
+    @RequestMapping(
+            value = "/PostChoices",
+            method = RequestMethod.POST)
+    public List<CreateJson> PostChoices(@RequestBody Types c){
+
+        try {
+
+            structure = false;
+            comment = false;
+            codemove = false;
+
+            if (c.getC1() != null)
+                structure = true;
+            if (c.getC2() != null)
+                codemove = true;
+            if (c.getC3() != null)
+                comment = true;
+
+            System.out.print("Success" + structure + codemove + comment);
+
+            return inputStream();
+        }
+        catch (Exception e){
+            logger.error("Error",e);
+        }
+
+        return new ArrayList<>();
+
+    }
+
+
     /**
      * An API to send the eventual results in form of a JSON
      * @return List of CreateJson
      */
     @RequestMapping("/getResults3")
     public List<CreateJson> inputStream() {
-        test();
-
         List<CreateJson> ljson = new ArrayList<>();
 
         try {
@@ -143,7 +183,7 @@ public class ResultsController {
                         list1.add(new ArrayList<>());
                         list1.get(2).add(0.0+"");
 
-                        if(namecheck){
+                        if(structure){
                             context = new Context(new NameChangePlagiarism());
                             list2 = context.executeStrategy(sourceContext1, sourceContext2);
                             createMatches(list2,"Structure Match", Listmatches);
@@ -232,14 +272,4 @@ public class ResultsController {
 
     }
 
-    private void test(){
-        namecheck = true;
-        comment = false;
-        codemove = false;
-
-        //inputStream();
-    }
-    private boolean namecheck;
-    private boolean comment;
-    private boolean codemove;
 }
