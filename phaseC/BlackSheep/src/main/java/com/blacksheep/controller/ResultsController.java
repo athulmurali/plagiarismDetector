@@ -11,6 +11,8 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.blacksheep.*;
 import com.blacksheep.parser.CreateJson;
 import com.blacksheep.parser.Matches;
+import com.blacksheep.parser.ParserFacade;
+import com.blacksheep.strategy.*;
 import com.blacksheep.util.Utility;
 import org.antlr.v4.runtime.RuleContext;
 import org.slf4j.Logger;
@@ -20,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,7 @@ public class ResultsController {
      */
     @RequestMapping("/getResults3")
     public List<CreateJson> inputStream() {
+        test();
 
         List<CreateJson> ljson = new ArrayList<>();
 
@@ -110,33 +112,56 @@ public class ResultsController {
 
                     List<Matches> Listmatches = new ArrayList<>();
 
-                    CodeMovementPlagiarism cmp = new CodeMovementPlagiarism();
-                    NameChangePlagiarism ncp = new NameChangePlagiarism();
-                    CommentPlagiarism cp = new CommentPlagiarism();
-                    CRCPlagiarism crc = new CRCPlagiarism();
-
                     InputStream crcStream1 = new ByteArrayInputStream(baos1.toByteArray());
                     InputStream crcStream2 = new ByteArrayInputStream(baos2.toByteArray());
 
                     double percentage = 0;
 
-                    List<List<String>> list4 = crc.getDetectResult(crcStream1, crcStream2);
+                    Context context = new Context(new CRCPlagiarism());
+                    List<List<String>> list4 = context.executeStrategy(crcStream1, crcStream2);
 
                     if(list4.get(0).size() > 0){
                         percentage = 100.0;
                         createMatches(list4,"CRC Match", Listmatches);
                     }
                     else{
-                        List<List<String>> list1 = cmp.getDetectResult(sourceContext1, sourceContext2);
-                        createMatches(list1,"CodeMovement Match", Listmatches);
+                        List<List<String>> list2 = new ArrayList<>();
+                        list2.add(new ArrayList<>());
+                        list2.add(new ArrayList<>());
+                        list2.add(new ArrayList<>());
+                        list2.get(2).add(0.0+"");
 
-                        List<List<String>> list2 = ncp.check(sourceContext1, sourceContext2);
-                        createMatches(list2,"Structure Match", Listmatches);
+                        List<List<String>> list3 = new ArrayList<>();
+                        list3.add(new ArrayList<>());
+                        list3.add(new ArrayList<>());
+                        list3.add(new ArrayList<>());
+                        list3.get(2).add(0.0+"");
 
-                        InputStream commentStream1 = new ByteArrayInputStream(baos1.toByteArray());
-                        InputStream commentStream2 = new ByteArrayInputStream(baos2.toByteArray());
-                        List<List<String>> list3 = cp.getDetectResult(commentStream1,commentStream2);
-                        createMatches(list3,"Comments Match", Listmatches);
+                        List<List<String>> list1 = new ArrayList<>();
+                        list1.add(new ArrayList<>());
+                        list1.add(new ArrayList<>());
+                        list1.add(new ArrayList<>());
+                        list1.get(2).add(0.0+"");
+
+                        if(namecheck){
+                            context = new Context(new NameChangePlagiarism());
+                            list2 = context.executeStrategy(sourceContext1, sourceContext2);
+                            createMatches(list2,"Structure Match", Listmatches);
+                        }
+
+                        if(codemove){
+                            context = new Context(new CodeMoveDetector());
+                            list1 = context.executeStrategy(sourceContext1, sourceContext2);
+                            createMatches(list1,"CodeMovement Match", Listmatches);
+                        }
+
+                        if(comment) {
+                            context = new Context(new CommentPlagiarism());
+                            InputStream commentStream1 = new ByteArrayInputStream(baos1.toByteArray());
+                            InputStream commentStream2 = new ByteArrayInputStream(baos2.toByteArray());
+                            list3 = context.executeStrategy(commentStream1, commentStream2);
+                            createMatches(list3, "Comments Match", Listmatches);
+                        }
 
                         percentage = calculateWeightedPercentage(Double.parseDouble(list1.get(2).get(0)),
                                 Double.parseDouble(list1.get(2).get(0)),Double.parseDouble(list3.get(2).get(0)));
@@ -206,4 +231,15 @@ public class ResultsController {
         return (0.25 * value1) +(0.25*value2 ) +(0.25 * value3)+(0.25 * value4);
 
     }
+
+    private void test(){
+        namecheck = true;
+        comment = false;
+        codemove = false;
+
+        //inputStream();
+    }
+    private boolean namecheck;
+    private boolean comment;
+    private boolean codemove;
 }

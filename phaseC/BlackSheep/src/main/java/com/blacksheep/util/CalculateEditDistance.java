@@ -1,4 +1,4 @@
-package com.blacksheep;
+package com.blacksheep.util;
 
 import java.util.Arrays;
 

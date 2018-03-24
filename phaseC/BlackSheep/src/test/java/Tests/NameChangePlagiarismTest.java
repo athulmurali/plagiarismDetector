@@ -1,7 +1,9 @@
 package Tests;
 
-import com.blacksheep.NameChangePlagiarism;
-import com.blacksheep.ParserFacade;
+import com.blacksheep.strategy.CodeMoveDetector;
+import com.blacksheep.strategy.Context;
+import com.blacksheep.strategy.NameChangePlagiarism;
+import com.blacksheep.parser.ParserFacade;
 import org.antlr.v4.runtime.RuleContext;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -95,8 +97,8 @@ public class NameChangePlagiarismTest {
         RuleContext sourceContext = parserFacade.parse(new ByteArrayInputStream(fileText1.getBytes(StandardCharsets.UTF_8)));
         RuleContext suspectContext = parserFacade.parse(new ByteArrayInputStream(fileText2.getBytes(StandardCharsets.UTF_8)));
 
-        NameChangePlagiarism check = new NameChangePlagiarism();
-        assertEquals(l4,check.check(sourceContext,suspectContext));
+        Context c = new Context(new NameChangePlagiarism());
+        assertEquals(l4,c.executeStrategy(sourceContext,suspectContext));
 
 
     }
@@ -131,8 +133,8 @@ public class NameChangePlagiarismTest {
         RuleContext sourceContext = parserFacade.parse(new ByteArrayInputStream(fileText1.getBytes(StandardCharsets.UTF_8)));
         RuleContext suspectContext = parserFacade.parse(new ByteArrayInputStream(fileText3.getBytes(StandardCharsets.UTF_8)));
 
-        NameChangePlagiarism check = new NameChangePlagiarism();
-        assertEquals(l4,check.check(sourceContext,suspectContext));
+        Context c = new Context(new NameChangePlagiarism());
+        assertEquals(l4,c.executeStrategy(sourceContext,suspectContext));
 
 
     }

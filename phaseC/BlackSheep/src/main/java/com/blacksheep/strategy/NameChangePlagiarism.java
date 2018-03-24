@@ -1,20 +1,23 @@
-package com.blacksheep;
+package com.blacksheep.strategy;
 
+import com.blacksheep.parser.CreateAST;
 import com.blacksheep.parser.Python3Parser;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;
 import org.apache.log4j.Logger;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
  * This class contains the implementation for comparing the syntax tree of source and suspect to get the
  * plagiarism if the variable and methods names have been changed but code order is the same
  */
-public class NameChangePlagiarism {
+public class NameChangePlagiarism implements Plagiarism {
 
     /**
      * Logger instance
@@ -27,8 +30,7 @@ public class NameChangePlagiarism {
      * @param suspectContext
      * @return
      */
-
-    public List<List<String>> check(RuleContext sourceContext, RuleContext suspectContext) {
+    public List<List<String>> getDetectResult(RuleContext sourceContext, RuleContext suspectContext) {
 
         CreateAST sourceAST = new CreateAST();
         CreateAST suspectAST = new CreateAST();
@@ -117,5 +119,27 @@ public class NameChangePlagiarism {
             return pctx.getStart().getLine();
         }
         return -1;
+    }
+
+    /**
+     * get the detect result
+     * @param f1 InputStream of the file that needs to detect
+     * @param f2 InputStream of the file that needs to compare with
+     * @return a list of three string lists that contain the line numbers of
+     *   similar codes in two files and the similar percentage
+     */
+    public List<List<String>> getDetectResult(InputStream f1, InputStream f2) throws IOException{
+        return null;
+    }
+
+    /**
+     * get the detect result
+     * @param f1 A file that needs to detect
+     * @param f2 A file that needs to compare with
+     * @return a list of three string lists that contain the line numbers of
+     *   similar codes in two files and the similar percentage
+     */
+    public List<List<String>> getDetectResult(File f1, File f2) throws IOException{
+        return null;
     }
 }
