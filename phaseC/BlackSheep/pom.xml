@@ -22,8 +22,8 @@
         <java.version>1.8</java.version>
         <sonar.exclusions>
             src/main/java/com/blacksheep/parser/*.java,
-            src/main/webapp/*.java,
-            src/main/resources/*.java
+            src/main/webapp/*,
+            src/main/resources/*
         </sonar.exclusions>
     </properties>
 
