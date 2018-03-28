@@ -16,17 +16,12 @@
         <relativePath/>
     </parent>
 
-    <!--<properties>
+    <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <sonar.coverage.exclusions>
-            src/main/webapp/*,
-            src/main/resources/*
-        </sonar.coverage.exclusions>
-        <sonar.login>Team-104</sonar.login>
-        <sonar.password>Team-104</sonar.password> 
-	</properties> -->
+    </properties>
+
 
     <!--<properties>-->
     <!--<java.version>1.8</java.version>-->
@@ -140,11 +135,6 @@
             <version>1.5.2</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-            <version>5.0.0</version>
-        </dependency>
     </dependencies>
 
 
@@ -176,8 +166,8 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            
-            <plugin>
+
+	    <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.7.9</version>
@@ -196,9 +186,8 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
         </plugins>
     </build>
-
 
 </project>
