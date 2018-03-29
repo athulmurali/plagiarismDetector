@@ -1,16 +1,29 @@
 package Tests;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.blacksheep.Types;
 import com.blacksheep.controller.ResultsController;
 import com.blacksheep.controller.UploadController;
 import com.blacksheep.parser.CreateJson;
 import com.blacksheep.parser.Matches;
+import com.blacksheep.util.AWSConfigUtil;
+
+import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 import static org.junit.Assert.assertEquals;
+
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -184,6 +197,127 @@ public class ResultControllerTest {
 		lcj.add(cj);
 
 		rc.postChoices(t);
+		
+		rc.inputStream();
+
+		// assertEquals(lcj.toString(),rc.PostChoices(t).toString());
+
+	}
+
+	@Test
+	public void TestPostChoices1() {
+		Types t = new Types();
+		
+		t.setC2("StructureChange");
+		assertEquals("StructureChange", t.getC2());
+
+		t.setC3("CommentChange");
+		assertEquals("CommentChange", t.getC3());
+
+		ResultsController rc = new ResultsController();
+
+		List<String> l1 = new ArrayList<>();
+		l1.add("1");
+
+		List<List<String>> list1 = new ArrayList<>();
+		list1.add(l1);
+
+		List<Integer> listInt = new ArrayList<>();
+		listInt.add(1);
+
+		Matches m = new Matches("abc", listInt, listInt);
+
+		List<Matches> matches = new ArrayList<>();
+		matches.add(m);
+
+		CreateJson cj = new CreateJson("file1", "file2", 80.0, matches);
+
+		List<CreateJson> lcj = new ArrayList<>();
+		lcj.add(cj);
+
+		rc.postChoices(t);
+		
+		rc.inputStream();
+
+		// assertEquals(lcj.toString(),rc.PostChoices(t).toString());
+
+	}
+	
+	@Test
+	public void TestPostChoices2() {
+
+		Types t = new Types();
+
+		t.setC1("CodeMovement");
+		assertEquals("CodeMovement", t.getC1());
+		
+		t.setC3("CommentChange");
+		assertEquals("CommentChange", t.getC3());
+
+		ResultsController rc = new ResultsController();
+
+		List<String> l1 = new ArrayList<>();
+		l1.add("1");
+
+		List<List<String>> list1 = new ArrayList<>();
+		list1.add(l1);
+
+		List<Integer> listInt = new ArrayList<>();
+		listInt.add(1);
+
+		Matches m = new Matches("abc", listInt, listInt);
+
+		List<Matches> matches = new ArrayList<>();
+		matches.add(m);
+
+		CreateJson cj = new CreateJson("file1", "file2", 80.0, matches);
+
+		List<CreateJson> lcj = new ArrayList<>();
+		lcj.add(cj);
+
+		rc.postChoices(t);
+		
+		rc.inputStream();
+
+		// assertEquals(lcj.toString(),rc.PostChoices(t).toString());
+
+	}
+	
+	@Test
+	public void TestPostChoices3() {
+
+		Types t = new Types();
+
+		t.setC1("CodeMovement");
+		assertEquals("CodeMovement", t.getC1());
+
+		t.setC2("StructureChange");
+		assertEquals("StructureChange", t.getC2());
+
+		ResultsController rc = new ResultsController();
+
+		List<String> l1 = new ArrayList<>();
+		l1.add("1");
+
+		List<List<String>> list1 = new ArrayList<>();
+		list1.add(l1);
+
+		List<Integer> listInt = new ArrayList<>();
+		listInt.add(1);
+
+		Matches m = new Matches("abc", listInt, listInt);
+
+		List<Matches> matches = new ArrayList<>();
+		matches.add(m);
+
+		CreateJson cj = new CreateJson("file1", "file2", 80.0, matches);
+
+		List<CreateJson> lcj = new ArrayList<>();
+		lcj.add(cj);
+
+		rc.postChoices(t);
+		
+		rc.inputStream();
 
 		// assertEquals(lcj.toString(),rc.PostChoices(t).toString());
 
@@ -196,22 +330,20 @@ public class ResultControllerTest {
 		byte[] array1 = null;
 		byte[] array2 = null;
 
-		File inputFile1 = new File(classloader.getResource("python/simple1.py").getFile());	
+		File inputFile1 = new File(classloader.getResource("python/simple1.py").getFile());
 		File inputFile2 = new File(classloader.getResource("python/simple4.py").getFile());
 		try {
 			array1 = Files.readAllBytes(inputFile1.toPath());
 			array2 = Files.readAllBytes(inputFile2.toPath());
 		} catch (final IOException e) {
 		}
-		
-		MultipartFile multipartFile1 = new MockMultipartFile("simple1.py",
-				"simple1.py", "text/plain", array1);
-		
-		MultipartFile multipartFile2 = new MockMultipartFile("simple4.py",
-				"simple4.py", "text/plain", array2);
-		
-		MultipartFile[] files1 = { multipartFile1 };		
-		MultipartFile[] files2 = { multipartFile2 };
+
+		MultipartFile multipartFile1 = new MockMultipartFile("simple1.py", "simple1.py", "text/plain", array1);
+
+		MultipartFile multipartFile2 = new MockMultipartFile("simple4.py", "simple4.py", "text/plain", array2);
+
+		MultipartFile[] files1 = { multipartFile1, multipartFile2 };
+		MultipartFile[] files2 = { multipartFile2, multipartFile1 };
 
 		uploadController.uploadFileSource(files1);
 		uploadController.uploadFileSuspect(files2);
