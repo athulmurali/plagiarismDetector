@@ -1,3 +1,10 @@
+/**
+ * Author : Athul
+ * Version : 2.0
+ * Data updated : 29 March 2018
+ * This class contains the implementation for Plagiarism Configuration
+ */
+
 package com.blacksheep.controller;
 
 import com.blacksheep.DBConfigUtil;
@@ -11,12 +18,7 @@ import javax.mail.MessagingException;
 import java.sql.*;
 import java.util.Map;
 
-/**
- * Author : Athul
- * Version : 2.0
- * Data updated : 29 March 2018
- * This class contains the implementation for Plagiarism Configuration
- */
+
 @RestController
 public class ConfigPlagiarismController {
 
