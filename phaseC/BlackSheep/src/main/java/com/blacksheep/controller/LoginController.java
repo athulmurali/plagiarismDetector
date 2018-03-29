@@ -40,19 +40,15 @@ public class LoginController {
         String userId   = cred.getUser().trim();
         String password = cred.getPassword().trim();
 
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
         ResultSet results = null;
-        try {
-
-            String CREDENTIALS_QUERY = "SELECT  * FROM credentials where userid = ? " + "AND  " + "password = ?";
-            IDBConfigUtil dbConfigUtil = new DBConfigUtil();
-
-            connection = DriverManager.getConnection(dbConfigUtil.getDbURL(), dbConfigUtil.getDbUser(), dbConfigUtil.getDbPass());
-            preparedStatement = connection.prepareStatement(CREDENTIALS_QUERY);
-            preparedStatement.setString(1, userId);
-            preparedStatement.setString(2, password);
-            results = preparedStatement.executeQuery();
+        String query = "SELECT  * FROM credentials where userid = ? " + "AND  " + "password = ?";
+        IDBConfigUtil dbConfigUtil = new DBConfigUtil();
+        try ( Connection con = DriverManager.getConnection( dbConfigUtil.getDbURL(), dbConfigUtil.getDbUser(), dbConfigUtil.getDbPass() ) ;
+                PreparedStatement ps = con.prepareStatement( query );          
+          )  {
+            ps.setString(1, userId);
+            ps.setString(2, password);
+            results = ps.executeQuery();
             logger.info("query executed : userId and password check");
 
             int count = 0;
@@ -69,15 +65,12 @@ public class LoginController {
             }
         }
         finally {
-        	connection.close();
-        	preparedStatement.close();
-        	results.close();
-                /*if (results != null)
-                    results.close();
+            try {
                 if (results != null)
-                    preparedStatement.close();
-                if (connection != null)
-                    connection.close();*/
+                    results.close();
+            } catch (SQLException e) {
+                logger.error("ERROR", e);
+            }
         }
     }
 }
