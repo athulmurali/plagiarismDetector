@@ -56,10 +56,11 @@ public class DBConfigUtil implements IDBConfigUtil {
             File file = new File(fileName);
             FileInputStream fileInput = new FileInputStream(file);
 
-            if (fileInput == null) {
+            /*if (fileInput == null) {
                 logger.info("Sorry, unable to find " + fileName);
                 return;
-            }
+            }*/
+            
             //load a properties file from class path, inside static method
             prop.load(fileInput);
 
@@ -72,11 +73,11 @@ public class DBConfigUtil implements IDBConfigUtil {
             ;
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error( e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error( e.getMessage());
+            // e.printStackTrace();
         }
-
     }
 
     //    the following are the field names in the propertyFile

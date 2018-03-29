@@ -15,6 +15,10 @@ import static org.junit.Assert.assertEquals;
 
 public class CommentsPlagiarismTest {
 
+	/**
+	 * test when there is only one line comment in each file
+	 * @throws IOException
+	 */
     @Test
     public void oneSingleLineComment() throws IOException {
         String fileText1 = "# change code order compare to 2 and 3\n" +
@@ -56,6 +60,10 @@ public class CommentsPlagiarismTest {
         assertEquals(1, result.get(0).size());
     }
 
+    /**
+     * test when there are two lines of comments in each file
+     * @throws IOException
+     */
     @Test
     public void twoSingleLineComments() throws IOException {
         String fileText1 = "# change code order compare to 2 and 3\n" +
@@ -87,6 +95,10 @@ public class CommentsPlagiarismTest {
         assertEquals(2, result.get(0).size());
     }
 
+    /**
+     * test when similar pencentage is less than 100
+     * @throws IOException
+     */
     @Test
     public void percentageLessThan100() throws IOException {
         String fileText1 = "# change code order compare to 2 and 3\n" +
@@ -118,6 +130,10 @@ public class CommentsPlagiarismTest {
         assertEquals(99.3, Double.valueOf(result.get(2).get(0)), 2);
     }
 
+    /**
+     * test when have the exactly same comment
+     * @throws IOException
+     */
     @Test
     public void percentage100() throws IOException {
         String fileText1 = "# change code order compare to 1 and 3\n" +
