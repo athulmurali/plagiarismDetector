@@ -30,10 +30,7 @@ public class EMailer{
     Properties emailProp;
 
     private static final String[] TEAM = {
-            "muralidharan.a@husky.neu.edu",
-            "havanagi.p@husky.neu.edu",
-            "tong.p@husky.neu.edu",
-            "lnu.m@husky.neu.edu"}; // list of team members to be notified
+           "athulmurali@hotmail.com"}; // list of team members to be notified
 
     // default from address for team notification
     private static final  String DEFAULT_FROM = "blacksheepdetector@gmail.com";
