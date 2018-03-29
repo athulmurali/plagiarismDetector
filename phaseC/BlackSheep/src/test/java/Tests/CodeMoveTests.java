@@ -79,17 +79,4 @@ public class CodeMoveTests {
         double percentage = Double.valueOf(result.get(2).get(0));
         assertEquals("codeMove part different test fail", percentage, 80.0, 1);
     }
-    
-    /**
-     * test when two same complicate files
-     */
-    @Test
-    public void complicate() throws IOException {
-        Context c = new Context(new CodeMoveDetector());
-        File f1 = new File(classloader.getResource("python/complixSimple1.py").getFile());
-        File f2 = new File(classloader.getResource("python/complixSimple2.py").getFile());
-        List<List<String>> result = c.executeStrategy(f1,f2);
-        double percentage = Double.valueOf(result.get(2).get(0));
-        assertEquals("comlicate same files test fail", percentage, 100.0, 1);
-    }
 }

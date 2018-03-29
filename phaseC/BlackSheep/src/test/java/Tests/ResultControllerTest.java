@@ -66,7 +66,7 @@ public class ResultControllerTest {
 
         double v1 = 40, v2 = 40,v3=40;
 
-        assertEquals(40.0,rc.calculateWeightedPercentage(v1,v2,v3),0);
+        assertEquals(39.6,rc.calculateWeightedPercentage(v1,v2,v3),0);
 
     }
 
@@ -178,7 +178,7 @@ public class ResultControllerTest {
         List<CreateJson> lcj = new ArrayList<>();
         lcj.add(cj);
 
-        rc.PostChoices(t);
+        rc.postChoices(t);
 
        // assertEquals(lcj.toString(),rc.PostChoices(t).toString());
 

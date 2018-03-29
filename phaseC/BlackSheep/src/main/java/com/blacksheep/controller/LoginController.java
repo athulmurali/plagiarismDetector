@@ -69,16 +69,12 @@ public class LoginController {
             }
         }
         finally {
-            try {
                 if (results != null)
                     results.close();
                 if (results != null)
                     preparedStatement.close();
                 if (connection != null)
                     connection.close();
-            } catch (SQLException e) {
-                logger.error("ERROR", e);
-            }
         }
     }
 }

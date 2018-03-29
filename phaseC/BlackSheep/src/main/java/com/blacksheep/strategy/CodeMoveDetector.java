@@ -204,7 +204,8 @@ public class CodeMoveDetector implements Plagiarism{
     public double detect(RuleContext t1, RuleContext t2) {
         int totalNum = getTotalNodeNum(t1);
         int matchNum = getMachedNodeNum(t1, t2);
-        return ((double)matchNum / (double) totalNum)*100;
+        if (totalNum == 0) return 0;
+        else return ((double)matchNum / (double) totalNum)*100;
     }
     /**
      * get the number of matched nodes in given two trees

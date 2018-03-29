@@ -72,11 +72,11 @@ public class DBConfigUtil implements IDBConfigUtil {
             ;
 
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error( e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error( e.getMessage());
+            // e.printStackTrace();
         }
-
     }
 
     //    the following are the field names in the propertyFile
