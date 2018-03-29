@@ -13,6 +13,7 @@ import com.blacksheep.parser.CreateJson;
 import com.blacksheep.parser.Matches;
 import com.blacksheep.parser.ParserFacade;
 import com.blacksheep.strategy.*;
+import com.blacksheep.util.AWSConfigUtil;
 import com.blacksheep.util.Utility;
 import org.antlr.v4.runtime.RuleContext;
 import org.slf4j.Logger;
@@ -269,5 +270,4 @@ public class ResultsController {
         return (0.33 * value1) +(0.33*value2 ) +(0.33 * value3);
 
     }
-
 }

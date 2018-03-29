@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,9 +74,17 @@ public class UploadTests {
 
 		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
-        File inputFile = new File(classloader.getResource("python/simple1.py").getFile());
-		MultipartFile multipartFile = new MockMultipartFile("simple1.py", new FileInputStream(inputFile));
+		byte[] array = null;
 
+		File inputFile = new File(classloader.getResource("python/simple1.py").getFile());	
+		try {
+			array = Files.readAllBytes(inputFile.toPath());
+		} catch (final IOException e) {
+		}
+		
+		MultipartFile multipartFile = new MockMultipartFile("simple1.py",
+				"simple1.py", "text/plain", array);
+		
 		MultipartFile[] files = { multipartFile };
 
 		uploadController.uploadFileSource(files);
@@ -98,9 +107,16 @@ public class UploadTests {
 
 		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
-        File inputFile = new File(classloader.getResource("python/simple1.py").getFile());
-		MultipartFile multipartFile = new MockMultipartFile("simple1.py", new FileInputStream(inputFile));
+		byte[] array = null;
 
+		File inputFile = new File(classloader.getResource("python/simple1.py").getFile());	
+		try {
+			array = Files.readAllBytes(inputFile.toPath());
+		} catch (final IOException e) {
+		}
+		
+		MultipartFile multipartFile = new MockMultipartFile("simple1.py",
+				"simple1.py", "text/plain", array);
 		MultipartFile[] files = { multipartFile };
 
 		uploadController.uploadFileSuspect(files);

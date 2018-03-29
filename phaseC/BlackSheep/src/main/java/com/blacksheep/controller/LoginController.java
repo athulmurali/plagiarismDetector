@@ -69,12 +69,15 @@ public class LoginController {
             }
         }
         finally {
-                if (results != null)
+        	connection.close();
+        	preparedStatement.close();
+        	results.close();
+                /*if (results != null)
                     results.close();
                 if (results != null)
                     preparedStatement.close();
                 if (connection != null)
-                    connection.close();
+                    connection.close();*/
         }
     }
 }

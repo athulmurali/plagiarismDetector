@@ -56,10 +56,11 @@ public class DBConfigUtil implements IDBConfigUtil {
             File file = new File(fileName);
             FileInputStream fileInput = new FileInputStream(file);
 
-            if (fileInput == null) {
+            /*if (fileInput == null) {
                 logger.info("Sorry, unable to find " + fileName);
                 return;
-            }
+            }*/
+            
             //load a properties file from class path, inside static method
             prop.load(fileInput);
 
