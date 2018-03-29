@@ -20,6 +20,16 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <sonar.sources>
+          src/main/java/
+        </sonar.sources>
+        <sonar.exclusions>
+          src/main/java/com/blacksheep/parser/*.java
+       	</sonar.exclusions>
+       	
+        <!-- <sonar.exclusions>**/*.js</sonar.exclusions> -->
+        <!-- <sonar.exclusions>**/*Python3*.java</sonar.exclusions> -->
+        <!-- <sonar.coverage.exclusions>**/*Python3*.java</sonar.coverage.exclusions> -->
     </properties>
 
 
@@ -28,7 +38,6 @@
     <!--</properties>-->
 
     <dependencies>
-
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>
@@ -166,6 +175,27 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+
+	    <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.9</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 

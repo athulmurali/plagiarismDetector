@@ -13,6 +13,7 @@ import com.blacksheep.parser.CreateJson;
 import com.blacksheep.parser.Matches;
 import com.blacksheep.parser.ParserFacade;
 import com.blacksheep.strategy.*;
+import com.blacksheep.util.AWSConfigUtil;
 import com.blacksheep.util.Utility;
 import org.antlr.v4.runtime.RuleContext;
 import org.slf4j.Logger;
@@ -31,8 +32,7 @@ import java.util.List;
 @RestController
 public class ResultsController {
 
-    private ByteArrayOutputStream baos1;
-    private ByteArrayOutputStream baos2;
+
 
     /**
      * Id of the logged in user
@@ -62,7 +62,7 @@ public class ResultsController {
     @RequestMapping(
             value = "/PostChoices",
             method = RequestMethod.POST)
-    public List<CreateJson> PostChoices(@RequestBody Types c){
+    public List<CreateJson> postChoices(@RequestBody Types c){
 
         try {
 
@@ -77,7 +77,6 @@ public class ResultsController {
             if (c.getC3() != null)
                 comment = true;
 
-            System.out.print("Success" + structure + codemove + comment);
 
             return inputStream();
         }
@@ -96,11 +95,14 @@ public class ResultsController {
      */
     @RequestMapping("/getResults3")
     public List<CreateJson> inputStream() {
+
+         ByteArrayOutputStream baos1;
+         ByteArrayOutputStream baos2;
         List<CreateJson> ljson = new ArrayList<>();
 
         try {
             AWSCredentials credentials = null;
-            credentials = new BasicAWSCredentials("AKIAJOOF3REKFDUYKJJQ", "KsxOKXynTIgJSlQxkeUADrHMh6VV7OoK5PsoqPV6");  //new ProfileCredentialsProvider().getCredentials();
+            credentials = new BasicAWSCredentials("AKIAJOOF3REKFDUYKJJQ", "KsxOKXynTIgJSlQxkeUADrHMh6VV7OoK5PsoqPV6");
 
             AmazonS3 s3 = AmazonS3ClientBuilder.standard()
                     .withCredentials(new AWSStaticCredentialsProvider(credentials))
@@ -110,20 +112,19 @@ public class ResultsController {
             String bucketName = "black-sheep-file-upload";
 
             // create folder into bucket
-            String Student1Folder = USERID + SUFFIX + "student1";
-            String Student2Folder = USERID + SUFFIX + "student2";
+            String studentOneFolder = USERID + SUFFIX + "student1";
+            String studentTwoFolder = USERID + SUFFIX + "student2";
 
             List student1List =
-                    s3.listObjects(bucketName, Student1Folder).getObjectSummaries();
+                    s3.listObjects(bucketName, studentOneFolder).getObjectSummaries();
 
             List student2List =
-                    s3.listObjects(bucketName, Student2Folder).getObjectSummaries();
+                    s3.listObjects(bucketName, studentTwoFolder).getObjectSummaries();
 
             student1List.remove(student1List.get(0));
             student2List.remove(student2List.get(0));
 
             ParserFacade parserFacade = new ParserFacade();
-
 
             CreateJson cj1;
 
@@ -150,7 +151,7 @@ public class ResultsController {
                     InputStream parserStream2 = new ByteArrayInputStream(baos2.toByteArray());
                     RuleContext sourceContext2 = parserFacade.parse(parserStream2);
 
-                    List<Matches> Listmatches = new ArrayList<>();
+                    List<Matches> listmatches = new ArrayList<>();
 
                     InputStream crcStream1 = new ByteArrayInputStream(baos1.toByteArray());
                     InputStream crcStream2 = new ByteArrayInputStream(baos2.toByteArray());
@@ -160,9 +161,9 @@ public class ResultsController {
                     Context context = new Context(new CRCPlagiarism());
                     List<List<String>> list4 = context.executeStrategy(crcStream1, crcStream2);
 
-                    if(list4.get(0).size() > 0){
+                    if(!list4.get(0).isEmpty()){
                         percentage = 100.0;
-                        createMatches(list4,"CRC Match", Listmatches);
+                        createMatches(list4,"CRC Match", listmatches);
                     }
                     else{
                         List<List<String>> list2 = new ArrayList<>();
@@ -186,13 +187,13 @@ public class ResultsController {
                         if(structure){
                             context = new Context(new NameChangePlagiarism());
                             list2 = context.executeStrategy(sourceContext1, sourceContext2);
-                            createMatches(list2,"Structure Match", Listmatches);
+                            createMatches(list2,"Structure Match", listmatches);
                         }
 
                         if(codemove){
                             context = new Context(new CodeMoveDetector());
                             list1 = context.executeStrategy(sourceContext1, sourceContext2);
-                            createMatches(list1,"CodeMovement Match", Listmatches);
+                            createMatches(list1,"CodeMovement Match", listmatches);
                         }
 
                         if(comment) {
@@ -200,14 +201,14 @@ public class ResultsController {
                             InputStream commentStream1 = new ByteArrayInputStream(baos1.toByteArray());
                             InputStream commentStream2 = new ByteArrayInputStream(baos2.toByteArray());
                             list3 = context.executeStrategy(commentStream1, commentStream2);
-                            createMatches(list3, "Comments Match", Listmatches);
+                            createMatches(list3, "Comments Match", listmatches);
                         }
 
                         percentage = calculateWeightedPercentage(Double.parseDouble(list1.get(2).get(0)),
                                 Double.parseDouble(list1.get(2).get(0)),Double.parseDouble(list3.get(2).get(0)));
                     }
 
-                    cj1 = new CreateJson(last1,last2,percentage,Listmatches);
+                    cj1 = new CreateJson(last1,last2,percentage,listmatches);
                     ljson.add(cj1);
 
                 }
@@ -265,11 +266,8 @@ public class ResultsController {
      */
     public double calculateWeightedPercentage(double value1,double value2, double value3){
 
-        // double value3 = 40;
-        double value4 = 40;
 
-        return (0.25 * value1) +(0.25*value2 ) +(0.25 * value3)+(0.25 * value4);
+        return (0.33 * value1) +(0.33*value2 ) +(0.33 * value3);
 
     }
-
 }
