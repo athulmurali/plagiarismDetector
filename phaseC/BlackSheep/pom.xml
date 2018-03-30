@@ -148,6 +148,11 @@
             <artifactId>spring-security-core</artifactId>
             <version>4.2.4.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.4.1</version>
+        </dependency>
 
     </dependencies>
 
