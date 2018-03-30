@@ -1,5 +1,5 @@
 package com.blacksheep.controller;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.blacksheep.Cred;
 import com.blacksheep.DBConfigUtil;
 import com.blacksheep.IDBConfigUtil;
@@ -10,13 +10,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.*;
 
+import static java.sql.DriverManager.*;
+
 /**
  * This class contains the implementation for the login use case
  */
 @RestController
 public class LoginController {
 
-
+    private static final  BCryptPasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
     private final Logger logger = Logger.getLogger(LoginController.class);
 
     /**
@@ -32,8 +34,7 @@ public class LoginController {
     @RequestMapping(
             value = "/userLogin",
             method = RequestMethod.POST)
-    public ResponseEntity<Object> process(@RequestBody Cred cred)
-            throws Exception {
+    public ResponseEntity<Object> process(@RequestBody Cred cred) throws SQLException {
 
         logger.info("endpoint : userLogin");
 
@@ -41,36 +42,44 @@ public class LoginController {
         String password = cred.getPassword().trim();
 
         ResultSet results = null;
-        String query = "SELECT  * FROM credentials where userid = ? " + "AND  " + "password = ?";
-        IDBConfigUtil dbConfigUtil = new DBConfigUtil();
-        try ( Connection con = DriverManager.getConnection( dbConfigUtil.getDbURL(), dbConfigUtil.getDbUser(), dbConfigUtil.getDbPass() ) ;
-                PreparedStatement ps = con.prepareStatement( query );          
-          )  {
-            ps.setString(1, userId);
-            ps.setString(2, password);
-            results = ps.executeQuery();
-            logger.info("query executed : userId and password check");
 
-            int count = 0;
-            while (results.next()) count++;
+        try {
 
-            if (count == 1) {
-                logger.info("userId & password matched");
-                return ResponseEntity.status(HttpStatus.OK).build();
-            }
-            else
+            IDBConfigUtil dbConfigUtil = new DBConfigUtil();
+            try (Connection connection = getConnection(dbConfigUtil.getDbURL(),
+                    dbConfigUtil.getDbUser(), dbConfigUtil.getDbPass()))
             {
-                logger.info("login check: userId & password pair not found");
-                return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+                String query = "SELECT  * FROM credentials where userid = ?";
+
+                try (PreparedStatement preparedStatement =
+                             connection.prepareStatement(query)) {
+
+
+                    preparedStatement.setString(1, userId);
+                    results = preparedStatement.executeQuery();
+                    String hashedPassword = null;
+                    while (results.next()) {
+                        logger.info("query executed :  User account with given userId exits");
+                        hashedPassword = results.getString("password");
+                    }
+                    if (hashedPassword != null && PASSWORD_ENCODER.matches(password, hashedPassword))
+                    {
+                        logger.info("userId & password matched ");
+                        return ResponseEntity.status(HttpStatus.OK).build();
+                    }
+                    else {
+                        logger.info("login check: userId & password pair not found");
+                        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+                    }
+                }
             }
+
         }
-        finally {
-            try {
-                if (results != null)
-                    results.close();
-            } catch (SQLException e) {
-                logger.error("ERROR", e);
-            }
+        finally
+        {
+            if (results != null)
+                results.close();
         }
+
     }
 }
