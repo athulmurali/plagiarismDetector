@@ -121,6 +121,9 @@ public class User
 
      */
     public static  int deleteUser(String  userId) throws SQLException, IOException {
+
+        int status  = ErrorCodes.CONNECTION_FAILURE; // return status
+
         DBConfigUtil dbConfigUtil = new DBConfigUtil();
 
         try (Connection connection = getConnection(dbConfigUtil.getDbURL(),
@@ -133,10 +136,10 @@ public class User
                     int result = preparedStatement.executeUpdate();
                     if (result == 0) {
                         logger.info("query executed : User account delete | But Invalid User ID");
-                        return ErrorCodes.USERID_INVALID;
+                        status =  ErrorCodes.USERID_INVALID;
                     } else if (result == 1) {
                         logger.info("query executed : 1 User account delete");
-                        return ErrorCodes.SUCCESS;
+                        status =  ErrorCodes.SUCCESS;
 
                     }
                 }
@@ -144,7 +147,7 @@ public class User
             }
         }
 
-        return ErrorCodes.CONNECTION_FAILURE;
+        return status;
     }
 
 
@@ -165,7 +168,7 @@ public class User
      */
 
     public static boolean isEmailTaken(String email) throws SQLException, IOException {
-
+        int count = 0; // return the result | Update on success or failure of operations
         DBConfigUtil dbConfigUtil = new DBConfigUtil();
         String query = "select * from credentials WHERE userid =?";
 
@@ -175,18 +178,14 @@ public class User
                         dbConfigUtil.getDbPass())) {
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, email);
-                int count;
                 try (ResultSet results = preparedStatement.executeQuery()) {
                     logger.info("SQL : executed query check if username exists");
-
-                    count = 0;
                     while (results.next()) count++;
                 }
 
-                return (count >0);
             }
         }
-
+        return (count>0);
     }
 
 
@@ -224,5 +223,4 @@ public class User
             }
         }
     }
-
 }

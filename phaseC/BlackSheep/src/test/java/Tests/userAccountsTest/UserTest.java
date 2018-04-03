@@ -1,3 +1,10 @@
+/**
+ * File :UserTest.java
+ *
+ * Author : Athul Muralidhran
+ * Version : 2
+ * Updated : 6: 30 pm, April 3, 2018 //Added test case for invalid userId
+ */
 package Tests.userAccountsTest;
 
 import com.blacksheep.ErrorCodes;
@@ -12,6 +19,13 @@ import static com.blacksheep.models.User.deleteUser;
 import static org.junit.Assert.assertEquals;
 
 public class UserTest {
+
+    // a valid userId or email is supposed to be in the format of email
+    // abcd, 1234 cannot be a valid user Id for creation unless directly created from the backend
+    // mike is an exception
+
+    private static final String INVLAID_EMAIL = "user";
+
     /**
      * Test  for create user : invalid userId or emailId passed (An id that doesn't exist)
      * Note : Once a user is created must be deleted
@@ -162,5 +176,23 @@ public class UserTest {
         User user = new User(username,password,confirmPassword,role,percentage);
 
         assertEquals(ErrorCodes.PERCENTAGE_INVALID,User.createUser(user));
+    }
+
+
+    /**
+     * Test added for invalid user Id or email format
+     * @throws IOException
+     * @throws SQLException
+     */
+    @Test
+    public void createUserInvalidEmailId() throws IOException, SQLException {
+        String username = "abcd";
+        String password = "1234";
+        String confirmPassword = "1234";
+        String role = "professor";
+        Integer percentage = 0;
+        User user = new User(username,password,confirmPassword,role,percentage);
+
+        assertEquals(ErrorCodes.EMAIL_INVALID,User.createUser(user));
     }
 }

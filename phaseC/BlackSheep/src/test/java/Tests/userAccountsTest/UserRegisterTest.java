@@ -5,7 +5,7 @@
  * Created          : April 2, 6 :00 pm   2018
  * Version          : 1
  */
-package Tests.utilTests;
+package Tests.userAccountsTest;
 
 import com.blacksheep.ErrorCodes;
 import com.blacksheep.controller.UserRegister;
