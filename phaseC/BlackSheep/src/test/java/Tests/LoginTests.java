@@ -57,4 +57,21 @@ public class LoginTests {
         assertEquals(ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build(),l.process(c));
     }
 
+
+
+    /**
+     * Test -  user exists but invalid password
+     */
+    @Test
+    public void ValidUserInvalidPassword() throws SQLException, IOException {
+
+        LoginController l = new LoginController();
+
+        Cred c = new Cred();
+        c.setUser("mike");
+        c.setPassword("mike"); //  Not the actual password
+        assertEquals(ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build(),l.process(c));
+    }
+
+
 }
