@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
@@ -30,7 +31,7 @@ public class LoginTests {
      * Tests if the login authentication is working
      */
     @Test
-    public void test3() throws SQLException {
+    public void test3() throws SQLException, IOException {
 
         LoginController l = new LoginController();
 
@@ -47,7 +48,7 @@ public class LoginTests {
      */
     @Test
 
-    public void test4() throws SQLException {
+    public void test4() throws SQLException, IOException {
         LoginController l = new LoginController();
 
         Cred c = new Cred();

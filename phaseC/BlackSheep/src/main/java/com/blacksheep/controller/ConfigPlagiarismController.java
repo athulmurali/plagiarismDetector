@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
 import java.sql.*;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class ConfigPlagiarismController {
      */
     @RequestMapping( value = "/configPercentage", method = RequestMethod.POST)
     public ResponseEntity<Object> configPercentageController( @RequestBody Map<String, Object> payload)
-            throws  SQLException {
+            throws SQLException, IOException {
         logger.info("Entering endpoint : /configPercentage");
         logger.info("userId" + payload.get("user"));
         logger.info(payload.get("percentage: " + "percentage"));
@@ -60,7 +61,7 @@ public class ConfigPlagiarismController {
      * @throws MessagingException
      */
 
-    private  boolean updatePlagiarismPercentage(String userId, int percentage) throws  SQLException {
+    private  boolean updatePlagiarismPercentage(String userId, int percentage) throws SQLException, IOException {
         IDBConfigUtil dbConfigUtil = new DBConfigUtil();
 
         try (Connection connection =
