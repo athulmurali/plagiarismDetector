@@ -63,7 +63,7 @@ public class LoginTests {
      * Test -  user exists but invalid password
      */
     @Test
-    public void ValidUserInvalidPassword() throws SQLException {
+    public void ValidUserInvalidPassword() throws SQLException, IOException {
 
         LoginController l = new LoginController();
 
