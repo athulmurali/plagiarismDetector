@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +26,7 @@ public class ConfigPlagiarismControllerTest {
      * Test for percentage update
      */
     @Test
-    public void configPercentageController() throws SQLException {
+    public void configPercentageController() throws SQLException, IOException {
         ConfigPlagiarismController configController = new ConfigPlagiarismController();
         Map<String,Object> testData = new HashMap<>();
 
@@ -45,7 +46,7 @@ public class ConfigPlagiarismControllerTest {
      * Test for percentage update
      */
     @Test
-    public void testConfigPercentageControllerFailure() throws SQLException {
+    public void testConfigPercentageControllerFailure() throws SQLException, IOException {
         String invalidUserId = "NON_EXISTING_USR";
         ConfigPlagiarismController configController = new ConfigPlagiarismController();
         Map<String,Object> testData = new HashMap<>();
