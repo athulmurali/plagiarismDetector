@@ -30,29 +30,26 @@ public class EmailConfigUtil {
     /**
      * Private constructor to hide implicit public constructor
      */
-    private EmailConfigUtil(){
+    private EmailConfigUtil() {
     }
 
     /**
-     *
      * @return an obj of Properties required for email config
      */
-    public static Properties returnProperties() {
+    public static Properties returnProperties() throws IOException {
 
         logger.debug("Loading emailConfig.properties");
         Properties emailProp = new Properties();
-        try {
-            ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
-            File file = new File(classloader.getResource(FILE_NAME).getFile());
-            FileInputStream fileInput = new FileInputStream(file);
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
-            emailProp.load(fileInput);
-        } catch ( IOException e) {
-            logger.error(e.getMessage());
-        }
+        File file = new File(classloader.getResource(FILE_NAME).getFile());
+        FileInputStream fileInput = new FileInputStream(file);
+
+        emailProp.load(fileInput);
         return emailProp;
     }
+
 }
 
 

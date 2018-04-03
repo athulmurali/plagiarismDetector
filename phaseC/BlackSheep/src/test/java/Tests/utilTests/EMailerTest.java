@@ -4,11 +4,15 @@ import com.blacksheep.util.EMailer;
 import org.junit.Test;
 
 import javax.mail.MessagingException;
+import java.io.IOException;
 
 
 public class EMailerTest {
 
     private final EMailer emailerObj = new EMailer();
+
+    public EMailerTest() throws IOException {
+    }
 
     /**
      * Test for emailing one valid id
