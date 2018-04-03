@@ -23,7 +23,7 @@ pipeline {
        stage('SonarQube') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                        sh 'mvn -f phaseC/BlackSheep/pom.xml clean install'
+		                        sh 'mvn -f phaseC/BlackSheep/pom.xml clean install -Dsonar.coverage.exclusions=src/main/java/com/blacksheep/DBConfigUtil.java'
                         sh 'mvn -f phaseC/BlackSheep/pom.xml sonar:sonar'
                 }
             }
@@ -36,7 +36,7 @@ pipeline {
                retry(5) {
                     script {
                     def qg = waitForQualityGate()
-                    if (qg.status != 'OK') {
+                    if (qg.status != 'OK' && qg.status != 'WARN') {
                   error "Pipeline aborted due to quality gate failure: ${qg.status}"
               }
             }
@@ -47,4 +47,3 @@ pipeline {
 
   }
 }
-

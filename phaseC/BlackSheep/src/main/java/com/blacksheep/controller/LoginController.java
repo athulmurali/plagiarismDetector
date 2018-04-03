@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.sql.*;
 
 import static java.sql.DriverManager.*;
@@ -34,16 +35,12 @@ public class LoginController {
     @RequestMapping(
             value = "/userLogin",
             method = RequestMethod.POST)
-    public ResponseEntity<Object> process(@RequestBody Cred cred) throws SQLException {
+    public ResponseEntity<Object> process(@RequestBody Cred cred) throws SQLException, IOException {
 
         logger.info("endpoint : userLogin");
 
         String userId   = cred.getUser().trim();
         String password = cred.getPassword().trim();
-
-        ResultSet results = null;
-
-        try {
 
             IDBConfigUtil dbConfigUtil = new DBConfigUtil();
             try (Connection connection = getConnection(dbConfigUtil.getDbURL(),
@@ -54,32 +51,27 @@ public class LoginController {
                 try (PreparedStatement preparedStatement =
                              connection.prepareStatement(query)) {
 
-
                     preparedStatement.setString(1, userId);
-                    results = preparedStatement.executeQuery();
-                    String hashedPassword = null;
-                    while (results.next()) {
-                        logger.info("query executed :  User account with given userId exits");
-                        hashedPassword = results.getString("password");
-                    }
-                    if (hashedPassword != null && PASSWORD_ENCODER.matches(password, hashedPassword))
+                    try (ResultSet results = preparedStatement.executeQuery())
                     {
-                        logger.info("userId & password matched ");
-                        return ResponseEntity.status(HttpStatus.OK).build();
+
+                        String hashedPassword = null;
+                        while (results.next()) {
+                            logger.info("query executed :  User account with given userId exits");
+                            hashedPassword = results.getString("password");
+                        }
+                        if (hashedPassword != null && PASSWORD_ENCODER.matches(password, hashedPassword))
+                        {
+                            logger.info("userId & password matched ");
+                            return ResponseEntity.status(HttpStatus.OK).build();
+                        }
+                        else {
+                            logger.info("login check: userId & password pair not found");
+                            return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+                        }
                     }
-                    else {
-                        logger.info("login check: userId & password pair not found");
-                        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
-                    }
+
                 }
             }
-
         }
-        finally
-        {
-            if (results != null)
-                results.close();
-        }
-
     }
-}

@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
@@ -30,7 +31,7 @@ public class LoginTests {
      * Tests if the login authentication is working
      */
     @Test
-    public void test3() throws SQLException {
+    public void test3() throws SQLException, IOException {
 
         LoginController l = new LoginController();
 
@@ -47,7 +48,7 @@ public class LoginTests {
      */
     @Test
 
-    public void test4() throws SQLException {
+    public void test4() throws SQLException, IOException {
         LoginController l = new LoginController();
 
         Cred c = new Cred();
@@ -55,5 +56,22 @@ public class LoginTests {
         c.setPassword("passcode");
         assertEquals(ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build(),l.process(c));
     }
+
+
+
+    /**
+     * Test -  user exists but invalid password
+     */
+    @Test
+    public void ValidUserInvalidPassword() throws SQLException, IOException {
+
+        LoginController l = new LoginController();
+
+        Cred c = new Cred();
+        c.setUser("mike");
+        c.setPassword("mike"); //  Not the actual password
+        assertEquals(ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build(),l.process(c));
+    }
+
 
 }

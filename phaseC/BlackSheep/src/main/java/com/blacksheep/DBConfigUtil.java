@@ -13,8 +13,8 @@ public class DBConfigUtil implements IDBConfigUtil {
     // Make sure the config.properties file is present else, an exception will be thrown.
     // Watch the console for file related exceptions.
 
-    // Location of the db config with fileName:
-    private static final String fileName = "config.properties";
+    // Location of the db config with FILE_NAME:
+    private static final String FILE_NAME = "config.properties";
 
     private final Logger logger = Logger.getLogger(LoginController.class);
 
@@ -48,19 +48,16 @@ public class DBConfigUtil implements IDBConfigUtil {
      *  Stores it in its private variables
      *  Can Be instantiated and values can be obtained using the above get methods
      */
-    public DBConfigUtil() {
+    public DBConfigUtil() throws IOException{
         logger.info("DBConfigUtil.js : loading dbConfig properties");
-        Properties prop = new Properties();
 
-        try {
-            File file = new File(fileName);
-            FileInputStream fileInput = new FileInputStream(file);
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
-            /*if (fileInput == null) {
-                logger.info("Sorry, unable to find " + fileName);
-                return;
-            }*/
-            
+        File file = new File(classloader.getResource(FILE_NAME).getFile());
+        try(FileInputStream fileInput = new FileInputStream(file))
+        {
+            Properties prop = new Properties();
+
             //load a properties file from class path, inside static method
             prop.load(fileInput);
 
@@ -70,13 +67,6 @@ public class DBConfigUtil implements IDBConfigUtil {
 
             //get the property value and print it out
             logger.info(prop.getProperty("dbURL"));
-            ;
-
-        } catch (FileNotFoundException e) {
-            logger.error( e.getMessage());
-        } catch (IOException e) {
-            logger.error( e.getMessage());
-            // e.printStackTrace();
         }
     }
 
