@@ -3,11 +3,11 @@
  *
  * Author           : Athul Muralidharan
  * Created          : April 2, 6 :00 pm   2018
- * Version          : 1
+ * Version          : 2
  */
 package Tests.userAccountsTest;
 
-import com.blacksheep.ErrorCodes;
+ import com.blacksheep.ErrorCodes;
 import com.blacksheep.controller.UserRegister;
 import com.blacksheep.models.User;
 import net.minidev.json.JSONObject;

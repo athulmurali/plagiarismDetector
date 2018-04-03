@@ -5,6 +5,7 @@ import javax.mail.*;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
 
@@ -39,7 +40,7 @@ public class EMailer{
     /**
      * Default Constructor : Sets the email property value from EmailConfigUtil class
      */
-     public  EMailer() {
+     public  EMailer() throws IOException {
          this.emailProp = EmailConfigUtil.returnProperties();
     }
 
