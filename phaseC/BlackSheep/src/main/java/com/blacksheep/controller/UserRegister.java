@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -25,8 +26,7 @@ public class UserRegister {
     @RequestMapping(
             value = "/userRegister",
             method = RequestMethod.POST)
-    public ResponseEntity<Object> userRegister(@RequestBody Map<String,Object> userDetails) throws SQLException
-    {
+    public ResponseEntity<Object> userRegister(@RequestBody Map<String,Object> userDetails) throws SQLException, IOException {
 
         String userId               = (String) userDetails.get("email");
         String password             = (String) userDetails.get("password");
@@ -57,7 +57,7 @@ public class UserRegister {
     @RequestMapping(value="/isEmailTaken", method = RequestMethod.GET)
     public @ResponseBody
     ResponseEntity<Object>  isEmailTaken
-    (@RequestParam("email") String email) throws SQLException {
+    (@RequestParam("email") String email) throws SQLException, IOException {
         logger.info("email: " + email);
         if(User.isEmailTaken(email)){
             logger.info("Another user registered under the same email Id");

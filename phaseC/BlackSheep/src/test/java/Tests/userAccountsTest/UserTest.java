@@ -3,9 +3,12 @@ package Tests.userAccountsTest;
 import com.blacksheep.ErrorCodes;
 import com.blacksheep.models.User;
 import org.junit.Test;
+
+import java.io.IOException;
 import java.sql.SQLException;
 
 import static com.blacksheep.ErrorCodes.*;
+import static com.blacksheep.models.User.deleteUser;
 import static org.junit.Assert.assertEquals;
 
 public class UserTest {
@@ -16,7 +19,7 @@ public class UserTest {
      * is unavoidable
      */
     @Test
-    public void createDeleteUser() throws SQLException {
+    public void createDeleteUser() throws SQLException, IOException {
         String username = "newUserCreated@gmail.com";
         String password = "1234";
         String confirmPassword = "1234";
@@ -25,19 +28,19 @@ public class UserTest {
         User user = new User(username,password,confirmPassword,role,percentage);
 
         assertEquals(ErrorCodes.SUCCESS,User.createUser(user));
-        assertEquals(ErrorCodes.SUCCESS, User.deleteUser(username));
+        assertEquals(ErrorCodes.SUCCESS, deleteUser(username));
     }
 
     /**
      * Test  for create user : invalid userId or emailId passed (An id that doesn't exist)
      * Note : Once a user is created must be deleted
      * Hence  adding delete function to createUser Test
-     * is unavoidable
+     * is unavoidable:
      *
      * Second test for creating user, to achieve branch of user Role as ta
      */
     @Test
-    public void createDeleteUser2() throws SQLException {
+    public void createDeleteUser2() throws SQLException, IOException {
         String username = "rando@gmail.com";
         String password = "1234";
         String confirmPassword = "1234";
@@ -46,14 +49,14 @@ public class UserTest {
         User user = new User(username,password,confirmPassword,role,percentage);
 
         assertEquals(ErrorCodes.SUCCESS,User.createUser(user));
-        assertEquals(ErrorCodes.SUCCESS, User.deleteUser(username));
+        assertEquals(ErrorCodes.SUCCESS, deleteUser(username));
     }
 
     /**
      * Test  for existing email : invalid userId or emailId passed (An id that doesn't exist)
      */
     @Test
-    public void createUserTakenEmail() throws SQLException {
+    public void createUserTakenEmail() throws SQLException, IOException {
         String username         = "ak123@gmail.com";
         String password         = "1234";
         String confirmPassword  = "1234";
@@ -67,9 +70,9 @@ public class UserTest {
      * Test for deleting a non existing user ID (invalid)
      */
     @Test
-    public void deleteInvalidUserId() throws SQLException {
+    public void deleteInvalidUserId() throws SQLException, IOException {
         String invalidUser = "INVLAID@GMAIL.COM";
-        assertEquals(User.deleteUser(invalidUser), USERID_INVALID);
+        assertEquals(deleteUser(invalidUser), USERID_INVALID);
     }
 
     /**
@@ -77,12 +80,12 @@ public class UserTest {
      * @throws SQLException
      */
     @Test
-    public void isEmailTaken() throws SQLException {
+    public void isEmailTaken() throws SQLException, IOException {
         assert (User.isEmailTaken("mike"));
     }
 
     @Test
-    public void passwordTooShort() throws SQLException {
+    public void passwordTooShort() throws SQLException, IOException {
         String username         = "ak1234987@gmail.com"; // new userID
         String password         = "123";
         String confirmPassword  = "123";
@@ -100,7 +103,7 @@ public class UserTest {
      * @throws SQLException
      */
     @Test
-    public void passwordMismatch() throws SQLException {
+    public void passwordMismatch() throws SQLException, IOException {
         String username         = "ak1234987@gmail.com"; // new userID
         String password         = "12345";
         String confirmPassword  = "1234";
@@ -117,7 +120,7 @@ public class UserTest {
      * @throws SQLException
      */
     @Test
-    public void roleInvalid() throws SQLException {
+    public void roleInvalid() throws SQLException, IOException {
         String username         = "ak1234987@gmail.com"; // new userID
         String password         = "12345";
         String confirmPassword  = "12345";
@@ -133,7 +136,7 @@ public class UserTest {
      * Test for invalid percentage
      */
     @Test
-    public void testSubZeroPercentage() throws SQLException {
+    public void testSubZeroPercentage() throws SQLException, IOException {
 
         String username         = "ak1234987@gmail.com"; // new userID
         String password         = "12345";
@@ -149,7 +152,7 @@ public class UserTest {
      * Test for invalid percentage
      */
     @Test
-    public void testAbove100Percentage() throws SQLException {
+    public void testAbove100Percentage() throws SQLException, IOException {
 
         String username         = "ak1234987@gmail.com"; // new userID
         String password         = "12345";

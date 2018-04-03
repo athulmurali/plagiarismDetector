@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.apache.commons.validator.*;
 
 
+import java.io.IOException;
 import java.sql.*;
 
 import static java.sql.DriverManager.*;
@@ -23,8 +24,8 @@ import static java.sql.DriverManager.*;
 public class User
 {
 
-    private static String PROFESSOR = "professor";
-    private static String TA = "ta";
+    private static final String PROFESSOR = "professor";
+    private static final String TA = "ta";
 
     private String email;
     private String password;
@@ -48,7 +49,14 @@ public class User
     }
 
 
-
+    /**
+     * Sets the role for the user object
+     * if the supplied user role is
+     * professor then assign role professor
+     * if the supplied user role is TA, then assign TA
+     * else null
+     * @param role
+     */
     private void setRoleEnum(String role)
     {
         if (role.equals(PROFESSOR))
@@ -67,7 +75,7 @@ public class User
      * End point access to be given
 
      */
-    public static  int createUser(User user) throws SQLException {
+    public static  int createUser(User user) throws SQLException, IOException {
 
         // if - email ID format is not right
         if (! EmailValidator.getInstance().isValid(user.email))
@@ -112,7 +120,7 @@ public class User
      * End point access must not be given ! Never
 
      */
-    public static  int deleteUser(String  userId) throws SQLException {
+    public static  int deleteUser(String  userId) throws SQLException, IOException {
         DBConfigUtil dbConfigUtil = new DBConfigUtil();
 
         try (Connection connection = getConnection(dbConfigUtil.getDbURL(),
@@ -156,7 +164,7 @@ public class User
 
      */
 
-    public static boolean isEmailTaken(String email) throws SQLException {
+    public static boolean isEmailTaken(String email) throws SQLException, IOException {
 
         DBConfigUtil dbConfigUtil = new DBConfigUtil();
         String query = "select * from credentials WHERE userid =?";
@@ -191,10 +199,11 @@ public class User
      * End point access must not be given ! Never
      * @param user
      */
-    private static void createUserRecord(User user) throws SQLException {
+    private static void createUserRecord(User user) throws SQLException, IOException {
 
         DBConfigUtil dbConfigUtil = new DBConfigUtil();
-        String CREDENTIALS_QUERY = "INSERT into  credentials" + "(userid, password, role, percentage) " +
+        String createUserQuery = "INSERT into  credentials" +
+                "(userid, password, role, percentage) " +
                 "VALUES(?,?,?,?)";
 
         try (Connection connection =
@@ -202,7 +211,7 @@ public class User
                              dbConfigUtil.getDbUser(),
                              dbConfigUtil.getDbPass()))
         {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(CREDENTIALS_QUERY))
+            try (PreparedStatement preparedStatement = connection.prepareStatement(createUserQuery))
             {
                 preparedStatement.setString(1, user.email);
                 preparedStatement.setString(2,
