@@ -29,6 +29,7 @@ public class LoginTests {
 
     /**
      * Tests if the login authentication is working
+     * @throws IOException 
      */
     @Test
     public void test3() throws SQLException, IOException {
@@ -45,6 +46,7 @@ public class LoginTests {
     /**
      * Tests if the login authentication throws an error if
      * wrong creds are given
+     * @throws IOException 
      */
     @Test
 
@@ -56,22 +58,5 @@ public class LoginTests {
         c.setPassword("passcode");
         assertEquals(ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build(),l.process(c));
     }
-
-
-
-    /**
-     * Test -  user exists but invalid password
-     */
-    @Test
-    public void ValidUserInvalidPassword() throws SQLException, IOException {
-
-        LoginController l = new LoginController();
-
-        Cred c = new Cred();
-        c.setUser("mike");
-        c.setPassword("mike"); //  Not the actual password
-        assertEquals(ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build(),l.process(c));
-    }
-
 
 }

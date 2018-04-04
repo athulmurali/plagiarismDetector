@@ -1,29 +1,18 @@
 package Tests;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.blacksheep.Types;
 import com.blacksheep.controller.ResultsController;
 import com.blacksheep.controller.UploadController;
 import com.blacksheep.parser.CreateJson;
 import com.blacksheep.parser.Matches;
-import com.blacksheep.util.AWSConfigUtil;
 
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -196,9 +185,9 @@ public class ResultControllerTest {
 		List<CreateJson> lcj = new ArrayList<>();
 		lcj.add(cj);
 
-		rc.postChoices(t);
+		rc.postChoices(t, "Mike");
 		
-		rc.inputStream();
+		rc.initPlagiarismDetection("Mike");
 
 		// assertEquals(lcj.toString(),rc.PostChoices(t).toString());
 
@@ -235,9 +224,9 @@ public class ResultControllerTest {
 		List<CreateJson> lcj = new ArrayList<>();
 		lcj.add(cj);
 
-		rc.postChoices(t);
+		rc.postChoices(t, "Mike");
 		
-		rc.inputStream();
+		rc.initPlagiarismDetection("Mike");
 
 		// assertEquals(lcj.toString(),rc.PostChoices(t).toString());
 
@@ -275,9 +264,9 @@ public class ResultControllerTest {
 		List<CreateJson> lcj = new ArrayList<>();
 		lcj.add(cj);
 
-		rc.postChoices(t);
+		rc.postChoices(t, "Mike");
 		
-		rc.inputStream();
+		rc.initPlagiarismDetection("Mike");
 
 		// assertEquals(lcj.toString(),rc.PostChoices(t).toString());
 
@@ -315,9 +304,9 @@ public class ResultControllerTest {
 		List<CreateJson> lcj = new ArrayList<>();
 		lcj.add(cj);
 
-		rc.postChoices(t);
+		rc.postChoices(t, "Mike");
 		
-		rc.inputStream();
+		rc.initPlagiarismDetection("Mike");
 
 		// assertEquals(lcj.toString(),rc.PostChoices(t).toString());
 
@@ -345,7 +334,7 @@ public class ResultControllerTest {
 		MultipartFile[] files1 = { multipartFile1, multipartFile2 };
 		MultipartFile[] files2 = { multipartFile2, multipartFile1 };
 
-		uploadController.uploadFileSource(files1);
-		uploadController.uploadFileSuspect(files2);
+		uploadController.uploadFileSource("Mike", "Project1", files1);
+		uploadController.uploadFileSource("Mike", "Project2", files2);
 	}
 }

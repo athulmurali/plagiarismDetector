@@ -14,11 +14,11 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.blacksheep.controller.UploadController;
 import com.blacksheep.util.AWSConfigUtil;
+import com.blacksheep.util.AWSConnection;
 
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -35,16 +35,15 @@ public class UploadTests {
 		AWSConfigUtil util = new AWSConfigUtil();
 		AmazonS3 s3 = createAWSClient(util);
 
-		UploadController uploadController = new UploadController();
 		String bucketName = util.getAwsBucketName();
-		uploadController.createFolder(bucketName, "test", s3);
+		AWSConnection.createFolder(bucketName, "test", s3);
 
 		List<S3ObjectSummary> fileList = s3.listObjects(bucketName, "test").getObjectSummaries();
 		List<String> keys = new ArrayList<>();
 		for (S3ObjectSummary file : fileList) {
 			keys.add(file.getKey());
 		}
-		assertEquals(true, keys.contains("test/"));
+		assertEquals(true, keys.contains("test"));
 	}
 
 	@Test
@@ -52,9 +51,8 @@ public class UploadTests {
 		AWSConfigUtil util = new AWSConfigUtil();
 		AmazonS3 s3 = createAWSClient(util);
 
-		UploadController uploadController = new UploadController();
 		String bucketName = util.getAwsBucketName();
-		uploadController.deleteFolder(bucketName, "test", s3);
+		AWSConnection.deleteFolder(bucketName, "test", s3);
 
 		List<S3ObjectSummary> fileList = s3.listObjects(bucketName, "test").getObjectSummaries();
 		List<String> keys = new ArrayList<>();
@@ -76,27 +74,26 @@ public class UploadTests {
 
 		byte[] array = null;
 
-		File inputFile = new File(classloader.getResource("python/simple1.py").getFile());	
+		File inputFile = new File(classloader.getResource("python/simple1.py").getFile());
 		try {
 			array = Files.readAllBytes(inputFile.toPath());
 		} catch (final IOException e) {
 		}
-		
-		MultipartFile multipartFile = new MockMultipartFile("simple1.py",
-				"simple1.py", "text/plain", array);
-		
+
+		MultipartFile multipartFile = new MockMultipartFile("simple1.py", "simple1.py", "text/plain", array);
+
 		MultipartFile[] files = { multipartFile };
 
-		uploadController.uploadFileSource(files);
+		uploadController.uploadFileSource("Mike", "Project1", files);
 
 		List<S3ObjectSummary> fileList = s3.listObjects(bucketName, "test").getObjectSummaries();
 		List<String> keys = new ArrayList<>();
 		for (S3ObjectSummary file : fileList) {
 			keys.add(file.getKey());
 		}
-		assertEquals(new ResponseEntity<>(HttpStatus.OK), uploadController.uploadFileSource(files));
+		assertEquals(new ResponseEntity<>(HttpStatus.OK), uploadController.uploadFileSource("Mike", "Project1", files));
 	}
-	
+
 	@Test
 	public void testUploadSuspectFiles() throws FileNotFoundException, IOException {
 		AWSConfigUtil util = new AWSConfigUtil();
@@ -109,24 +106,23 @@ public class UploadTests {
 
 		byte[] array = null;
 
-		File inputFile = new File(classloader.getResource("python/simple1.py").getFile());	
+		File inputFile = new File(classloader.getResource("python/simple1.py").getFile());
 		try {
 			array = Files.readAllBytes(inputFile.toPath());
 		} catch (final IOException e) {
 		}
-		
-		MultipartFile multipartFile = new MockMultipartFile("simple1.py",
-				"simple1.py", "text/plain", array);
+
+		MultipartFile multipartFile = new MockMultipartFile("simple1.py", "simple1.py", "text/plain", array);
 		MultipartFile[] files = { multipartFile };
 
-		uploadController.uploadFileSuspect(files);
+		uploadController.uploadFileSource("Mike", "Project1", files);
 
 		List<S3ObjectSummary> fileList = s3.listObjects(bucketName, "test").getObjectSummaries();
 		List<String> keys = new ArrayList<>();
 		for (S3ObjectSummary file : fileList) {
 			keys.add(file.getKey());
 		}
-		assertEquals(new ResponseEntity<>(HttpStatus.OK), uploadController.uploadFileSource(files));
+		assertEquals(new ResponseEntity<>(HttpStatus.OK), uploadController.uploadFileSource("Mike", "Project1", files));
 	}
 
 	/**

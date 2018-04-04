@@ -34,6 +34,7 @@ public class CRCPlagiarism implements Plagiarism {
         result.add(new ArrayList<>());
         result.add(new ArrayList<>());
         result.add(new ArrayList<>());
+        Scanner scanner1 = null;
         try {
             ByteArrayOutputStream baos = Utility.backupInput(input1);
             InputStream crcStream = new ByteArrayInputStream(baos.toByteArray());
@@ -62,7 +63,8 @@ public class CRCPlagiarism implements Plagiarism {
 
             if(crc1 == crc2){
 
-                String s1 = new Scanner(crcStream).useDelimiter("\\A").next();
+                scanner1 = new Scanner(crcStream);
+				String s1 = scanner1.useDelimiter("\\A").next();
                 String[] codeLines1 = s1.split("\\r?\\n");
 
                 for(int i = 0; i < codeLines1.length; i++){
@@ -83,6 +85,8 @@ public class CRCPlagiarism implements Plagiarism {
             return result;
         }
         finally {
+        	if (scanner1 != null)
+        		scanner1.close();
             input1.close();
             input2.close();
         }
