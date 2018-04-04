@@ -1,0 +1,22 @@
+.legends {
+    width: 655px;
+    margin: auto;
+    padding: 20px;
+}
+
+.table{
+    border: 3px white solid;
+    border-radius: 20px;
+}
+
+
+body {
+    background-color: #cc0000;
+    color: white;
+    font-family: 'Dosis', sans-serif;"
+
+}
+
+#codeButton{
+    width: 150px;
+}

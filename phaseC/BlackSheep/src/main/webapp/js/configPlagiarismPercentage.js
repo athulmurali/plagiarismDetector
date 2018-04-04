@@ -24,3 +24,7 @@ elem.addEventListener("input", rangeValue);
 
 
 
+function redirectToCodeStats()
+{
+    window.location = "../templates/codeStats.html";
+}
