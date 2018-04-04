@@ -1,22 +1,22 @@
 @import url(https://fonts.googleapis.com/css?family=Dosis:700);
 body {
     font-family: "Dosis", Helvetica, Arial, sans-serif;
-    background: #ecf0f1;
-    color: #34495e;
+    background: #cc0000;
+    color: white;
     padding-top: 40px;
     text-shadow: white 1px 1px 1px;
 }
 .value {
-    border-bottom: 4px dashed #bdc3c7;
+    border-bottom: 4px;
     text-align: center;
     font-weight: bold;
     font-size: 10em;
-    width: 300px;
-    height: 100px;
+    width: auto;
+    height: 80px;
     line-height: 60px;
     margin: 40px auto;
     letter-spacing: -0.07em;
-    text-shadow: white 2px 2px 2px;
+    text-shadow: #111111 1px 1px 1px;
 }
 input[type="range"] {
     display: block;
@@ -47,71 +47,78 @@ input[type="range"]::-webkit-slider-thumb:active {
 }
 
 
-/*css less required */
-/*Below css fx are for the new Go button added ! */
-/*@circle-size: 100px;*/
-/*@outside-circle-size: @circle-size + 10px;*/
-/*@outside-circle-border: 2px;*/
-/*@outside-circle-margin: ((@outside-circle-size / 2) + @outside-circle-border) * -1;*/
+/*Added for toggle switches*/
 
-/*.button{*/
-/*text-align: center;*/
-/*text-transform: uppercase;*/
-/*text-decoration: none;*/
-/*font-size: 14px;*/
-/*font-weight: 100;*/
-/*font-family: "Segoe UI";*/
-/*letter-spacing: 1px;*/
 
-/*&:before{*/
-/*border-radius: @circle-size;*/
-/*border: @outside-circle-border solid #468cdc;*/
-/*box-shadow: 0 0 15px rgba(0, 255, 204, 0.15), 0 0 15px rgba(0, 255, 204, 0.15) inset;*/
-/*content: "";*/
-/*display: block;*/
-/*position: absolute;*/
-/*left: 50%;*/
-/*top: 50%;*/
-/*height: @outside-circle-size;*/
-/*width: @outside-circle-size;*/
-/*margin-left: @outside-circle-margin;*/
-/*margin-top: @outside-circle-margin;*/
-/*opacity: 1;*/
-/*transform: scale(1);*/
-/*transition: all 300ms;*/
-/*}*/
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
 
-/*&:hover:before{*/
-/*transform: scale(1.05);*/
-/*}*/
+.switch input {display:none;}
 
-/*&.circle{*/
-/*background: #23466e;*/
-/*border: none;*/
-/*border-radius: 900px;*/
-/*color: #e4ecfa;*/
-/*cursor: pointer;*/
-/*display: block;*/
-/*width: @circle-size;*/
-/*height: @circle-size;*/
-/*line-height: @circle-size;*/
-/*position: relative;*/
-/*margin: auto;*/
-/*margin-top: 25px;*/
-/*transition: 0.5s;*/
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
 
-/*&:hover {*/
-/*background: #3e70aa;*/
-/*padding: -2px;*/
-/*}*/
-/*}*/
-/*}*/
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
 
-/*.container{*/
-/*background-color: rgb(5, 40, 60);*/
-/*position: fixed;*/
-/*width: 100%;*/
-/*height: 100%;*/
-/*top: 0;*/
-/*overflow: auto;*/
-/*}*/
+input:checked + .slider {
+    background-color: green;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+
+/*Adding properties for submit / next button*/
+/* Set a style for all buttons */
+button {
+    background-color: #ff3203;
+    color: white;
+    margin: 8px 0;
+    border: 2px solid;
+    border-radius: 20px;
+    cursor: pointer;
+    height: 50px;
+}
+
+button:hover {
+    opacity: 0.6;
+}
