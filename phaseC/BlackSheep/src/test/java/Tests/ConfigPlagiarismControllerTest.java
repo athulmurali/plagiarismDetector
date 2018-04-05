@@ -7,15 +7,16 @@
  */
 package Tests;
 
+
+import com.blacksheep.Types;
 import com.blacksheep.controller.ConfigPlagiarismController;
+
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -28,33 +29,12 @@ public class ConfigPlagiarismControllerTest {
     @Test
     public void configPercentageController() throws SQLException, IOException {
         ConfigPlagiarismController configController = new ConfigPlagiarismController();
-        Map<String,Object> testData = new HashMap<>();
+        Types testData = new Types();
 
-        String  validUserID = "mike";
-        testData.put("user",validUserID);
-
-        testData.put("percentage",50);
+        testData.setC2("codeMovement");
+        testData.setPercentage(80);
 
         assertEquals( ResponseEntity.status(HttpStatus.OK).build(),
-                configController.configPercentageController((testData)) );
-
-    }
-
-
-
-    /**
-     * Test for percentage update
-     */
-    @Test
-    public void testConfigPercentageControllerFailure() throws SQLException, IOException {
-        String invalidUserId = "NON_EXISTING_USR";
-        ConfigPlagiarismController configController = new ConfigPlagiarismController();
-        Map<String,Object> testData = new HashMap<>();
-        testData.put("user",invalidUserId);
-        testData.put("percentage",50);
-
-
-        assertEquals( ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error Message"),
                 configController.configPercentageController((testData)) );
 
     }
