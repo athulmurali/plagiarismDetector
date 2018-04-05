@@ -88,15 +88,13 @@ public class CommentPlagiarism implements Plagiarism {
 			int comments2Size = comments2.size();
 
 			for (int i = 0; i < comments1Size; i++) {
-				if (visitedFile1.contains(lineNumbers1.get(i))) {
-					continue;
-				}
+				
 				String comment1 = comments1.get(i);
 				double comment1Length = comment1.length();
 
 				for (int j = 0; j < comments2Size; j++) {
 
-					if (visitedFile2.contains(lineNumbers1.get(j)) || visitedFile1.contains(lineNumbers1.get(i))) {
+					if (visitedFile2.contains(lineNumbers2.get(j)) || visitedFile1.contains(lineNumbers1.get(i))) {
 						continue;
 					}
 
@@ -112,9 +110,9 @@ public class CommentPlagiarism implements Plagiarism {
 					if (percent > threshold) {
 						percentages.add(percent);
 						result.get(0).add(lineNumbers1.get(i));
-						result.get(1).add(lineNumbers1.get(j));
+						result.get(1).add(lineNumbers2.get(j));
 						visitedFile1.add(lineNumbers1.get(i));
-						visitedFile2.add(lineNumbers1.get(j));
+						visitedFile2.add(lineNumbers2.get(j));
 					}
 				}
 			}
@@ -153,9 +151,9 @@ public class CommentPlagiarism implements Plagiarism {
 	 *
 	 * @return Returns whether multiline comment was found or not
 	 */
-	private boolean getCommentsFromSource(String[] lines, int size, int index, List<String> code, List<String> lineNum,
+	private boolean getCommentsFromSource(String[] lines, int index, List<String> code, List<String> lineNum,
 			boolean multipleCommentFound) {
-		if (size <= lines.length) {
+		if (index < lines.length) {
 			String codeLine = lines[index];
 
 			if (multipleCommentFound) {
@@ -206,8 +204,8 @@ public class CommentPlagiarism implements Plagiarism {
 		boolean multiLineFound2 = false;
 
 		for (int i = 0; i < size; i++) {
-			multiLineFound1 = getCommentsFromSource(codeLines1, size, i, comments1, lineNumbers1, multiLineFound1);
-			multiLineFound2 = getCommentsFromSource(codeLines2, size, i, comments2, lineNumbers2, multiLineFound2);
+			multiLineFound1 = getCommentsFromSource(codeLines1, i, comments1, lineNumbers1, multiLineFound1);
+			multiLineFound2 = getCommentsFromSource(codeLines2, i, comments2, lineNumbers2, multiLineFound2);
 		}
 	}
 

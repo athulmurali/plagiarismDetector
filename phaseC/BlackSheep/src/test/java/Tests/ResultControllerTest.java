@@ -1,11 +1,15 @@
 package Tests;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.blacksheep.Types;
 import com.blacksheep.controller.ResultsController;
 import com.blacksheep.controller.UploadController;
 import com.blacksheep.parser.CreateJson;
 import com.blacksheep.parser.Matches;
+import com.blacksheep.util.AWSConfigUtil;
+import com.blacksheep.util.AWSConnection;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
@@ -20,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ResultControllerTest {
+	
+	private static final String TESTUSER = "Test";
 
 	@Test(expected = IndexOutOfBoundsException.class)
 	public void empty() {
@@ -222,7 +228,7 @@ public class ResultControllerTest {
 		List<CreateJson> lcj = new ArrayList<>();
 		lcj.add(cj);
 		
-		rc.initPlagiarismDetection("Mike");
+		rc.initPlagiarismDetection(TESTUSER);
 
 		// assertEquals(lcj.toString(),rc.PostChoices(t).toString());
 
@@ -260,7 +266,7 @@ public class ResultControllerTest {
 		List<CreateJson> lcj = new ArrayList<>();
 		lcj.add(cj);
 		
-		rc.initPlagiarismDetection("Mike");
+		rc.initPlagiarismDetection(TESTUSER);
 
 		// assertEquals(lcj.toString(),rc.PostChoices(t).toString());
 
@@ -298,7 +304,7 @@ public class ResultControllerTest {
 		List<CreateJson> lcj = new ArrayList<>();
 		lcj.add(cj);
 		
-		rc.initPlagiarismDetection("Mike");
+		rc.initPlagiarismDetection(TESTUSER);
 
 		// assertEquals(lcj.toString(),rc.PostChoices(t).toString());
 
@@ -326,7 +332,14 @@ public class ResultControllerTest {
 		MultipartFile[] files1 = { multipartFile1, multipartFile2 };
 		MultipartFile[] files2 = { multipartFile2, multipartFile1 };
 
-		uploadController.uploadFileSource("Mike", "Project1", files1);
-		uploadController.uploadFileSource("Mike", "Project2", files2);
+		uploadController.uploadFileSource(TESTUSER, "Project1", files1);
+		uploadController.uploadFileSource(TESTUSER, "Project2", files2);
+	}
+	
+	@AfterClass
+	public static void cleaup() throws FileNotFoundException, IOException {
+		AWSConfigUtil config = new AWSConfigUtil();
+		AmazonS3 s3 = AWSConnection.getS3Client();
+		AWSConnection.deleteFolder(config.getAwsBucketName(), TESTUSER, s3);
 	}
 }

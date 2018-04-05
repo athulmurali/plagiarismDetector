@@ -24,4 +24,8 @@ public class Utility {
         byteArrayStream.flush();
         return byteArrayStream;
     }
+    
+    private Utility() {
+    	
+    }
 }

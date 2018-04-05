@@ -15,7 +15,7 @@ public class AWSConfigUtil {
     /**
      * Name of the config file
      */
-    private static final String fileName = "awsconfig.properties";
+    private static final String FILENAME = "awsconfig.properties";
 
     /**
      * Logger instance
@@ -101,7 +101,7 @@ public class AWSConfigUtil {
         try {
             ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 
-            File file = new File(classloader.getResource(fileName).getFile());
+            File file = new File(classloader.getResource(FILENAME).getFile());
             FileInputStream fileInput = new FileInputStream(file);
 
             prop.load(fileInput);

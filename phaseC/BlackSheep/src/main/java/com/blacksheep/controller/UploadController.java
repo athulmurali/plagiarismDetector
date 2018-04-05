@@ -72,7 +72,7 @@ public class UploadController {
 			String folder = userId + SUFFIX + projectName;
 
 			AWSConnection.deleteFolder(bucketName, folder + SUFFIX, s3);
-			AWSConnection.createFolder(bucketName, folder, s3);
+			AWSConnection.createFolder(bucketName, folder + SUFFIX, s3);
 
 			for (MultipartFile file : files) {
 				if (file.isEmpty()) {
