@@ -4,7 +4,8 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
-import com.blacksheep.*;
+import com.blacksheep.DBConfigUtil;
+import com.blacksheep.IDBConfigUtil;
 import com.blacksheep.parser.CreateJson;
 import com.blacksheep.parser.Matches;
 import com.blacksheep.parser.ParserFacade;
@@ -13,12 +14,8 @@ import com.blacksheep.util.AWSConfigUtil;
 import com.blacksheep.util.AWSConnection;
 import com.blacksheep.util.Utility;
 import org.antlr.v4.runtime.RuleContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,6 +23,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,43 +43,22 @@ public class ResultsController {
 	/**
 	 * Logger instance
 	 */
-	private final Logger logger = LoggerFactory.getLogger(ResultsController.class);
-
-	private boolean structure = false;
-	private boolean comment = false;
-	private boolean codemove = false;
+	private final Logger logger = Logger.getLogger(ResultsController.class);
 
 	/**
-	 * Controller to take values of the optional Strategy
-	 * 
-	 * @param c,
-	 *            Types JSON
-	 * @return a list of JSON Objects
+	 * Flag to get see if structure match is enabled
 	 */
-	@RequestMapping(value = "/PostChoices", method = RequestMethod.POST)
-	public List<CreateJson> postChoices(@RequestBody Types c,
-			@RequestParam("userid") String userId) {
+	private boolean structure = false;
 
-		try {
+	/**
+	 * Flag to get see if comment match is enabled
+	 */
+	private boolean comment = false;
 
-			structure = false;
-			comment = false;
-			codemove = false;
-
-			if (c.getC1() != null)
-				structure = true;
-			if (c.getC2() != null)
-				codemove = true;
-			if (c.getC3() != null)
-				comment = true;
-
-			return initPlagiarismDetection(userId);
-		} catch (Exception e) {
-			logger.error("Error", e);
-		}
-
-		return new ArrayList<>();
-	}
+	/**
+	 * Flag to get see if code movement is enabled
+	 */
+	private boolean codemove = false;
 
 	/**
 	 * An API to send the eventual results in form of a JSON
@@ -90,6 +71,7 @@ public class ResultsController {
 		List<CreateJson> ljson = new ArrayList<>();
 
 		try {
+			getConfigFlags();
 			AWSConfigUtil util = new AWSConfigUtil();
 			AmazonS3 s3 = AWSConnection.getS3Client();
 
@@ -107,6 +89,7 @@ public class ResultsController {
 			for (int i = 0; i < submissions.size(); i++) {
 				S3ObjectSummary submission1 = submissions.get(i);
 				String filename1 = submission1.getKey();
+				filename1 = filename1.substring(filename1.indexOf(SUFFIX) + 1);
 
 				String[] submissionPrefixes1 = filename1.split(SUFFIX);
 				String submissionName1 = submissionPrefixes1[1];
@@ -126,8 +109,9 @@ public class ResultsController {
 					List<Matches> listmatches = new ArrayList<>();
 					double percentage = 0;
 
-					S3ObjectSummary submission2 = submissions2.get(i);
+					S3ObjectSummary submission2 = submissions2.get(j);
 					String filename2 = submission2.getKey();
+					filename2 = filename2.substring(filename2.indexOf(SUFFIX) + 1);
 
 					ByteArrayOutputStream baos2 = getAWSFile(s3, bucketName, submission2);
 
@@ -150,14 +134,16 @@ public class ResultsController {
 								sourceContext2, listmatches);
 					}
 
-					CreateJson cj1 = new CreateJson(filename1, filename2, percentage,
-							listmatches);
-					ljson.add(cj1);
+					if (!listmatches.isEmpty()) {
+						CreateJson cj1 = new CreateJson(filename1, filename2, percentage,
+								listmatches);
+						ljson.add(cj1);
+					}
 				}
 			}
 			return ljson;
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			logger.error(e.getMessage(), e);
 			return ljson;
 		}
 
@@ -328,9 +314,42 @@ public class ResultsController {
 			double value3) {
 		return (0.33 * value1) + (0.33 * value2) + (0.33 * value3);
 	}
-	
-	public static void main(String[] args) {
-		BCryptPasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
-		System.out.println(PASSWORD_ENCODER.encode("abc"));
+
+	/**
+	 *
+	 * @param config
+	 *            : Configuration values selected by the user
+	 * @throws MessagingException
+	 */
+	private void getConfigFlags() throws SQLException, IOException {
+		IDBConfigUtil dbConfigUtil = new DBConfigUtil();
+
+		String updateTableSQL = "SELECT * FROM CONFIGPLAGIARISM";
+
+		try (Connection connection = DriverManager.getConnection(dbConfigUtil.getDbURL(),
+				dbConfigUtil.getDbUser(), dbConfigUtil.getDbPass())) {
+			try (PreparedStatement preparedStatement = connection
+					.prepareStatement(updateTableSQL)) {
+
+				try (ResultSet results = preparedStatement.executeQuery()) {
+					while (results.next()) {
+						if (results.getString("comment") != null)
+							comment = true;
+						else
+							comment = false;
+
+						if (results.getString("codeMovement") != null)
+							codemove = true;
+						else
+							codemove = false;
+
+						if (results.getString("structure") != null)
+							structure = true;
+						else
+							structure = false;
+					}
+				}
+			}
+		}
 	}
 }

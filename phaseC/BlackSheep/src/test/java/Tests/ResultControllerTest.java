@@ -184,8 +184,6 @@ public class ResultControllerTest {
 
 		List<CreateJson> lcj = new ArrayList<>();
 		lcj.add(cj);
-
-		rc.postChoices(t, "Mike");
 		
 		rc.initPlagiarismDetection("Mike");
 
@@ -223,8 +221,6 @@ public class ResultControllerTest {
 
 		List<CreateJson> lcj = new ArrayList<>();
 		lcj.add(cj);
-
-		rc.postChoices(t, "Mike");
 		
 		rc.initPlagiarismDetection("Mike");
 
@@ -263,8 +259,6 @@ public class ResultControllerTest {
 
 		List<CreateJson> lcj = new ArrayList<>();
 		lcj.add(cj);
-
-		rc.postChoices(t, "Mike");
 		
 		rc.initPlagiarismDetection("Mike");
 
@@ -303,8 +297,6 @@ public class ResultControllerTest {
 
 		List<CreateJson> lcj = new ArrayList<>();
 		lcj.add(cj);
-
-		rc.postChoices(t, "Mike");
 		
 		rc.initPlagiarismDetection("Mike");
 

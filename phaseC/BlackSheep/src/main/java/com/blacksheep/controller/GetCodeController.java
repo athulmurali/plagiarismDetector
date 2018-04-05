@@ -57,6 +57,7 @@ public class GetCodeController {
 
 			for (S3ObjectSummary submission : submissions) {
 				String fileName = submission.getKey();
+				fileName = fileName.substring(fileName.indexOf(SUFFIX) + 1);
 
 				S3Object object = s3
 						.getObject(new GetObjectRequest(bucketName, submission.getKey()));
@@ -78,6 +79,5 @@ public class GetCodeController {
 			if(scanner != null)
 				scanner.close();
 		}
-
 	}
 }
