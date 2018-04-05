@@ -1,0 +1,33 @@
+CS5500 Managing Software Development
+
+------------------------------------------------
+Sprint 2 Group Grade Team 104:
+------------------------------------------------
+
+Functionality Expectations Achieved:
+-----------------------------------------------
+
+Comments on Functionality Expectations: Good Code overall; please add comments to the methods which don't have it and  remove unused imports/variables. Increase test coverage and do not exclude any files written by the team from Sonar. Also; there is no ""Register"" page to add Users to the system. Feedback: UI was very confusing with no navigational clues or messages; please fix as per discussion.  URL: http://lacksheep.us-east-2.elasticbeanstalk.com/templates/userLogin.html"
+
+Stretches Achieved:
+-----------------------------------------------
+
+(1) Stretch (small): employs more than one comparison strategy on demand. Hint: use the strategy pattern.; (2) Stretch (bigger): uses more than one comparison strategy and reports the results of each method.; (4) Stretch (even bigger): uses more than one comparison strategy and computes an overall score using a weighted polynomial function.; (2) Stretch: System throws a message (email SNMP trap etc.) when something bad happens.
+
+Comments: 4 strategies: CRC; Code Movement; Comments match; Structure Match (variable and method names)
+Email Stretch: Code present in EMailer.java; however; the code is only executed in test and not called from code. Please trigger an email on critical system errors; shutdowns; program termination etc. too.
+
+
+Environment Expectations: 
+-----------------------------------------------
+
+Comments: Jenkins: tongcs.com:8080 (msdtaspring18/msdtaspring18)
+SonarQube: http://128.31.25.108:9000 (Team-104/Team-104)
+
+------------------------------------------------
+Team GRADE: 100
+------------------------------------------------
+
+Extra Comments:  
+
+Grader: Biswaraj
