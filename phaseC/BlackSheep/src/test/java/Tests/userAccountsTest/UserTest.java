@@ -198,4 +198,25 @@ public class UserTest {
 
         assertEquals(ErrorCodes.EMAIL_INVALID,User.createUser(user));
     }
+
+//    /**
+//     * Test added for invalid user Id or email format
+//     * @throws IOException
+//     * @throws SQLException
+//     */
+//    @Test (expected = NullPointerException.class)
+//    public void TestNull() throws Exception{
+//
+//        User user = new User("abc","abc",
+//                "abc",
+//                "TA",30);
+//
+//        try {
+//            user.createUserRecord(null);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//    }
 }
