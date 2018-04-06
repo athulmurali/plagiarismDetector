@@ -38,7 +38,7 @@ public class GetCodeControllerTests {
 		assertEquals(expected.size(), actual.size());		
 	}
 	
-	@Test (expected = Exception.class)
+	@Test
 	public void exceptionTest() {
 		GetCodeController controller = new GetCodeController();
 		List<GetCodeJson> actual = controller.getCode(TESTUSER);

@@ -25,7 +25,7 @@ public class Utility {
         return byteArrayStream;
     }
     
-    private Utility() {
+    public Utility() {
     	
     }
 }

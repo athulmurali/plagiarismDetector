@@ -40,7 +40,7 @@ public class UploadController {
 	@RequestMapping(method = RequestMethod.POST, value = "/upload")
 	public ResponseEntity<?> uploadFileSource(@RequestParam("userid") String userId,
 			@RequestParam("project") String projectName,
-			@RequestParam("files") MultipartFile[] files) {
+			@RequestParam("files[]") MultipartFile[] files) {
 
 		if (files.length == 0)
 			return new ResponseEntity<>("Please select a file!", HttpStatus.BAD_REQUEST);
@@ -91,7 +91,7 @@ public class UploadController {
 				s3.putObject(putObjectRequest);
 			}
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			logger.error(e.getMessage());
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}

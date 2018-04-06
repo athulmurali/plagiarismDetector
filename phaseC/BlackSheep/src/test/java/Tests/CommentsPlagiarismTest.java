@@ -261,4 +261,29 @@ public class CommentsPlagiarismTest {
         List<List<String>> result = c.executeStrategy(stream1, stream2);
         assertEquals(100.0, Double.valueOf(result.get(2).get(0)), 2);
     }
+    
+    @Test
+    public void exceptionTest() throws IOException {
+    	List<List<String>> expected = new ArrayList<>();
+    	expected.add(new ArrayList<>());
+    	expected.add(new ArrayList<>());
+    	expected.add(new ArrayList<>());
+
+        String fileText2 = "# totally different from previous simples\r\n" + 
+        		"temperature = 115\r\n" + 
+        		"while temperature > 112: "+ 
+        		"    print(temperature)\r\n" + 
+        		"    temperature = temperature - 1";
+
+        String fileText1 = "# totally different from previous simples\r\n" + 
+        		"temperature = 115\r\n" + 
+        		"while temperature > 112: # totally different from previous simples\r\n" + 
+        		"    print(temperature)\r\n" + 
+        		"    temperature = temperature - 1";
+
+        Context c = new Context(new CommentPlagiarism());
+        InputStream stream1 = new ByteArrayInputStream(fileText1.getBytes(StandardCharsets.UTF_8));
+        List<List<String>> result = c.executeStrategy(stream1, null);
+        assertEquals(expected, result);
+    }
 }

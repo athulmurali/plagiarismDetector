@@ -80,15 +80,13 @@ public class CRCPlagiarism implements Plagiarism {
                 return result;
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error("CRC check error", e);
             return result;
         }
         finally {
         	if (scanner1 != null)
         		scanner1.close();
-            input1.close();
-            input2.close();
         }
     }
     /**

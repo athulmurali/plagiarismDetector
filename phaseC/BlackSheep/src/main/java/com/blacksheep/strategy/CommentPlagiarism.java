@@ -126,10 +126,7 @@ public class CommentPlagiarism implements Plagiarism {
 		} catch (Exception e) {
 			logger.error("Comment Plagiarism error", e);
 			return result;
-		} finally {
-			input1.close();
-			input2.close();
-		}
+		} 
 	}
 
 	/***

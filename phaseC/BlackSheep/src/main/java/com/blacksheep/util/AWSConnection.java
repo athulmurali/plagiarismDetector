@@ -88,7 +88,7 @@ public class AWSConnection {
 				.substring(summaryObject.getKey().lastIndexOf(SUFFIX) + 1);
 	}
 
-	private AWSConnection() {
+	public AWSConnection() {
 
 	}
 }

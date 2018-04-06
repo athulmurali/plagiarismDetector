@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -70,5 +71,24 @@ public class CRCPlagiarismTests {
     	RuleContext ruleContext2 = parser.parse(inputFile2);
     	Context c = new Context(new CRCPlagiarism());
     	assertEquals(null,c.executeStrategy(ruleContext1,ruleContext2));
+    }
+    
+    @Test
+    public void exceptionTest() throws IOException {
+    	try {
+			List<List<String>> expected = new ArrayList<>();
+			expected.add(new ArrayList<>());
+			expected.add(new ArrayList<>());
+			expected.add(new ArrayList<>());
+			ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+			File inputFile2 = new File(classloader.getResource("python/simple5.py").getFile());
+
+			Context c = new Context(new CRCPlagiarism());
+			InputStream stream2 = new FileInputStream(inputFile2);
+			List<List<String>> result = c.executeStrategy(null, stream2);
+			assertEquals(expected, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 }

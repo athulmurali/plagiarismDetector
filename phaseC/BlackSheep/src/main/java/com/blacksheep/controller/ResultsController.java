@@ -69,6 +69,8 @@ public class ResultsController {
 	public List<CreateJson> initPlagiarismDetection(
 			@RequestParam("userid") String userId) {
 		List<CreateJson> ljson = new ArrayList<>();
+		
+		List<String> checkedSubmissions = new ArrayList<>();
 
 		try {
 			getConfigFlags();
@@ -97,12 +99,26 @@ public class ResultsController {
 				InputStream parserStream1 = new ByteArrayInputStream(baos1.toByteArray());
 				ParserFacade parserFacade = new ParserFacade();
 				RuleContext sourceContext1 = parserFacade.parse(parserStream1);
+				
+				String[] submissionPrefixes1 = filename1.split(SUFFIX);
+				String submissionName1 = submissionPrefixes1[0];
+				
+				checkedSubmissions.add(submissionName1);
+				
+				List<S3ObjectSummary> submissions2 = new ArrayList<>(submissions);
+				
+				for(String s : checkedSubmissions) {
+					submissions2 = submissions2.stream()
+							.filter(p -> !p.getKey().contains(s))
+							.collect(Collectors.toList());
+				}		
+				
 
-				for (int j = i+1; j < submissions.size(); j++) {
+				for (int j = 0; j < submissions2.size(); j++) {
 					List<Matches> listmatches = new ArrayList<>();
 					double percentage = 0;
 
-					S3ObjectSummary submission2 = submissions.get(j);
+					S3ObjectSummary submission2 = submissions2.get(j);
 					String filename2 = submission2.getKey();
 					filename2 = filename2.substring(filename2.indexOf(SUFFIX) + 1);
 
@@ -178,7 +194,7 @@ public class ResultsController {
 			InputStream commentStream1 = new ByteArrayInputStream(baos1.toByteArray());
 			InputStream commentStream2 = new ByteArrayInputStream(baos2.toByteArray());
 			commentMatches = checkPlagiarism(commentStream1, commentStream2,
-					new CommentPlagiarism(), "CodeMovement Match", matches);
+					new CommentPlagiarism(), "Comment Match", matches);
 		} else {
 			initMatches(commentMatches);
 
@@ -282,10 +298,12 @@ public class ResultsController {
 
 			for (String s : l2)
 				intl2.add(Integer.valueOf(s));
-
-			Matches match1 = new Matches(type, intl1, intl2);
-
-			matches.add(match1);
+			
+			if(!intl1.isEmpty() && !intl2.isEmpty()) {
+				Matches match1 = new Matches(type, intl1, intl2);
+				matches.add(match1);
+			}
+			
 			return "All went fine";
 		} catch (ArrayIndexOutOfBoundsException exception) {
 			logger.error("Error:", exception);
@@ -317,7 +335,7 @@ public class ResultsController {
 	private void getConfigFlags() throws SQLException, IOException {
 		IDBConfigUtil dbConfigUtil = new DBConfigUtil();
 
-		String updateTableSQL = "SELECT * FROM CONFIGPLAGIARISM";
+		String updateTableSQL = "SELECT * FROM configPlagiarism";
 
 		try (Connection connection = DriverManager.getConnection(dbConfigUtil.getDbURL(),
 				dbConfigUtil.getDbUser(), dbConfigUtil.getDbPass())) {

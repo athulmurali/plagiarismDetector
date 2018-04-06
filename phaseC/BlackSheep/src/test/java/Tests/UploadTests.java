@@ -34,6 +34,7 @@ public class UploadTests {
 	@Test
 	public void testFolderCreate() {
 		AWSConfigUtil util = new AWSConfigUtil();
+		AWSConnection con = new AWSConnection();
 		AmazonS3 s3 = createAWSClient(util);
 
 		String bucketName = util.getAwsBucketName();
@@ -170,6 +171,40 @@ public class UploadTests {
 				.withCredentials(new AWSStaticCredentialsProvider(credentials))
 				.withRegion("us-east-2").build();
 		return s3;
+	}
+	
+	@Test
+	public void exceptionTest() throws FileNotFoundException, IOException {
+		AWSConfigUtil util = new AWSConfigUtil();
+		AmazonS3 s3 = createAWSClient(util);
+
+		UploadController uploadController = new UploadController();
+		String bucketName = util.getAwsBucketName();
+
+		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+
+		byte[] array = null;
+
+		File inputFile = new File(classloader.getResource("python/empty.py").getFile());
+		try {
+			array = Files.readAllBytes(inputFile.toPath());
+		} catch (final IOException e) {
+		}
+
+		MultipartFile multipartFile = null;
+
+		MultipartFile[] files = { multipartFile };
+
+		uploadController.uploadFileSource(TEST, "Project1", files);
+
+		List<S3ObjectSummary> fileList = s3.listObjects(bucketName, TEST)
+				.getObjectSummaries();
+		List<String> keys = new ArrayList<>();
+		for (S3ObjectSummary file : fileList) {
+			keys.add(file.getKey());
+		}
+		assertEquals(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR),
+				uploadController.uploadFileSource(TEST, "Project1", files));
 	}
 
 }
