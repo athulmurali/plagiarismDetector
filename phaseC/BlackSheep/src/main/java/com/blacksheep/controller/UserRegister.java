@@ -1,6 +1,7 @@
 package com.blacksheep.controller;
 
 import com.blacksheep.ErrorCodes;
+import com.blacksheep.UserDetails;
 import com.blacksheep.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,14 +27,21 @@ public class UserRegister {
     @RequestMapping(
             value = "/userRegister",
             method = RequestMethod.POST)
-    public ResponseEntity<Object> userRegister(@RequestBody Map<String,Object> userDetails) throws SQLException, IOException {
+    public ResponseEntity<Object> userRegister(@RequestBody UserDetails userDetails) throws SQLException, IOException {
 
-        String userId               = (String) userDetails.get("email");
-        String password             = (String) userDetails.get("password");
-        String confirmedPassword    = (String) userDetails.get("confirmedPassword");
-        String role                 = (String) userDetails.get("role");
+       // String userId               = (String) userDetails.get("email");
+       // String password             = (String) userDetails.get("password");
+       // String confirmedPassword    = (String) userDetails.get("confirmedPassword");
+        //String role                 = (String) userDetails.get("role");
         logger.info("User Registration endpoint reached");
         logger.info(userDetails);
+
+        String userId   = userDetails.getUserId().trim();
+        String password = userDetails.getPassword().trim();
+       // String confirmedPassword = userDetails.getConfirmedPassword().trim();
+        String confirmedPassword = password;
+        String role = userDetails.getRole();
+
 
         User user = new User(userId,password,confirmedPassword,
                 role,DEFAULT_PLAGIARISM_PERCENTAGE);

@@ -1,8 +1,8 @@
 $(document).ready(function () {
 
     $("#login").click(function () {
-        // var password = $("#password").val();n
-        // var user = $("#uname").val();
+        ///var password2 = $("#password").val();
+        var user2 = $("#uname").val();
         var cred = {
 
             "user":$("#uname").val(),
@@ -25,15 +25,17 @@ $(document).ready(function () {
 
             }
         });
+
+        function redirect1() {
+
+            console.log("in redirect");
+            window.location.href = "../templates/configPlagiarismPercentage.html?userId="+user2;
+        }
+
+        function redirect2() {
+            window.location = "../templates/userLogin.html";
+        }
     });
 
-    function redirect1() {
 
-        console.log("in redirect");
-        window.location = "../templates/configPlagiarismPercentage.html";
-    }
-
-    function redirect2() {
-        window.location = "../templates/userLogin.html";
-    }
 });
