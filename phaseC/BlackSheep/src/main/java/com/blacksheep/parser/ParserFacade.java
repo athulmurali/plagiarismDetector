@@ -2,6 +2,7 @@ package com.blacksheep.parser;
 
 import com.blacksheep.parser.Python3Lexer;
 import com.blacksheep.parser.Python3Parser;
+
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 
@@ -47,11 +48,27 @@ public class ParserFacade {
      *
      * @param inputStream : file input stream
      */
-    public Python3Parser.File_inputContext parse(InputStream inputStream) throws IOException {
+    public Python3Parser.File_inputContext parse(InputStream inputStream) {
         String code = new BufferedReader(new InputStreamReader(inputStream))
                 .lines().collect(Collectors.joining("\n"));
 
 
+        Python3Lexer lexer = new Python3Lexer(new ANTLRInputStream(code));
+
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+
+        Python3Parser parser = new Python3Parser(tokens);
+
+        return parser.file_input();
+    }
+    
+    /**
+     * Converts the input file into a tokens and returns the Input context of the source code AST
+     *
+     * @param String : file string
+     */
+    public Python3Parser.File_inputContext parse(String code) {
+        
         Python3Lexer lexer = new Python3Lexer(new ANTLRInputStream(code));
 
         CommonTokenStream tokens = new CommonTokenStream(lexer);

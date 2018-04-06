@@ -67,7 +67,7 @@ public class CommentPlagiarism implements Plagiarism {
 	 * @return The lines numbers that match in the two source files and match
 	 *         percent
 	 */
-	public List<List<String>> getDetectResult(InputStream input1, InputStream input2) throws IOException {
+	public List<List<String>> getDetectResult(String input1, String input2) {
 		logger.debug("Comment plagiarism check started");
 
 		List<String> visitedFile1 = new ArrayList<>();
@@ -157,13 +157,17 @@ public class CommentPlagiarism implements Plagiarism {
 				if (codeLine.contains("\"\"\"")) {
 					multipleCommentFound = false;
 				} else {
-					code.add(codeLine.trim());
-					lineNum.add(String.valueOf(index + 1));
+					if(!codeLine.contains("@@TOPAATMABI@@")) {
+						code.add(codeLine.trim());
+						lineNum.add(String.valueOf(index + 1));	
+					}					
 				}
 			} else {
 				if (codeLine.contains("#")) {
-					code.add(codeLine.substring(codeLine.indexOf('#') + 1).trim());
-					lineNum.add(String.valueOf(index + 1));
+					if(!codeLine.contains("@@TOPAATMABI@@")) {
+						code.add(codeLine.substring(codeLine.indexOf('#') + 1).trim());
+						lineNum.add(String.valueOf(index + 1));
+					}
 				} else if (codeLine.contains("\"\"\"")) {
 					multipleCommentFound = true;
 				}
@@ -177,23 +181,14 @@ public class CommentPlagiarism implements Plagiarism {
 	 * which is then converted to array of strings
 	 * 
 	 * @param input1
-	 *            : InputStream of the first source file
+	 *            : String of the first source file
 	 * @param input2
-	 *            : InputStream of the second source file
+	 *            : String of the second source file
 	 */
-	private void processInputStream(InputStream input1, InputStream input2) {
+	private void processInputStream(String input1, String input2) {
 		
-		Scanner scanner1 = new Scanner(input1);
-		Scanner scanner2 = new Scanner(input2);
-		
-		String s1 = scanner1.useDelimiter("\\A").next();
-		String s2 = scanner2.useDelimiter("\\A").next();
-		
-		scanner1.close();
-		scanner2.close();
-
-		String[] codeLines1 = s1.split("\\r?\\n");
-		String[] codeLines2 = s2.split("\\r?\\n");
+		String[] codeLines1 = input1.split("\\r?\\n");
+		String[] codeLines2 = input2.split("\\r?\\n");
 
 		int size = codeLines1.length > codeLines2.length ? codeLines1.length : codeLines2.length;
 
@@ -233,4 +228,15 @@ public class CommentPlagiarism implements Plagiarism {
 	public List<List<String>> getDetectResult(File f1, File f2) throws IOException {
 		return null;
 	}
+	
+	/**
+     * get the detect result
+     * @param f1 A file that needs to detect
+     * @param f2 A file that needs to compare with
+     * @return a list of three string lists that contain the line numbers of
+     *   similar codes in two files and the similar percentage
+     */
+    public List<List<String>> getDetectResult(InputStream f1, InputStream f2) throws IOException{
+        return null;
+    }
 }

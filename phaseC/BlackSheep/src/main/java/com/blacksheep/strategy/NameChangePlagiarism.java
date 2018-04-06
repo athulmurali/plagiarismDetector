@@ -142,4 +142,15 @@ public class NameChangePlagiarism implements Plagiarism {
     public List<List<String>> getDetectResult(File f1, File f2) throws IOException{
         return null;
     }
+    
+    /**
+     * get the detect result
+     * @param f1 A file that needs to detect
+     * @param f2 A file that needs to compare with
+     * @return a list of three string lists that contain the line numbers of
+     *   similar codes in two files and the similar percentage
+     */
+    public List<List<String>> getDetectResult(String f1, String f2) {
+        return null;
+    }
 }

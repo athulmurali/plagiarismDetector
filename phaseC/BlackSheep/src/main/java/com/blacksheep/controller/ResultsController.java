@@ -6,6 +6,8 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.blacksheep.DBConfigUtil;
 import com.blacksheep.IDBConfigUtil;
+import com.blacksheep.models.FileStreams;
+import com.blacksheep.models.SourceCodeList;
 import com.blacksheep.parser.CreateJson;
 import com.blacksheep.parser.Matches;
 import com.blacksheep.parser.ParserFacade;
@@ -29,7 +31,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 @RestController
@@ -66,11 +72,9 @@ public class ResultsController {
 	 * @return List of CreateJson
 	 */
 	@RequestMapping("/getResults3")
-	public List<CreateJson> initPlagiarismDetection(
-			@RequestParam("userid") String userId) {
+	public List<CreateJson> initPlagiarismDetection(@RequestParam("userid") String userId) {
 		List<CreateJson> ljson = new ArrayList<>();
-		
-		List<String> checkedSubmissions = new ArrayList<>();
+		Map<String, List<FileStreams>> allSubmissionStreams = new HashMap<>();
 
 		try {
 			getConfigFlags();
@@ -82,10 +86,8 @@ public class ResultsController {
 			String userFolder = userId + SUFFIX;
 
 			// get the list of objects inside the user folder
-			List<S3ObjectSummary> submissions = s3.listObjects(bucketName, userFolder)
-					.getObjectSummaries();
-			submissions = submissions.stream()
-					.filter(p -> AWSConnection.getFileName(p).endsWith(".py"))
+			List<S3ObjectSummary> submissions = s3.listObjects(bucketName, userFolder).getObjectSummaries();
+			submissions = submissions.stream().filter(p -> AWSConnection.getFileName(p).endsWith(".py"))
 					.collect(Collectors.toList());
 
 			for (int i = 0; i < submissions.size(); i++) {
@@ -93,63 +95,63 @@ public class ResultsController {
 				String filename1 = submission1.getKey();
 				filename1 = filename1.substring(filename1.indexOf(SUFFIX) + 1);
 
-				ByteArrayOutputStream baos1 = getAWSFile(s3, bucketName, submission1);
-
-				InputStream crcStream1 = new ByteArrayInputStream(baos1.toByteArray());
-				InputStream parserStream1 = new ByteArrayInputStream(baos1.toByteArray());
-				ParserFacade parserFacade = new ParserFacade();
-				RuleContext sourceContext1 = parserFacade.parse(parserStream1);
-				
 				String[] submissionPrefixes1 = filename1.split(SUFFIX);
-				String submissionName1 = submissionPrefixes1[0];
-				
-				checkedSubmissions.add(submissionName1);
-				
-				List<S3ObjectSummary> submissions2 = new ArrayList<>(submissions);
-				
-				for(String s : checkedSubmissions) {
-					submissions2 = submissions2.stream()
-							.filter(p -> !p.getKey().contains(s))
-							.collect(Collectors.toList());
-				}		
-				
+				String projectName = submissionPrefixes1[0];
 
-				for (int j = 0; j < submissions2.size(); j++) {
-					List<Matches> listmatches = new ArrayList<>();
-					double percentage = 0;
+				ByteArrayOutputStream baos1 = getAWSFile(s3, bucketName, submission1);
+				InputStream parserStream1 = new ByteArrayInputStream(baos1.toByteArray());
 
-					S3ObjectSummary submission2 = submissions2.get(j);
-					String filename2 = submission2.getKey();
-					filename2 = filename2.substring(filename2.indexOf(SUFFIX) + 1);
+				List<FileStreams> fileStream = new ArrayList<>();
 
-					ByteArrayOutputStream baos2 = getAWSFile(s3, bucketName, submission2);
+				if (allSubmissionStreams.containsKey(projectName)) {
+					fileStream = allSubmissionStreams.get(projectName);
+				}
 
-					InputStream crcStream2 = new ByteArrayInputStream(
-							baos2.toByteArray());
-					InputStream parserStream2 = new ByteArrayInputStream(
-							baos2.toByteArray());
-					RuleContext sourceContext2 = parserFacade.parse(parserStream2);
+				FileStreams file = new FileStreams();
+				file.setFileName(filename1);
+				file.setProjectName(projectName);
+				file.setStream(parserStream1);
+
+				fileStream.add(file);
+				allSubmissionStreams.put(projectName, fileStream);
+			}
+
+			List<Matches> listmatches = new ArrayList<>();
+			SourceCodeList sourceCodeList = getFilesForDetection(allSubmissionStreams);
+
+			List<String> sourceCodes = sourceCodeList.getSourceCodes();
+			List<String> folderNames = sourceCodeList.getFolderNames();
+
+			for (int i = 0; i < sourceCodes.size(); i++) {
+				String submission1 = sourceCodes.get(i);
+				ParserFacade parser1 = new ParserFacade();
+				RuleContext ctx1 = parser1.parse(submission1);
+
+				for (int j = i + 1; j < sourceCodes.size(); j++) {
+					String submission2 = sourceCodes.get(j);
+					ParserFacade parser2 = new ParserFacade();
+					RuleContext ctx2 = parser2.parse(submission2);
 
 					Context context = new Context(new CRCPlagiarism());
-					List<List<String>> crcMatches = context.executeStrategy(crcStream1,
-							crcStream2);
+					List<List<String>> crcMatches = context.executeStrategy(submission1, submission2);
+					double percentage = 0;
 
 					if (!crcMatches.get(0).isEmpty()) {
 						percentage = 100.0;
 						createMatches(crcMatches, "CRC Match", listmatches);
 					} else {
 
-						percentage = getAllPlagiarism(baos1, sourceContext1, baos2,
-								sourceContext2, listmatches);
+						percentage = getAllPlagiarism(submission1, ctx1, submission2, ctx2, listmatches);
 					}
-
 					if (!listmatches.isEmpty()) {
-						CreateJson cj1 = new CreateJson(filename1, filename2, percentage,
+						CreateJson cj1 = new CreateJson(folderNames.get(i), folderNames.get(j), percentage,
 								listmatches);
 						ljson.add(cj1);
 					}
 				}
+
 			}
+
 			return ljson;
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -159,22 +161,56 @@ public class ResultsController {
 	}
 
 	/**
-	 * @param baos1
+	 * @param submissionstreams
+	 * @throws IOException
+	 */
+	private SourceCodeList getFilesForDetection(Map<String, List<FileStreams>> submissionstreams) {
+		Iterator<Entry<String, List<FileStreams>>> it = submissionstreams.entrySet().iterator();
+		SourceCodeList codeList = new SourceCodeList();
+		List<String> sourceCodes = new ArrayList<>();
+		List<String> folderNames = new ArrayList<>();
+		while (it.hasNext()) {
+			Map.Entry<String, List<FileStreams>> pair = it.next();
+			String projectName = pair.getKey();
+			List<FileStreams> streams = pair.getValue();
+			StringBuilder fileText = new StringBuilder();
+
+			for (FileStreams file : streams) {
+				fileText.append("\n # @@TOPAATMABI@@ ");
+				fileText.append(file.getFileName());
+				fileText.append(" start\n");
+
+				fileText.append(Utility.streamToText(file.getStream()));
+
+				fileText.append("\n @@TOPAATMABI@@# ");
+				fileText.append(file.getFileName());
+				fileText.append(" end\n");
+			}
+
+			folderNames.add(projectName);
+			sourceCodes.add(fileText.toString());
+		}
+		codeList.setFolderNames(folderNames);
+		codeList.setSourceCodes(sourceCodes);
+		return codeList;
+	}
+
+	/**
+	 * @param string1
 	 * @param sourceContext1
-	 * @param baos2
+	 * @param string2
 	 * @param sourceContext2
 	 * @param matches
 	 * @return
 	 * @throws IOException
 	 */
-	private double getAllPlagiarism(ByteArrayOutputStream baos1,
-			RuleContext sourceContext1, ByteArrayOutputStream baos2,
+	private double getAllPlagiarism(String string1, RuleContext sourceContext1, String string2,
 			RuleContext sourceContext2, List<Matches> matches) throws IOException {
 		double percentage;
 		List<List<String>> structureMatches = new ArrayList<>();
 		if (structure) {
-			structureMatches = checkPlagiarism(sourceContext1, sourceContext2,
-					new NameChangePlagiarism(), "Structure Match", matches);
+			structureMatches = checkPlagiarism(sourceContext1, sourceContext2, new NameChangePlagiarism(),
+					"Structure Match", matches);
 		} else {
 			initMatches(structureMatches);
 
@@ -182,8 +218,8 @@ public class ResultsController {
 
 		List<List<String>> codeMovementMatches = new ArrayList<>();
 		if (codemove) {
-			codeMovementMatches = checkPlagiarism(sourceContext1, sourceContext2,
-					new CodeMoveDetector(), "CodeMovement Match", matches);
+			codeMovementMatches = checkPlagiarism(sourceContext1, sourceContext2, new CodeMoveDetector(),
+					"CodeMovement Match", matches);
 		} else {
 			initMatches(codeMovementMatches);
 
@@ -191,17 +227,13 @@ public class ResultsController {
 
 		List<List<String>> commentMatches = new ArrayList<>();
 		if (comment) {
-			InputStream commentStream1 = new ByteArrayInputStream(baos1.toByteArray());
-			InputStream commentStream2 = new ByteArrayInputStream(baos2.toByteArray());
-			commentMatches = checkPlagiarism(commentStream1, commentStream2,
-					new CommentPlagiarism(), "Comment Match", matches);
+			commentMatches = checkPlagiarism(string1, string2, new CommentPlagiarism(), "Comment Match", matches);
 		} else {
 			initMatches(commentMatches);
 
 		}
 
-		percentage = calculateWeightedPercentage(
-				Double.parseDouble(structureMatches.get(2).get(0)),
+		percentage = calculateWeightedPercentage(Double.parseDouble(structureMatches.get(2).get(0)),
 				Double.parseDouble(codeMovementMatches.get(2).get(0)),
 				Double.parseDouble(commentMatches.get(2).get(0)));
 		return percentage;
@@ -216,32 +248,29 @@ public class ResultsController {
 	 * @param flag
 	 * @throws IOException
 	 */
-	private List<List<String>> checkPlagiarism(RuleContext sourceContext1,
-			RuleContext sourceContext2, Plagiarism plagiarism, String name,
-			List<Matches> listmatches) throws IOException {
+	private List<List<String>> checkPlagiarism(RuleContext sourceContext1, RuleContext sourceContext2,
+			Plagiarism plagiarism, String name, List<Matches> listmatches) throws IOException {
 
 		Context context = new Context(plagiarism);
-		List<List<String>> matches = context.executeStrategy(sourceContext1,
-				sourceContext2);
+		List<List<String>> matches = context.executeStrategy(sourceContext1, sourceContext2);
 		createMatches(matches, name, listmatches);
 
 		return matches;
 	}
 
 	/**
-	 * @param stream1
-	 * @param stream2
+	 * @param string1
+	 * @param string2
 	 * @param plagiarism
 	 * @param name
 	 * @param listmatches
 	 * @throws IOException
 	 */
-	private List<List<String>> checkPlagiarism(InputStream stream1, InputStream stream2,
-			Plagiarism plagiarism, String name, List<Matches> listmatches)
-			throws IOException {
+	private List<List<String>> checkPlagiarism(String string1, String string2, Plagiarism plagiarism, String name,
+			List<Matches> listmatches) {
 
 		Context context = new Context(plagiarism);
-		List<List<String>> matches = context.executeStrategy(stream1, stream2);
+		List<List<String>> matches = context.executeStrategy(string1, string2);
 		createMatches(matches, name, listmatches);
 
 		return matches;
@@ -264,8 +293,7 @@ public class ResultsController {
 	 * @return
 	 * @throws IOException
 	 */
-	private ByteArrayOutputStream getAWSFile(AmazonS3 s3, String bucketName,
-			S3ObjectSummary file1) throws IOException {
+	private ByteArrayOutputStream getAWSFile(AmazonS3 s3, String bucketName, S3ObjectSummary file1) throws IOException {
 		ByteArrayOutputStream baos;
 		S3Object object1 = s3.getObject(new GetObjectRequest(bucketName, file1.getKey()));
 		InputStream stream1 = object1.getObjectContent();
@@ -283,8 +311,7 @@ public class ResultsController {
 	 * @param matches
 	 *            The List of matches passed as reference
 	 */
-	public String createMatches(List<List<String>> list1, String type,
-			List<Matches> matches) {
+	public String createMatches(List<List<String>> list1, String type, List<Matches> matches) {
 
 		try {
 			List<String> l1 = list1.get(0);
@@ -298,12 +325,12 @@ public class ResultsController {
 
 			for (String s : l2)
 				intl2.add(Integer.valueOf(s));
-			
-			if(!intl1.isEmpty() && !intl2.isEmpty()) {
+
+			if (!intl1.isEmpty() && !intl2.isEmpty()) {
 				Matches match1 = new Matches(type, intl1, intl2);
 				matches.add(match1);
 			}
-			
+
 			return "All went fine";
 		} catch (ArrayIndexOutOfBoundsException exception) {
 			logger.error("Error:", exception);
@@ -321,8 +348,7 @@ public class ResultsController {
 	 *            the percentage from second comparison strategy
 	 * @return double, returns the weighted percentage
 	 */
-	public double calculateWeightedPercentage(double value1, double value2,
-			double value3) {
+	public double calculateWeightedPercentage(double value1, double value2, double value3) {
 		return (0.33 * value1) + (0.33 * value2) + (0.33 * value3);
 	}
 
@@ -337,10 +363,9 @@ public class ResultsController {
 
 		String updateTableSQL = "SELECT * FROM configPlagiarism";
 
-		try (Connection connection = DriverManager.getConnection(dbConfigUtil.getDbURL(),
-				dbConfigUtil.getDbUser(), dbConfigUtil.getDbPass())) {
-			try (PreparedStatement preparedStatement = connection
-					.prepareStatement(updateTableSQL)) {
+		try (Connection connection = DriverManager.getConnection(dbConfigUtil.getDbURL(), dbConfigUtil.getDbUser(),
+				dbConfigUtil.getDbPass())) {
+			try (PreparedStatement preparedStatement = connection.prepareStatement(updateTableSQL)) {
 
 				try (ResultSet results = preparedStatement.executeQuery()) {
 					while (results.next()) {
@@ -362,5 +387,11 @@ public class ResultsController {
 				}
 			}
 		}
+	}
+	
+	public void setFlagsForTesting(boolean comment, boolean codemove, boolean structure) {
+		this.comment = comment;
+		this.codemove = codemove;
+		this.structure = structure;
 	}
 }
