@@ -137,7 +137,7 @@ public class User
                     if (result == 0) {
                         logger.info("query executed : User account delete | But Invalid User ID");
                         status =  ErrorCodes.USERID_INVALID;
-                    } else if (result == 1) {
+                    } else {
                         logger.info("query executed : 1 User account delete");
                         status =  ErrorCodes.SUCCESS;
 
