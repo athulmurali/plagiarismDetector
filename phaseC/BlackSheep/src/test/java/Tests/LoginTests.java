@@ -68,9 +68,9 @@ public class LoginTests {
         LoginController l = new LoginController();
 
         Cred c = new Cred();
-        c.setUser("mike");
-        c.setPassword("mike"); //  Not the actual password
-        assertEquals(ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build(),l.process(c));
+        c.setUser("ab@a.com");
+        c.setPassword("abcd"); //  Not the actual password
+        assertEquals(ResponseEntity.status(HttpStatus.OK).build(),l.process(c));
     }
 
 
