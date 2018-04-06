@@ -41,6 +41,7 @@ public class UserRegisterTest {
     public void userRegister() throws IOException, SQLException {
 
         UserRegister ur = new UserRegister();
+        ErrorCodes e = new ErrorCodes();
 
         UserDetails ud = new UserDetails();
         ud.setPassword("password1234");

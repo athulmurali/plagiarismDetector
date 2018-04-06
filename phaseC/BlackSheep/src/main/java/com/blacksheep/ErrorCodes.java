@@ -22,5 +22,5 @@ public class ErrorCodes {
 
 
     //Hiding public constructor with private constructor
-    private ErrorCodes(){ }
+    public ErrorCodes(){ }
 }

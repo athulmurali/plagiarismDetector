@@ -1,6 +1,7 @@
 package Tests;
 
 import com.blacksheep.Cred;
+import com.blacksheep.UserDetails;
 import com.blacksheep.controller.LoginController;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -71,6 +72,16 @@ public class LoginTests {
         c.setUser("ab@a.com");
         c.setPassword("abcd"); //  Not the actual password
         assertEquals(ResponseEntity.status(HttpStatus.OK).build(),l.process(c));
+    }
+
+    @Test
+    public void TestGetconfirmedPassword() {
+
+        UserDetails ud = new UserDetails();
+        ud.setConfirmedPassword("abc");
+
+        assertEquals("abc",ud.getConfirmedPassword());
+
     }
 
 
