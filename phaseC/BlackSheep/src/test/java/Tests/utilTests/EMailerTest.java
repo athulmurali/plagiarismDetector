@@ -1,6 +1,8 @@
 package Tests.utilTests;
 
 import com.blacksheep.util.EMailer;
+import com.blacksheep.util.EmailConfigUtil;
+
 import org.junit.Test;
 
 import javax.mail.MessagingException;
@@ -62,6 +64,7 @@ public class EMailerTest {
 
     @Test
     public void invalidRecipientTest() {
+    	EmailConfigUtil util = new EmailConfigUtil();
         boolean exceptionThrown = false;
         String sender   = "BlackSheepDetector";
         String[] invalidEMailList = new String[]{"afaddress"}; // list of invalid toAddresses
