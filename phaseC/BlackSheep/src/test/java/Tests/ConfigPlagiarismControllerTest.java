@@ -38,4 +38,25 @@ public class ConfigPlagiarismControllerTest {
                 configController.configPercentageController((testData)) );
 
     }
+
+    /**
+     * Test for percentage update
+     */
+    @Test //(expected = NullPointerException.class)
+    public void configPercentageControllerThrow() {
+        try {
+            ConfigPlagiarismController configController = new ConfigPlagiarismController();
+            Types testData = new Types();
+
+            testData.setC2("codeMovement");
+            testData.setPercentage(80);
+
+            assertEquals( ResponseEntity.status(HttpStatus.BAD_REQUEST).build(),
+                    configController.configPercentageController((null)) );
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
 }
