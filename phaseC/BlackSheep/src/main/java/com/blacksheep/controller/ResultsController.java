@@ -91,9 +91,6 @@ public class ResultsController {
 				String filename1 = submission1.getKey();
 				filename1 = filename1.substring(filename1.indexOf(SUFFIX) + 1);
 
-				String[] submissionPrefixes1 = filename1.split(SUFFIX);
-				String submissionName1 = submissionPrefixes1[1];
-
 				ByteArrayOutputStream baos1 = getAWSFile(s3, bucketName, submission1);
 
 				InputStream crcStream1 = new ByteArrayInputStream(baos1.toByteArray());
@@ -101,15 +98,11 @@ public class ResultsController {
 				ParserFacade parserFacade = new ParserFacade();
 				RuleContext sourceContext1 = parserFacade.parse(parserStream1);
 
-				List<S3ObjectSummary> submissions2 = submissions.stream()
-						.filter(p -> !p.getKey().contains(submissionName1))
-						.collect(Collectors.toList());
-
-				for (int j = 0; j < submissions2.size(); j++) {
+				for (int j = i+1; j < submissions.size(); j++) {
 					List<Matches> listmatches = new ArrayList<>();
 					double percentage = 0;
 
-					S3ObjectSummary submission2 = submissions2.get(j);
+					S3ObjectSummary submission2 = submissions.get(j);
 					String filename2 = submission2.getKey();
 					filename2 = filename2.substring(filename2.indexOf(SUFFIX) + 1);
 
