@@ -1,6 +1,5 @@
 package Tests;
 
-import com.blacksheep.strategy.CodeMoveDetector;
 import com.blacksheep.strategy.Context;
 import com.blacksheep.strategy.NameChangePlagiarism;
 import com.blacksheep.parser.ParserFacade;

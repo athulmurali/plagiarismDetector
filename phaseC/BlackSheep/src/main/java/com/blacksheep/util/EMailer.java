@@ -70,13 +70,9 @@ public class EMailer{
         }
 
         // Attach all to address in message metadata
-        if (recipients.length > 0)
-        {
-            for (int i = 0; i < recipients.length; i++) {
-                msg.addRecipient(MimeMessage.RecipientType.TO,
-                        new InternetAddress(recipients[i]));
-            }
-        }
+		for (int i = 0; i < recipients.length; i++) {
+			msg.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(recipients[i]));
+		}
 
         // add subject
         msg.setSubject(subject);
@@ -91,11 +87,11 @@ public class EMailer{
                 emailProp.getProperty("mail.smtp.user"),
                 emailProp.getProperty("mail.smtp.password"));
         Address[] addresses = new InternetAddress[recipients.length];
-        if (recipients.length > 0) {
+
             for (int i = 0; i < recipients.length; i++) {
                 addresses[i] = new InternetAddress(recipients[i]);
             }
-        }
+        
         transport.sendMessage(msg, addresses);
         transport.close();
 

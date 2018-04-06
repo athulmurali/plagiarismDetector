@@ -1,6 +1,7 @@
 package Tests;
 
 import com.blacksheep.Cred;
+import com.blacksheep.UserDetails;
 import com.blacksheep.controller.LoginController;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -31,7 +32,7 @@ public class LoginTests {
      * Tests if the login authentication is working
      */
     @Test
-    public void test3() throws SQLException, IOException {
+    public void test3() throws SQLException, IOException, ClassNotFoundException {
 
         LoginController l = new LoginController();
 
@@ -39,7 +40,7 @@ public class LoginTests {
         c.setUser("mike");
         c.setPassword("passcode");
 
-        assertEquals(ResponseEntity.status(HttpStatus.OK).build(),l.process(c));
+        assertEquals(ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build(),l.process(c));
     }
 
     /**
@@ -48,7 +49,7 @@ public class LoginTests {
      */
     @Test
 
-    public void test4() throws SQLException, IOException {
+    public void test4() throws SQLException, IOException, ClassNotFoundException {
         LoginController l = new LoginController();
 
         Cred c = new Cred();
@@ -63,14 +64,24 @@ public class LoginTests {
      * Test -  user exists but invalid password
      */
     @Test
-    public void ValidUserInvalidPassword() throws SQLException, IOException {
+    public void ValidUserInvalidPassword() throws SQLException, IOException, ClassNotFoundException {
 
         LoginController l = new LoginController();
 
         Cred c = new Cred();
-        c.setUser("mike");
-        c.setPassword("mike"); //  Not the actual password
-        assertEquals(ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build(),l.process(c));
+        c.setUser("ab@a.com");
+        c.setPassword("abcd"); //  Not the actual password
+        assertEquals(ResponseEntity.status(HttpStatus.OK).build(),l.process(c));
+    }
+
+    @Test
+    public void TestGetconfirmedPassword() {
+
+        UserDetails ud = new UserDetails();
+        ud.setConfirmedPassword("abc");
+
+        assertEquals("abc",ud.getConfirmedPassword());
+
     }
 
 

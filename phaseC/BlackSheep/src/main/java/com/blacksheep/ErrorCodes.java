@@ -22,5 +22,5 @@ public class ErrorCodes {
 
     public static final int DB_UPDATE_FAILURE       = -700;
     //Hiding public constructor with private constructor
-    private ErrorCodes(){ }
+    public ErrorCodes(){ }
 }

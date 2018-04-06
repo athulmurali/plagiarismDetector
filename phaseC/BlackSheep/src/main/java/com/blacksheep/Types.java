@@ -6,6 +6,16 @@ public class Types {
     private String c2;
     private String c3;
 
+    public int getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(int percentage) {
+        this.percentage = percentage;
+    }
+
+    private int percentage;
+
     public String getC1() {
         return c1;
     }

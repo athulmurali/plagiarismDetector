@@ -30,7 +30,7 @@ public class EmailConfigUtil {
     /**
      * Private constructor to hide implicit public constructor
      */
-    private EmailConfigUtil() {
+    public EmailConfigUtil() {
     }
 
     /**
