@@ -60,7 +60,7 @@ public class LoginController {
                             logger.info("query executed :  User account with given userId exits");
                             hashedPassword = results.getString("password");
                         }
-                        if (hashedPassword != null && PASSWORD_ENCODER.matches(password, hashedPassword))
+                        if ( PASSWORD_ENCODER.matches(password, hashedPassword))
                         {
                             logger.info("userId & password matched ");
                             return ResponseEntity.status(HttpStatus.OK).build();

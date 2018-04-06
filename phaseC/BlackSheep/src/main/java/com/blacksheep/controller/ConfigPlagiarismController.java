@@ -1,93 +1,76 @@
 /**
- * Author : Athul
- * Version : 2.0
- * Data updated : 29 March 2018
  * This class contains the implementation for Plagiarism Configuration
  */
-
 package com.blacksheep.controller;
 
 import com.blacksheep.DBConfigUtil;
 import com.blacksheep.IDBConfigUtil;
+import com.blacksheep.Types;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.sql.*;
-import java.util.Map;
-
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 @RestController
 public class ConfigPlagiarismController {
 
+	private final Logger logger = Logger.getLogger(ConfigPlagiarismController.class);
 
-    //    will removed once user data is passed from browser
-    private static final int ONE_ROW_AFFECTED = 1;
-    private static final String QUERY = "update credentials set percentage = ? where userid = ? " ;
-    private final Logger logger = Logger.getLogger(LoginController.class);
+	/**
+	 *
+	 * @param config
+	 *            contains the percentage to be set for the user account user and
+	 *            percentage must be present in the json data of request
+	 * @return a response entity object representing success or failure
+	 * @throws SQLException
+	 */
+	@RequestMapping(value = "/config", method = RequestMethod.POST)
+	public ResponseEntity<Object> configPercentageController(
+			@RequestBody Types config) {
+		try {
+			logger.info("Config update start");
 
-    /**
-     *
-     * @param payload contains the percentage to be set for the user account
-     *                user and percentage must be present in the json data of request
-     * @return a response entity object representing success or failure
-     * @throws SQLException
-     */
-    @RequestMapping( value = "/configPercentage", method = RequestMethod.POST)
-    public ResponseEntity<Object> configPercentageController( @RequestBody Map<String, Object> payload)
-            throws SQLException, IOException {
-        logger.info("Entering endpoint : /configPercentage");
-        logger.info("userId" + payload.get("user"));
-        logger.info(payload.get("percentage: " + "percentage"));
+			updateConfig(config);
 
-        Integer percentageToSet = (Integer) payload.get("percentage");
-        String  userID          = (String) payload.get("user");
+			logger.info("Config update end");
+			return ResponseEntity.status(HttpStatus.OK).build();
+		} catch (SQLException | IOException e) {
+			logger.error("", e);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
+	}
 
-        if(updatePlagiarismPercentage(userID,percentageToSet))
-            return ResponseEntity.status(HttpStatus.OK).build();
+	/**
+	 *
+	 * @param config
+	 *            : Configuration values selected by the user
+	 * @throws MessagingException
+	 */
+	private void updateConfig(Types config) throws SQLException, IOException {
+		IDBConfigUtil dbConfigUtil = new DBConfigUtil();
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error Message");
-    }
+		String updateTableSQL = "UPDATE configPlagiarism SET COMMENT = ?, STRUCTURE = ?, CODEMOVEMENT = ?, PERCENT = ?";
 
-
-    /**
-     *
-     * @param userId the user Id of the user for which the percentage has to be changed
-     * @param percentage the percentage to which the plagiarism level has to be set.
-     * @return a Response entity Object
-     * @throws MessagingException
-     */
-
-    private  boolean updatePlagiarismPercentage(String userId, int percentage) throws SQLException, IOException {
-        IDBConfigUtil dbConfigUtil = new DBConfigUtil();
-
-        try (Connection connection =
-                     DriverManager.getConnection(
-                             dbConfigUtil.getDbURL(),
-                             dbConfigUtil.getDbUser(),
-                             dbConfigUtil.getDbPass()))
-        {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(QUERY))
-            {
-                preparedStatement.setString(1,String.valueOf(percentage));
-                preparedStatement.setString(2,userId);
-                if (preparedStatement.executeUpdate() == ONE_ROW_AFFECTED)
-                {
-                    logger.info("query executed successfully: update Table ");
-                    logger.info("plagiarism percentage updated for userId" + userId);
-                    return true;
-                }
-                else{
-                    logger.info("Plagiarism configuration not applied.");
-                    logger.info("Invalid UserID");
-                    return false;
-                }
-
-            }
-        }
-    }
-
+		try (Connection connection = DriverManager.getConnection(dbConfigUtil.getDbURL(),
+				dbConfigUtil.getDbUser(), dbConfigUtil.getDbPass())) {
+			try (PreparedStatement preparedStatement = connection
+					.prepareStatement(updateTableSQL)) {
+				preparedStatement.setString(1, config.getC3());
+				preparedStatement.setString(2, config.getC1());
+				preparedStatement.setString(3, config.getC2());
+				preparedStatement.setInt(4, config.getPercentage());
+				preparedStatement.executeUpdate();
+			}
+		}
+	}
 }
