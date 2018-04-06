@@ -81,4 +81,28 @@ public class EMailerTest {
         }
         assert(exceptionThrown);
     }
+
+
+    /**
+     * Test for admin team
+     */
+
+    @Test
+    public void  adminTeamMailTest()
+    {
+        String body = "Black sheep system restarted  - test function";
+        String subject = "Black Sheep restarted";
+        boolean exceptionThrown = false;
+
+        try {
+            emailerObj.emailAdminTeam(subject,body);
+        } catch (MessagingException e) {
+            exceptionThrown = true;
+            e.printStackTrace();
+        }
+
+        // if no exception is thrown and email is sent to the above list,
+        //        assert will be true
+        assert (!exceptionThrown);
+    }
 }
