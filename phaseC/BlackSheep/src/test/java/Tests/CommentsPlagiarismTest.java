@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import static org.junit.Assert.assertEquals;
 
@@ -60,7 +61,14 @@ public class CommentsPlagiarismTest {
         Context c = new Context(new CommentPlagiarism());
         InputStream stream1 = new ByteArrayInputStream(fileText1.getBytes(StandardCharsets.UTF_8));
         InputStream stream2 = new ByteArrayInputStream(fileText2.getBytes(StandardCharsets.UTF_8));
-        List<List<String>> result = c.executeStrategy(stream1, stream2);
+        
+        Scanner scanner = new Scanner(stream1);
+		String s1 = scanner.useDelimiter("\\A").next();
+		
+		scanner = new Scanner(stream2);
+		String s2 = scanner.useDelimiter("\\A").next();
+        
+        List<List<String>> result = c.executeStrategy(s1, s2);
         assertEquals(1, result.get(0).size());
     }
 
@@ -95,7 +103,14 @@ public class CommentsPlagiarismTest {
         Context c = new Context(new CommentPlagiarism());
         InputStream stream1 = new ByteArrayInputStream(fileText1.getBytes(StandardCharsets.UTF_8));
         InputStream stream2 = new ByteArrayInputStream(fileText2.getBytes(StandardCharsets.UTF_8));
-        List<List<String>> result = c.executeStrategy(stream1, stream2);
+        
+        Scanner scanner = new Scanner(stream1);
+		String s1 = scanner.useDelimiter("\\A").next();
+		
+		scanner = new Scanner(stream2);
+		String s2 = scanner.useDelimiter("\\A").next();
+        
+        List<List<String>> result = c.executeStrategy(s1, s2);
         assertEquals(2, result.get(0).size());
     }
 
@@ -127,10 +142,9 @@ public class CommentsPlagiarismTest {
                 "def mul(a,b,c):\n" +
                 "    a*b*c";
 
-        Context c = new Context(new CommentPlagiarism());
-        InputStream stream1 = new ByteArrayInputStream(fileText1.getBytes(StandardCharsets.UTF_8));
-        InputStream stream2 = new ByteArrayInputStream(fileText2.getBytes(StandardCharsets.UTF_8));
-        List<List<String>> result = c.executeStrategy(stream1, stream2);
+        Context c = new Context(new CommentPlagiarism()); 
+        
+        List<List<String>> result = c.executeStrategy(fileText1, fileText2);
         assertEquals(99.3, Double.valueOf(result.get(2).get(0)), 2);
     }
 
@@ -163,9 +177,8 @@ public class CommentsPlagiarismTest {
                 "    a*b*c";
 
         Context c = new Context(new CommentPlagiarism());
-        InputStream stream1 = new ByteArrayInputStream(fileText1.getBytes(StandardCharsets.UTF_8));
-        InputStream stream2 = new ByteArrayInputStream(fileText2.getBytes(StandardCharsets.UTF_8));
-        List<List<String>> result = c.executeStrategy(stream1, stream2);
+        
+        List<List<String>> result = c.executeStrategy(fileText1, fileText2);
         assertEquals(100.0, Double.valueOf(result.get(2).get(0)), 2);
     }
     
@@ -213,10 +226,9 @@ public class CommentsPlagiarismTest {
         		"    print(temperature)\r\n" + 
         		"    temperature = temperature - 1";
 
-        Context c = new Context(new CommentPlagiarism());
-        InputStream stream1 = new ByteArrayInputStream(fileText1.getBytes(StandardCharsets.UTF_8));
-        InputStream stream2 = new ByteArrayInputStream(fileText2.getBytes(StandardCharsets.UTF_8));
-        List<List<String>> result = c.executeStrategy(stream1, stream2);
+        Context c = new Context(new CommentPlagiarism()); 
+        
+        List<List<String>> result = c.executeStrategy(fileText1, fileText2);
         assertEquals(0.0, Double.valueOf(result.get(2).get(0)), 2);
     }
     
@@ -235,9 +247,8 @@ public class CommentsPlagiarismTest {
         		"    temperature = temperature - 1";
 
         Context c = new Context(new CommentPlagiarism());
-        InputStream stream1 = new ByteArrayInputStream(fileText1.getBytes(StandardCharsets.UTF_8));
-        InputStream stream2 = new ByteArrayInputStream(fileText2.getBytes(StandardCharsets.UTF_8));
-        List<List<String>> result = c.executeStrategy(stream1, stream2);
+        
+        List<List<String>> result = c.executeStrategy(fileText1, fileText2);
         assertEquals(100.0, Double.valueOf(result.get(2).get(0)), 2);
     }
     
@@ -256,9 +267,8 @@ public class CommentsPlagiarismTest {
         		"    temperature = temperature - 1";
 
         Context c = new Context(new CommentPlagiarism());
-        InputStream stream1 = new ByteArrayInputStream(fileText1.getBytes(StandardCharsets.UTF_8));
-        InputStream stream2 = new ByteArrayInputStream(fileText2.getBytes(StandardCharsets.UTF_8));
-        List<List<String>> result = c.executeStrategy(stream1, stream2);
+        
+        List<List<String>> result = c.executeStrategy(fileText2, fileText1);
         assertEquals(100.0, Double.valueOf(result.get(2).get(0)), 2);
     }
     
@@ -269,12 +279,6 @@ public class CommentsPlagiarismTest {
     	expected.add(new ArrayList<>());
     	expected.add(new ArrayList<>());
 
-        String fileText2 = "# totally different from previous simples\r\n" + 
-        		"temperature = 115\r\n" + 
-        		"while temperature > 112: "+ 
-        		"    print(temperature)\r\n" + 
-        		"    temperature = temperature - 1";
-
         String fileText1 = "# totally different from previous simples\r\n" + 
         		"temperature = 115\r\n" + 
         		"while temperature > 112: # totally different from previous simples\r\n" + 
@@ -282,8 +286,8 @@ public class CommentsPlagiarismTest {
         		"    temperature = temperature - 1";
 
         Context c = new Context(new CommentPlagiarism());
-        InputStream stream1 = new ByteArrayInputStream(fileText1.getBytes(StandardCharsets.UTF_8));
-        List<List<String>> result = c.executeStrategy(stream1, null);
+        
+        List<List<String>> result = c.executeStrategy(fileText1, null);
         assertEquals(expected, result);
     }
 }

@@ -32,6 +32,7 @@ public class ResultControllerTest {
 
 		try {
 			ResultsController rc = new ResultsController();
+			rc.setFlagsForTesting(false, false, true);
 			List<String> l1 = new ArrayList<>();
 			l1.add("1");
 
@@ -55,6 +56,7 @@ public class ResultControllerTest {
 	@Test
 	public void Notempty() {
 		ResultsController rc = new ResultsController();
+		rc.setFlagsForTesting(true, false, true);
 		List<String> l1 = new ArrayList<>();
 		l1.add("1");
 
@@ -80,6 +82,7 @@ public class ResultControllerTest {
 	@Test
 	public void CheckPercentage() {
 		ResultsController rc = new ResultsController();
+		rc.setFlagsForTesting(true, true, true);
 
 		double v1 = 40, v2 = 40, v3 = 40;
 
@@ -330,9 +333,9 @@ public class ResultControllerTest {
 		} catch (final IOException e) {
 		}
 
-		MultipartFile multipartFile1 = new MockMultipartFile("simple1.py", "simple1.py", "text/plain", array1);
+		MultipartFile multipartFile1 = new MockMultipartFile("simple1.py", "simple4.py", "text/plain", array1);
 
-		MultipartFile multipartFile2 = new MockMultipartFile("simple4.py", "simple4.py", "text/plain", array2);
+		MultipartFile multipartFile2 = new MockMultipartFile("simple1.py", "simple4.py", "text/plain", array2);
 
 		MultipartFile[] files1 = { multipartFile1, multipartFile2 };
 		MultipartFile[] files2 = { multipartFile2, multipartFile1 };
