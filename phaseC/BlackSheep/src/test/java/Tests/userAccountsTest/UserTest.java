@@ -8,6 +8,7 @@
 package Tests.userAccountsTest;
 
 import com.blacksheep.ErrorCodes;
+import com.blacksheep.models.Role;
 import com.blacksheep.models.User;
 import org.junit.Test;
 
@@ -192,7 +193,30 @@ public class UserTest {
         String role = "professor";
         Integer percentage = 0;
         User user = new User(username,password,confirmPassword,role,percentage);
+        
+        Role.valueOf("TA");
 
         assertEquals(ErrorCodes.EMAIL_INVALID,User.createUser(user));
     }
+
+//    /**
+//     * Test added for invalid user Id or email format
+//     * @throws IOException
+//     * @throws SQLException
+//     */
+//    @Test (expected = NullPointerException.class)
+//    public void TestNull() throws Exception{
+//
+//        User user = new User("abc","abc",
+//                "abc",
+//                "TA",30);
+//
+//        try {
+//            user.createUserRecord(null);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//
+//    }
 }

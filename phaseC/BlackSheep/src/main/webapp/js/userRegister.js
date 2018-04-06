@@ -1,5 +1,4 @@
-window.onload = function()
-{
+$(document).ready(function () {
     // checks bootstrap import
     var bootstrap_enabled = (typeof $().emulateTransitionEnd == 'function');
     console.log("bootstrap loaded : " + bootstrap_enabled);
@@ -25,40 +24,29 @@ window.onload = function()
     $("#register").click(function () {
 
         var userDetails = {
-            "email"     :    $("#email").val(),
+            "userId"     :    $("#email").val(),
             "password"  :    $("#password").val(),
             "role"      :    $('input[name=role]:checked').val()
         }
 
-        console.log("data to send : ");
-        console.log(userDetails);
+        $.ajax({
+            type: "POST",
+            url: "/userRegister",
+            data: JSON.stringify(userDetails),
+            contentType: 'application/json',
 
-        if (ifFormValid()){
-            alert("form is valid");
-        }
-        else{
-            alert("Error! Please check the inputs!")
-        }
+            success: function (response) {
+                console.log("Success");
+                redirect1();
+            },
+            error: function (e) {
+                console.log('page not found' + e);
+                redirect2();
 
-        // $.ajax({
-        //     type: "POST",
-        //     url: "/userLogin",
-        //     data: JSON.stringify(userDetails),
-        //     contentType: 'application/json',
-        //
-        //     success: function (response) {
-        //         console.log("Success");
-        //         redirect1();
-        //     },
-        //     error: function (e) {
-        //         console.log('page not found' + e);
-        //         redirect2();
-        //
-        //     }
-        // });
-
+            }
+        });
     });
-}
+});
 
 function ifFormValid() {
     return  emailValidate()             &&
@@ -108,16 +96,15 @@ function isPasswordLengthValid()
     }
 }
 
-// to be fixed
-function redirect1(){
-    //redirect to page 1
-    console.log("redirect to page 1");
-};
+function redirect1() {
 
-function redirect2(){
-    //redirect to page 2
-    console.log("hi")
-};
+    console.log("in redirect");
+    window.location = "../templates/userLogin.html";
+}
+
+function redirect2() {
+    window.location = "../templates/userRegister.html";
+}
 
 function checkIfEmailNotTaken(email){
     // return false if not taken (send request to server)
