@@ -1,6 +1,6 @@
 package com.blacksheep.strategy;
 
-import com.blacksheep.parser.ParserFacade;
+import com.blacksheep.services.ParserFacade;
 import com.blacksheep.parser.Python3Parser;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RuleContext;

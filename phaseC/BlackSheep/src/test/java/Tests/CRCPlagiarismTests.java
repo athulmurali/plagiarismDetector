@@ -1,6 +1,6 @@
 package Tests;
 
-import com.blacksheep.parser.ParserFacade;
+import com.blacksheep.services.ParserFacade;
 import com.blacksheep.strategy.CRCPlagiarism;
 import com.blacksheep.strategy.Context;
 
