@@ -24,7 +24,8 @@
           src/main/java/
         </sonar.sources>
         <sonar.exclusions>
-          src/main/java/com/blacksheep/parser/*.java
+          src/main/java/com/blacksheep/parser/*.java, src/main/java/com/blacksheep/services/*.java
+
        	</sonar.exclusions>
        	
         <!-- <sonar.exclusions>**/*.js</sonar.exclusions> -->

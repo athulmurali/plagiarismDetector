@@ -20,7 +20,7 @@ public class ErrorCodes {
     public static final int PASSWORD_TOO_SHORT       =   -2;
     public static final int ROLE_INVALID             =   -1;
 
-
+    public static final int DB_UPDATE_FAILURE       = -700;
     //Hiding public constructor with private constructor
     public ErrorCodes(){ }
 }

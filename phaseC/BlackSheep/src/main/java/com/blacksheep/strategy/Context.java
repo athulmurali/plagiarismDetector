@@ -29,4 +29,8 @@ public class Context {
     public List<List<String>> executeStrategy(File i1, File i2) throws IOException{
         return strategy.getDetectResult(i1, i2);
     }
+    
+    public List<List<String>> executeStrategy(String i1, String i2){
+        return strategy.getDetectResult(i1, i2);
+    }
 }

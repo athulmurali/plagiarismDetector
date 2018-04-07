@@ -1,6 +1,8 @@
 package Tests.utilTests;
 
 import com.blacksheep.util.EMailer;
+import com.blacksheep.util.EmailConfigUtil;
+
 import org.junit.Test;
 
 import javax.mail.MessagingException;
@@ -62,6 +64,7 @@ public class EMailerTest {
 
     @Test
     public void invalidRecipientTest() {
+    	EmailConfigUtil util = new EmailConfigUtil();
         boolean exceptionThrown = false;
         String sender   = "BlackSheepDetector";
         String[] invalidEMailList = new String[]{"afaddress"}; // list of invalid toAddresses
@@ -77,5 +80,29 @@ public class EMailerTest {
             exceptionThrown = true; //SendFailedException is a Messaging exception
         }
         assert(exceptionThrown);
+    }
+
+
+    /**
+     * Test for admin team
+     */
+
+    @Test
+    public void  adminTeamMailTest()
+    {
+        String body = "Black sheep system restarted  - test function";
+        String subject = "Black Sheep restarted";
+        boolean exceptionThrown = false;
+
+        try {
+            emailerObj.emailAdminTeam(subject,body);
+        } catch (MessagingException e) {
+            exceptionThrown = true;
+            e.printStackTrace();
+        }
+
+        // if no exception is thrown and email is sent to the above list,
+        //        assert will be true
+        assert (!exceptionThrown);
     }
 }

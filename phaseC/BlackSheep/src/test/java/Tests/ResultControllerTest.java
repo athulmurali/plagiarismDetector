@@ -1,29 +1,23 @@
 package Tests;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.blacksheep.Types;
 import com.blacksheep.controller.ResultsController;
 import com.blacksheep.controller.UploadController;
 import com.blacksheep.parser.CreateJson;
 import com.blacksheep.parser.Matches;
 import com.blacksheep.util.AWSConfigUtil;
+import com.blacksheep.util.AWSConnection;
+import com.blacksheep.util.Utility;
 
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -31,31 +25,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ResultControllerTest {
+	
+	private static final String TESTUSER = "Test";
 
-	@Test(expected = IndexOutOfBoundsException.class)
 	public void empty() {
 
-		ResultsController rc = new ResultsController();
-		List<String> l1 = new ArrayList<>();
-		l1.add("1");
+		try {
+			ResultsController rc = new ResultsController();
+			rc.setFlagsForTesting(false, false, true);
+			List<String> l1 = new ArrayList<>();
+			l1.add("1");
 
-		List<List<String>> list1 = new ArrayList<>();
-		list1.add(l1);
+			List<List<String>> list1 = new ArrayList<>();
+			list1.add(l1);
 
-		List<Integer> listInt = new ArrayList<>();
-		listInt.add(1);
+			List<Integer> listInt = new ArrayList<>();
+			listInt.add(1);
 
-		Matches m = new Matches("abc", listInt, listInt);
+			Matches m = new Matches("abc", listInt, listInt);
 
-		List<Matches> matches = new ArrayList<>();
-		matches.add(m);
+			List<Matches> matches = new ArrayList<>();
+			matches.add(m);
 
-		rc.createMatches(list1, "test", matches);
+			rc.createMatches(list1, "test", matches);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
 	public void Notempty() {
 		ResultsController rc = new ResultsController();
+		rc.setFlagsForTesting(true, false, true);
 		List<String> l1 = new ArrayList<>();
 		l1.add("1");
 
@@ -81,6 +82,7 @@ public class ResultControllerTest {
 	@Test
 	public void CheckPercentage() {
 		ResultsController rc = new ResultsController();
+		rc.setFlagsForTesting(true, true, true);
 
 		double v1 = 40, v2 = 40, v3 = 40;
 
@@ -195,10 +197,8 @@ public class ResultControllerTest {
 
 		List<CreateJson> lcj = new ArrayList<>();
 		lcj.add(cj);
-
-		rc.postChoices(t);
 		
-		rc.inputStream();
+		rc.initPlagiarismDetection("Mike");
 
 		// assertEquals(lcj.toString(),rc.PostChoices(t).toString());
 
@@ -234,10 +234,8 @@ public class ResultControllerTest {
 
 		List<CreateJson> lcj = new ArrayList<>();
 		lcj.add(cj);
-
-		rc.postChoices(t);
 		
-		rc.inputStream();
+		rc.initPlagiarismDetection(TESTUSER);
 
 		// assertEquals(lcj.toString(),rc.PostChoices(t).toString());
 
@@ -274,10 +272,8 @@ public class ResultControllerTest {
 
 		List<CreateJson> lcj = new ArrayList<>();
 		lcj.add(cj);
-
-		rc.postChoices(t);
 		
-		rc.inputStream();
+		rc.initPlagiarismDetection(TESTUSER);
 
 		// assertEquals(lcj.toString(),rc.PostChoices(t).toString());
 
@@ -285,6 +281,7 @@ public class ResultControllerTest {
 	
 	@Test
 	public void TestPostChoices3() {
+		Utility util = new Utility();
 
 		Types t = new Types();
 
@@ -314,10 +311,8 @@ public class ResultControllerTest {
 
 		List<CreateJson> lcj = new ArrayList<>();
 		lcj.add(cj);
-
-		rc.postChoices(t);
 		
-		rc.inputStream();
+		rc.initPlagiarismDetection(TESTUSER);
 
 		// assertEquals(lcj.toString(),rc.PostChoices(t).toString());
 
@@ -338,14 +333,21 @@ public class ResultControllerTest {
 		} catch (final IOException e) {
 		}
 
-		MultipartFile multipartFile1 = new MockMultipartFile("simple1.py", "simple1.py", "text/plain", array1);
+		MultipartFile multipartFile1 = new MockMultipartFile("simple1.py", "simple4.py", "text/plain", array1);
 
-		MultipartFile multipartFile2 = new MockMultipartFile("simple4.py", "simple4.py", "text/plain", array2);
+		MultipartFile multipartFile2 = new MockMultipartFile("simple1.py", "simple4.py", "text/plain", array2);
 
 		MultipartFile[] files1 = { multipartFile1, multipartFile2 };
 		MultipartFile[] files2 = { multipartFile2, multipartFile1 };
 
-		uploadController.uploadFileSource(files1);
-		uploadController.uploadFileSuspect(files2);
+		uploadController.uploadFileSource(TESTUSER, "Project1", files1);
+		uploadController.uploadFileSource(TESTUSER, "Project2", files2);
+	}
+	
+	@AfterClass
+	public static void cleaup() throws FileNotFoundException, IOException {
+		AWSConfigUtil config = new AWSConfigUtil();
+		AmazonS3 s3 = AWSConnection.getS3Client();
+		AWSConnection.deleteFolder(config.getAwsBucketName(), TESTUSER, s3);
 	}
 }
