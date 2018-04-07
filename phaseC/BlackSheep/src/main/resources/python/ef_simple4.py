@@ -7,4 +7,4 @@ def sum(a, b):
 
 def mul(a,b):
   c=a+b
-c*b
+  c*b

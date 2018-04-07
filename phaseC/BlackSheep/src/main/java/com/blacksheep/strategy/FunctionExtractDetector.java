@@ -8,15 +8,13 @@ import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class FunctionExtractDetector {
     // map that saves the name of a function and all its RuleContext children
     private Map<String, String> functionMap = new HashMap();
 
-
-    // set of names of functions that need to be removed
-    private Set<String> functionRemoveSet = new HashSet<>();
 
 
     /**
@@ -30,7 +28,12 @@ public class FunctionExtractDetector {
         ParserFacade parserFacade = new ParserFacade();
         RuleContext t1 = parserFacade.parse(f1); // build ast1
         RuleContext t2 = parserFacade.parse(f2);
-        return detector.getSimilarPercentage(t1,t2);
+        String s1 = changeTreeStructure(t1,f1);
+        String s2 = changeTreeStructure(t2,f2);
+        InputStream stream1 = new ByteArrayInputStream(s1.getBytes(StandardCharsets.UTF_8));
+        InputStream stream2 = new ByteArrayInputStream(s2.getBytes(StandardCharsets.UTF_8));
+
+        return detector.getSimilarPercentage(parserFacade.parse(stream1),parserFacade.parse(stream2));
     }
 
 
@@ -38,9 +41,9 @@ public class FunctionExtractDetector {
      * change the tree structure by replace function call with its body
      * @param ctx a RuleContext represents the tree that needs to change
      */
-    public void changeTreeStructure(RuleContext ctx, File file) throws IOException {
+    public String changeTreeStructure(RuleContext ctx, File file) throws IOException {
         getFunctionNameAndBody(ctx);
-        replaceFunctionCall(file);
+        return replaceFunctionCall(file);
     }
 
     /**
@@ -52,16 +55,13 @@ public class FunctionExtractDetector {
         {
             // get name of the function
             String functionName = ctx.getChild(1).getText().trim();
-            System.out.println("\nfunction: " + functionName);
 
             // put all its function name and body into map
             //String body = ctx.getChild(4).getText(); // suite(body) of function
             String bodyString = "";
             RuleContext body = (RuleContext) ctx.getChild(4);
-            System.out.println("childCOutn: " + body.getChildCount());
             for (int i=0;i<body.getChildCount();i++) {
                 if (isValidChild(body.getChild(i))) {
-                    System.out.println("child" + i + ": " + body.getChild(i).getText());
                     bodyString += "  " + body.getChild(i).getText() + "\n";
                 }
             }
@@ -91,14 +91,13 @@ public class FunctionExtractDetector {
         while((line = in.readLine()) != null) {
             if(isFunctionCall(line)) {
                 String functionName = extractFunctionCallName(line);
-                System.out.println("function name: " + functionName);
                 newCode.append(this.functionMap.get(functionName) + "\n");
             }
             else {
                 newCode.append(line + "\n");
             }
         }
-        System.out.println("new code: \n" + newCode);
+        in.close();
         return newCode.toString();
     }
 
@@ -109,7 +108,7 @@ public class FunctionExtractDetector {
      * @return true if given rule is a function call
      */
     public Boolean isFunctionCall(String text) {
-        return  text.indexOf("(") > 0 &&
+        return  text.indexOf('(') > 0 &&
                 text.indexOf("def") == -1 &&
                 text.indexOf("print") != 0;
     }
@@ -120,7 +119,7 @@ public class FunctionExtractDetector {
      * @return a string which is the name of given function
      */
     private String extractFunctionCallName(String s) {
-        return s.substring(0, s.indexOf("(")).trim();
+        return s.substring(0, s.indexOf('(')).trim();
     }
 
 

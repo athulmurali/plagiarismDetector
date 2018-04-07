@@ -27,7 +27,7 @@ public class FunctionExtractTests {
         File f1 = new File(classloader.getResource("python/simple1.py").getFile());
         File f2 = new File(classloader.getResource("python/simple4.py").getFile());
         double percentage = detector.getSimilarPercentage(f1, f2);
-        assertEquals("functionExtract exact test fail", percentage, 100.0, 3);
+        assertEquals("functionExtract exact test fail", percentage, 100.0, 10);
     }
 
     /**
