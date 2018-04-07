@@ -1,5 +1,8 @@
 window.onload= function() {
 
+    var userId = localStorage.getItem("user");
+    getUrlJsonSync();
+
     var RESULT = getMatches();
     console.log(getFileDict(RESULT));
 
@@ -200,24 +203,22 @@ function getMatches() {
 
     return RESULT1;
 }
-
-function getUrlJsonSync(url){
+function getUrlJsonSync(url) {
+    var data = new FormData();
+    data.append("userid", "mike");
     var getResultObj = $.ajax({
-        type: "GET",
+        type: "POST",
         url: url,
-        dataType: 'json',
+        data: data,
+        data: data,
+        processData: false,
+        contentType: false,
         cache: false,
-        async: false
+        timeout: 600000
     });
-    // 'async' has to be 'false' for this to work
-    console.log(getResultObj.data);
-    var response = {valid: getResultObj.statusText,  data: getResultObj.responseJSON};
-
-    console.log("response,.,..");
-    console.log(response.data);
-    return response.data;
-};
-
+console.log("newResults:");
+console.log(getResultObj);
+}
 
 function getFileDict(matchPairArray)
 {
@@ -264,3 +265,29 @@ function redirectToCodeMatch()
     console.log(" logged redirection ");
     window.location = "../templates/codeMatch.html"
 }
+
+
+
+
+// old json request
+
+
+// function getUrlJsonSync(url){
+//     var getResultObj = $.ajax({
+//         type: "GET",
+//         url: url,
+//         dataType: 'json',
+//         cache: false,
+//         async: false
+//     });
+//     // 'async' has to be 'false' for this to work
+//     console.log(getResultObj.data);
+//     var response = {valid: getResultObj.statusText,  data: getResultObj.responseJSON};
+//
+//     console.log("response,.,..");
+//     console.log(response.data);
+//     return response.data;
+// };
+
+
+

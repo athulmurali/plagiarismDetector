@@ -124,7 +124,7 @@ window.onload =function () {
         location.href = "../templates/codeStats.html";
     }
 
-    function redirectToHome(){
+    function redirectToWelcome(){
         location.href = "../templates/welcome.html";
     }
 //
