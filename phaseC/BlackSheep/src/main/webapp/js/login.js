@@ -1,8 +1,10 @@
 $(document).ready(function () {
 
     $("#login").click(function () {
+
         ///var password2 = $("#password").val();
         var user2 = $("#uname").val();
+
         var cred = {
 
             "user":$("#uname").val(),
@@ -17,12 +19,20 @@ $(document).ready(function () {
 
             success: function (response) {
 
+                localStorage.setItem("user",user2);
+
                 if(response == "TA")
+                {
+                    localStorage.setItem("role","TA");
                     location.href = "./multipleSubmissionUpload.html?userId="+user2;
-                else
+                }
+                else{
+                    localStorage.setItem("role","PROFESSOR");
                     redirect1();
+                }
             },
             error: function (e) {
+                localStorage.clear();
                 console.log('page not found' + e);
                 redirect2();
 
@@ -32,7 +42,6 @@ $(document).ready(function () {
         function redirect1() {
 
             console.log("in redirect");
-            localStorage.setItem("user",user2);
             window.location.href = "../templates/configPlagiarismPercentage.html?userId="+user2;
         }
 
