@@ -16,7 +16,10 @@ $(document).ready(function () {
             contentType: 'application/json',
 
             success: function (response) {
-                    console.log("Success");
+
+                if(response == "TA")
+                    location.href = "./multipleSubmissionUpload.html?userId="+user2;
+                else
                     redirect1();
             },
             error: function (e) {

@@ -78,7 +78,7 @@ elem.addEventListener("input", rangeValue);
 
                 success: function (response) {
                     console.log("Success");
-                    window.location = "../templates/uploadFiles.html";
+                    window.location = "../templates/multipleSubmissionUpload.html";
 
                 },
                 error: function (e) {
