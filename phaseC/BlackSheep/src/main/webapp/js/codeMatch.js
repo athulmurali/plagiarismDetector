@@ -690,3 +690,7 @@ codeObj["simple6.py"] = "# totally different from previous simples\n" +
 //     }
 //
 // }
+function redirectToCodeStats()
+{
+    window.location = "../templates/codeStats.html"
+}
