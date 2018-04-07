@@ -2,7 +2,7 @@ package Tests;
 
 import com.blacksheep.strategy.Context;
 import com.blacksheep.strategy.NameChangePlagiarism;
-import com.blacksheep.parser.ParserFacade;
+import com.blacksheep.services.ParserFacade;
 import org.antlr.v4.runtime.RuleContext;
 import org.junit.BeforeClass;
 import org.junit.Test;

@@ -1,6 +1,6 @@
 package Tests;
 
-import com.blacksheep.parser.ParserFacade;
+import com.blacksheep.services.ParserFacade;
 import com.blacksheep.strategy.CommentPlagiarism;
 import com.blacksheep.strategy.Context;
 
