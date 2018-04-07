@@ -1,12 +1,17 @@
+var globalMetadata;
 window.onload= function() {
 
-    console.log(newAjaxGet("/getResults3","mike"))
+
+
     var userId = localStorage.getItem("user");
-    getUrlJsonSync();
+    console.log("getting user's code")
 
-    var RESULT = getMatches();
+    newAjaxGet("/getCode",userId);
+
+
+    var RESULT = getMatches(userId);
+
     console.log(getFileDict(RESULT));
-
 
     var perList = getPercentageArray(RESULT);
     var avg = avgOfList(perList);
@@ -22,7 +27,6 @@ window.onload= function() {
         addRow('myTable',keys[i],typeCountDict[keys[i]]);
         console.log(keys[i] + typeCountDict[keys[i]]);
     }
-
 
 
     // getMatches();s
@@ -176,6 +180,13 @@ function getFileDict(matchPairArray){
         }
 
     }
+
+    console.log("currentUser : ", userId);
+    console.log("global code");
+    newAjaxGet("/getCode","mike");
+
+
+
     console.log(dict);
      return dict;
 
@@ -196,30 +207,16 @@ function addUniqueElements(newLi,oldLi){
     return oldLi;
 }
 
-function getMatches() {
-    const RESULT1 = getUrlJsonSync("/getResults3");
+function getMatches(userId) {
+    const RESULT1 =     newAjaxGet("/getResults3",userId);
+
     console.log(" Result below  /....   ");
 
     console.log(RESULT1);
 
     return RESULT1;
 }
-function getUrlJsonSync(url) {
-    var data = new FormData();
-    data.append("userid", "mike");
-    var getResultObj = $.ajax({
-        type: "POST",
-        url: url,
-        data: data,
-        data: data,
-        processData: false,
-        contentType: false,
-        cache: false,
-        timeout: 600000
-    });
-console.log("newResults:");
-console.log(getResultObj);
-}
+
 
 function getFileDict(matchPairArray)
 {
@@ -273,16 +270,17 @@ function redirectToCodeMatch()
     var paramData = 'userid='+encodeURI(userId);
     console.log("param" +paramData);
 
-    var result;
+    var resultTemp;
    var ajaxObx =  $.ajax({
         url: urlTo,
         data: paramData,
         type: "GET",
+       async: false,
 
         success: function (response) {
-            console.log("response");
             console.log(response);
-
+            resultTemp = response;
+            return response;
         },
         error: function (xhr, status, error) {
             alert(xhr.responseText);
@@ -290,8 +288,7 @@ function redirectToCodeMatch()
     });
 
    console.log("ajax res");
-   console.log(result);
-    return ajaxObx;
+    return resultTemp;
 }
 
 
