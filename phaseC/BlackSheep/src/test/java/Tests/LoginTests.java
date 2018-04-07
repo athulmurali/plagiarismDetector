@@ -71,7 +71,7 @@ public class LoginTests {
         Cred c = new Cred();
         c.setUser("ab@a.com");
         c.setPassword("abcd"); //  Not the actual password
-        assertEquals(ResponseEntity.status(HttpStatus.OK).build(),l.process(c));
+        assertEquals(new ResponseEntity<>("PROFESSOR", HttpStatus.OK),l.process(c));
     }
 
     @Test
