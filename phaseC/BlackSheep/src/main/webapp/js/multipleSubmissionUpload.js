@@ -15,7 +15,7 @@
 //     // may be from a text box called project name
 //     // || can be derived from the first part of file Name
 
-var user    = "mike";
+var user    = localStorage.getItem("user");
 var project = "proj1";
 
 window.onload =function () {
