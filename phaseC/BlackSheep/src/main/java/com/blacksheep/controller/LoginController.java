@@ -1,4 +1,5 @@
 package com.blacksheep.controller;
+import com.blacksheep.services.UsageStats;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.blacksheep.Cred;
 import com.blacksheep.DBConfigUtil;
@@ -64,8 +65,11 @@ public class LoginController {
                     }
                     if ( PASSWORD_ENCODER.matches(password, hashedPassword))
                     {
+                        UsageStats.incrementUsageCount();
+
                         logger.info("userId & password matched ");
                         return new ResponseEntity<>(role, HttpStatus.OK);
+
                     }
                     else {
                         logger.info("login check: userId & password pair not found");

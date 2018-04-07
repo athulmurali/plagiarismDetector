@@ -17,9 +17,7 @@ import com.blacksheep.util.AWSConnection;
 import com.blacksheep.util.Utility;
 import org.antlr.v4.runtime.RuleContext;
 import org.apache.log4j.Logger;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -70,8 +68,10 @@ public class ResultsController {
 	 * An API to send the eventual results in form of a JSON
 	 * 
 	 * @return List of CreateJson
+	 *  added RequestBody to get response
 	 */
-	@RequestMapping("/getResults3")
+	@RequestMapping(value = "/getResults3",  method = RequestMethod.GET)
+	@ResponseBody
 	public List<CreateJson> initPlagiarismDetection(@RequestParam("userid") String userId) {
 		List<CreateJson> ljson = new ArrayList<>();
 		Map<String, List<FileStreams>> allSubmissionStreams = new HashMap<>();

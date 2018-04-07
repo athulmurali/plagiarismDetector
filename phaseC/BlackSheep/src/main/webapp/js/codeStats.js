@@ -1,8 +1,17 @@
+var globalMetadata;
 window.onload= function() {
 
-    var RESULT = getMatches();
-    console.log(getFileDict(RESULT));
 
+
+    var userId = localStorage.getItem("user");
+    console.log("getting user's code")
+
+    newAjaxGet("/getCode",userId);
+
+
+    var RESULT = getMatches(userId);
+
+    console.log(getFileDict(RESULT));
 
     var perList = getPercentageArray(RESULT);
     var avg = avgOfList(perList);
@@ -18,7 +27,6 @@ window.onload= function() {
         addRow('myTable',keys[i],typeCountDict[keys[i]]);
         console.log(keys[i] + typeCountDict[keys[i]]);
     }
-
 
 
     // getMatches();s
@@ -172,6 +180,13 @@ function getFileDict(matchPairArray){
         }
 
     }
+
+    console.log("currentUser : ", userId);
+    console.log("global code");
+    newAjaxGet("/getCode","mike");
+
+
+
     console.log(dict);
      return dict;
 
@@ -192,31 +207,15 @@ function addUniqueElements(newLi,oldLi){
     return oldLi;
 }
 
-function getMatches() {
-    const RESULT1 = getUrlJsonSync("/getResults3");
+function getMatches(userId) {
+    const RESULT1 =     newAjaxGet("/getResults3",userId);
+
     console.log(" Result below  /....   ");
 
     console.log(RESULT1);
 
     return RESULT1;
 }
-
-function getUrlJsonSync(url){
-    var getResultObj = $.ajax({
-        type: "GET",
-        url: url,
-        dataType: 'json',
-        cache: false,
-        async: false
-    });
-    // 'async' has to be 'false' for this to work
-    console.log(getResultObj.data);
-    var response = {valid: getResultObj.statusText,  data: getResultObj.responseJSON};
-
-    console.log("response,.,..");
-    console.log(response.data);
-    return response.data;
-};
 
 
 function getFileDict(matchPairArray)
@@ -264,3 +263,57 @@ function redirectToCodeMatch()
     console.log(" logged redirection ");
     window.location = "../templates/codeMatch.html"
 }
+
+
+    function newAjaxGet(urlTo,userId)
+{
+    var paramData = 'userid='+encodeURI(userId);
+    console.log("param" +paramData);
+
+    var resultTemp;
+   var ajaxObx =  $.ajax({
+        url: urlTo,
+        data: paramData,
+        type: "GET",
+       async: false,
+
+        success: function (response) {
+            console.log(response);
+            resultTemp = response;
+            return response;
+        },
+        error: function (xhr, status, error) {
+            alert(xhr.responseText);
+        }
+    });
+
+   console.log("ajax res");
+    return resultTemp;
+}
+
+
+
+
+
+// old json request
+
+
+// function getUrlJsonSync(url){
+//     var getResultObj = $.ajax({
+//         type: "GET",
+//         url: url,
+//         dataType: 'json',
+//         cache: false,
+//         async: false
+//     });
+//     // 'async' has to be 'false' for this to work
+//     console.log(getResultObj.data);
+//     var response = {valid: getResultObj.statusText,  data: getResultObj.responseJSON};
+//
+//     console.log("response,.,..");
+//     console.log(response.data);
+//     return response.data;
+// };
+
+
+

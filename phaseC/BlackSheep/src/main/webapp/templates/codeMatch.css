@@ -1,6 +1,15 @@
 #header{
     font-family: "Al Bayan";
 }
+
+
+
+body {
+    background-color: #cc0000;
+    color: white;
+    font-family: 'Dosis', sans-serif;"
+
+}
 .legends {
     width: 655px;
     margin: auto;

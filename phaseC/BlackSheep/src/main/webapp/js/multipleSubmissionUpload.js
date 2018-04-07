@@ -15,7 +15,7 @@
 //     // may be from a text box called project name
 //     // || can be derived from the first part of file Name
 
-var user = "mike";
+var user    = localStorage.getItem("user");
 var project = "proj1";
 
 window.onload =function () {
@@ -124,8 +124,8 @@ window.onload =function () {
         location.href = "../templates/codeStats.html";
     }
 
-    function redirectToHome(){
-        location.href = "../templates/home.html";
+    function redirectToWelcome(){
+        location.href = "../templates/welcome.html";
     }
 //
 // get random string for project Id

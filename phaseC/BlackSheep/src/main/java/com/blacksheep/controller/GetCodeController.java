@@ -9,9 +9,7 @@ import com.blacksheep.util.AWSConnection;
 import com.blacksheep.util.GetCodeJson;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -37,7 +35,8 @@ public class GetCodeController {
 	 * 
 	 * @return List of CreateJson
 	 */
-	@RequestMapping("/getCode")
+	@RequestMapping(value ="/getCode", method = RequestMethod.GET)
+	@ResponseBody
 	public List<GetCodeJson> getCode(@RequestParam("userid") String userId) {
 		Scanner scanner = null;
 		List<GetCodeJson> response = new ArrayList<>();
