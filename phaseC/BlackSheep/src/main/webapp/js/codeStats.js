@@ -1,5 +1,6 @@
 window.onload= function() {
 
+    console.log(newAjaxGet("/getResults3","mike"))
     var userId = localStorage.getItem("user");
     getUrlJsonSync();
 
@@ -265,6 +266,34 @@ function redirectToCodeMatch()
     console.log(" logged redirection ");
     window.location = "../templates/codeMatch.html"
 }
+
+
+    function newAjaxGet(urlTo,userId)
+{
+    var paramData = 'userid='+encodeURI(userId);
+    console.log("param" +paramData);
+
+    var result;
+   var ajaxObx =  $.ajax({
+        url: urlTo,
+        data: paramData,
+        type: "GET",
+
+        success: function (response) {
+            console.log("response");
+            console.log(response);
+
+        },
+        error: function (xhr, status, error) {
+            alert(xhr.responseText);
+        }
+    });
+
+   console.log("ajax res");
+   console.log(result);
+    return ajaxObx;
+}
+
 
 
 
