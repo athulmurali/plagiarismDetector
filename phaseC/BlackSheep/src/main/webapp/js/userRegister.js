@@ -46,6 +46,11 @@ $(document).ready(function () {
             }
         });
     });
+
+    $("#home").click(function(){
+        console.log("hi");
+        window.location = "../templates/welcome.html";
+    });
 });
 
 function ifFormValid() {

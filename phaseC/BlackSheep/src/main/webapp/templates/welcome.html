@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>BlackSheep Plagiarism: Welcome</title>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="configPlagiarismPercentage.css"/>
+    <script src = "../js/welcome.js"></script>
+
+</head>
+<body>
+<div class="container justify-content-center" style="margin-bottom: 20px">
+
+    <div class = "header" style="text-align: center">
+        <p align="center">
+        <h1>Welcome!</h1>
+        <br>
+       <h4>to</h4>
+        <h3>Black Sheep Plagairism Detection System</h3>
+        </p>
+    </div>
+
+    <div class = "header" style="text-align: center">
+
+        <br>
+        <br>
+        <p align="center"><h1>Hits</h1></p>
+
+    </div>
+
+    <br>
+    <div   id = "rangeValueDisplay" class="value">
+        <span id="count">0</span>
+    </div>
+
+    <div   id = "status" >
+        System status:
+        <span id="statusText" style="text-align: center"><h3>Inactive</h3></span>
+    </div>
+
+    <div  id ="redirect">
+        <div class ="row justify-content-center">
+            <button id= "register" onclick="redirectToUserRegister()" style="width: 100px"> Register</button>
+            <button id= "login"    onclick="redirectToLogin()"style="width: 100px">    Login</button>
+        </div>
+
+    </div>
+
+
+
+</div>
+
+</body>
+
+
+</html>
