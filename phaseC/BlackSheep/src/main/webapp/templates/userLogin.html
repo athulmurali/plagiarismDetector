@@ -4,65 +4,78 @@
     <title>Black Sheep Plagiarism Detector</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--credits to flaticon for free icons-->
-    <div>Icons made by <a href="https://www.flaticon.com/authors/prosymbols" title="Prosymbols">Prosymbols</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="./userLogin.css">
-    <script src="../js/userLogin.js" type="text/javascript"></script>
+    <!--<script src="../js/userLogin.js" type="text/javascript"></script>-->
     <script type="text/javascript" src="../js/login.js"></script>
 </head>
-<body>
+<body style="background-color: #cc0000">
 
-<h2>Black Sheep Plagiarism Detector</h2>
-
-
-<div class="split left">
-    <div class="centered">
-        <img src="./img/ta.png" alt="Professor" class = img-circle-ta>
-        <h2>Teaching Assistant</h2>
-        <button  id="TAContinue" class="continueAsTA" style="width:auto;"> Continue</button>
+<h2 align="center">Black Sheep Plagiarism Detector</h2>
 
 
-    </div>
+<div class="container ">
+
+    <label for="uname"><b>Username</b></label>
+    <input type="text" placeholder="Enter Username" name="uname" id = "uname"required>
+
+    <label for="password" ><b>Password</b></label>
+    <input type="password" placeholder="Enter Password" name="password" id="password" required>
+
+    <button type="submit" id="login" style="background-color: #555555">Login</button>
+
 </div>
 
-<div class="split right">
-    <div class="centered">
-        <img src="./img/professor.png" alt="Teaching Assistant" class = img-circle-ta>
-        <h2>Professor</h2>
-        <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;"> Login</button>
-    </div>
-</div>
 
-<div id="id01" class="modal">
 
-    <div class="modal-content animate">
-        <div class="imgcontainer">
-            <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>
-            <img src="img/huskyPaw.jpg" alt="Avatar" class="avatar">
-        </div>
+<!--<div class="split left">-->
+    <!--<div class="centered">-->
+        <!--<img src="./img/ta.png" alt="Professor" class = img-circle-ta>-->
+        <!--<h2>Teaching Assistant</h2>-->
+        <!--<button  id="TAContinue" class="continueAsTA" style="width:auto;"> Continue</button>-->
 
-        <div class="container">
-            <label for="uname"><b>Username</b></label>
-            <input type="text" placeholder="Enter Username" name="uname" id = "uname"required>
 
-            <label for="password" ><b>Password</b></label>
-            <input type="password" placeholder="Enter Password" name="password" id="password" required>
+    <!--</div>-->
+<!--</div>-->
 
-            <button type="submit" id="login">Login</button>
-            <label>
-                <input type="checkbox" checked="checked" name="remember"> Remember me
-            </label>
-        </div>
+<!--<div class="split right">-->
+    <!--<div class="centered">-->
+        <!--<img src="./img/professor.png" alt="Teaching Assistant" class = img-circle-ta>-->
+        <!--<h2>Professor</h2>-->
+        <!--<button onclick="document.getElementById('id01').style.display='block'" style="width:auto;"> Login</button>-->
+    <!--</div>-->
+<!--</div>-->
 
-        <!--<div class="container" style="background-color:#f1f1f1">-->
-            <!--<button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>-->
-            <!--<span class="psw">Forgot <a href="#">password?</a></span>-->
+<!--<div id="id01" class="modal">-->
+
+    <!--<div class="modal-content animate">-->
+        <!--<div class="imgcontainer">-->
+            <!--<span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>-->
+            <!--<img src="img/huskyPaw.jpg" alt="Avatar" class="avatar">-->
         <!--</div>-->
-    </div>
-</div>
+
+        <!--<div class="container">-->
+            <!--<label for="uname"><b>Username</b></label>-->
+            <!--<input type="text" placeholder="Enter Username" name="uname" id = "uname"required>-->
+
+            <!--<label for="password" ><b>Password</b></label>-->
+            <!--<input type="password" placeholder="Enter Password" name="password" id="password" required>-->
+
+            <!--<button type="submit" id="login">Login</button>-->
+            <!--<label>-->
+                <!--<input type="checkbox" checked="checked" name="remember"> Remember me-->
+            <!--</label>-->
+        <!--</div>-->
+
+        <!--&lt;!&ndash;<div class="container" style="background-color:#f1f1f1">&ndash;&gt;-->
+            <!--&lt;!&ndash;<button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>&ndash;&gt;-->
+            <!--&lt;!&ndash;<span class="psw">Forgot <a href="#">password?</a></span>&ndash;&gt;-->
+        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+    <!--</div>-->
+<!--</div>-->
 
 </body>
 </html>

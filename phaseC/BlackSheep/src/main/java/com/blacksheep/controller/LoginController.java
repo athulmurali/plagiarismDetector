@@ -42,36 +42,38 @@ public class LoginController {
         String userId   = cred.getUser().trim();
         String password = cred.getPassword().trim();
 
-            IDBConfigUtil dbConfigUtil = new DBConfigUtil();
-            try (Connection connection = getConnection(dbConfigUtil.getDbURL(),
-                    dbConfigUtil.getDbUser(), dbConfigUtil.getDbPass()))
-            {
-                String query = "SELECT  * FROM credentials where userid = ?";
+        IDBConfigUtil dbConfigUtil = new DBConfigUtil();
+        try (Connection connection = getConnection(dbConfigUtil.getDbURL(),
+                dbConfigUtil.getDbUser(), dbConfigUtil.getDbPass()))
+        {
+            String query = "SELECT  * FROM credentials where userid = ?";
 
-                try (PreparedStatement preparedStatement =
-                             connection.prepareStatement(query)) {
+            try (PreparedStatement preparedStatement =
+                         connection.prepareStatement(query)) {
 
-                    preparedStatement.setString(1, userId);
-                    try (ResultSet results = preparedStatement.executeQuery())
-                    {
+                preparedStatement.setString(1, userId);
+                try (ResultSet results = preparedStatement.executeQuery())
+                {
 
-                        String hashedPassword = null;
-                        while (results.next()) {
-                            logger.info("query executed :  User account with given userId exits");
-                            hashedPassword = results.getString("password");
-                        }
-                        if ( PASSWORD_ENCODER.matches(password, hashedPassword))
-                        {
-                            logger.info("userId & password matched ");
-                            return ResponseEntity.status(HttpStatus.OK).build();
-                        }
-                        else {
-                            logger.info("login check: userId & password pair not found");
-                            return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
-                        }
+                    String hashedPassword = null;
+                    String role = "";
+                    while (results.next()) {
+                        logger.info("query executed :  User account with given userId exits");
+                        hashedPassword = results.getString("password");
+                        role = results.getString("role");
                     }
-
+                    if ( PASSWORD_ENCODER.matches(password, hashedPassword))
+                    {
+                        logger.info("userId & password matched ");
+                        return new ResponseEntity<>(role, HttpStatus.OK);
+                    }
+                    else {
+                        logger.info("login check: userId & password pair not found");
+                        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+                    }
                 }
+
             }
         }
     }
+}
