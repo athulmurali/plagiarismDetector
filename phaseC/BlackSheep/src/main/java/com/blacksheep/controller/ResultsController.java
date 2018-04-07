@@ -68,6 +68,7 @@ public class ResultsController {
 	 * An API to send the eventual results in form of a JSON
 	 * 
 	 * @return List of CreateJson
+	 *  added RequestBody to get response
 	 */
 	@RequestMapping(value = "/getResults3",  method = RequestMethod.GET)
 	@ResponseBody
