@@ -15,7 +15,7 @@
 //     // may be from a text box called project name
 //     // || can be derived from the first part of file Name
 
-var user = "mike";
+var user    = "mike";
 var project = "proj1";
 
 window.onload =function () {
@@ -125,7 +125,7 @@ window.onload =function () {
     }
 
     function redirectToHome(){
-        location.href = "../templates/home.html";
+        location.href = "../templates/welcome.html";
     }
 //
 // get random string for project Id
