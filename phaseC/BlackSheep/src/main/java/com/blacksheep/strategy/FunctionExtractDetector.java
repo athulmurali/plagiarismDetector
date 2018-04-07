@@ -85,19 +85,23 @@ public class FunctionExtractDetector {
     private String replaceFunctionCall(File file) throws IOException {
         InputStream codeStream = new FileInputStream(file);
         BufferedReader in = new BufferedReader(new InputStreamReader(codeStream));
-        String line = null;
-
         StringBuilder newCode = new StringBuilder();
-        while((line = in.readLine()) != null) {
-            if(isFunctionCall(line)) {
-                String functionName = extractFunctionCallName(line);
-                newCode.append(this.functionMap.get(functionName) + "\n");
-            }
-            else {
-                newCode.append(line + "\n");
+
+        try {
+            String line = null;
+            while ((line = in.readLine()) != null) {
+                if (isFunctionCall(line)) {
+                    String functionName = extractFunctionCallName(line);
+                    newCode.append(this.functionMap.get(functionName) + "\n");
+                } else {
+                    newCode.append(line + "\n");
+                }
             }
         }
-        in.close();
+        finally {
+            in.close();
+        }
+        
         return newCode.toString();
     }
 
