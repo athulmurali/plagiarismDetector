@@ -32,10 +32,12 @@ $(document).ready(function () {
         function redirect1() {
 
             console.log("in redirect");
+            localStorage.setItem("user",user2);
             window.location.href = "../templates/configPlagiarismPercentage.html?userId="+user2;
         }
 
         function redirect2() {
+            alert("Invalid login credentials!");
             window.location = "../templates/userLogin.html";
         }
     });
