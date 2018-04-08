@@ -32,7 +32,13 @@ var plagiarismCSSClasses = {
     "CRC Match"             : "exactMatch",
     "CodeMovement Match"    : "movedMatch",
     "Structure Match"       : "renamedMatch",
-    "Comments Match"        : "commentsMatch"
+    "Comments Match"        : "commentsMatch",
+
+
+    //Added after backend data format change
+
+
+    "Comment Match"        : "commentsMatch"
 
 };
 
