@@ -99,17 +99,28 @@ public class GetCodeControllerTests {
 			
 			scanner2 = new Scanner(in2);
 			String code2 = scanner2.useDelimiter("\\A").next();
+			
+			StringBuilder sb1 = new StringBuilder();
+			sb1.append("\n # @@TOPAATMABI@@ Project1/simple1.py start\n");
+			sb1.append(code1);
+			sb1.append("\n # @@TOPAATMABI@@ Project1/simple1.py end\n");
+			sb1.append("\n # @@TOPAATMABI@@ Project1/simple4.py start\n");
+			sb1.append(code2);
+			sb1.append("\n # @@TOPAATMABI@@ Project1/simple4.py end\n");
+			
+			StringBuilder sb2 = new StringBuilder();
+			sb2.append("\n # @@TOPAATMABI@@ Project2/simple4.py start\n");
+			sb2.append(code2);
+			sb2.append("\n # @@TOPAATMABI@@ Project2/simple4.py end\n");
+			sb2.append("\n # @@TOPAATMABI@@ Project2/simple1.py start\n");
+			sb2.append(code1);
+			sb2.append("\n # @@TOPAATMABI@@ Project2/simple1.py end\n");
+			
 
-			GetCodeJson json = new GetCodeJson("Project1/simple1.py", code1);
+			GetCodeJson json = new GetCodeJson("Project1", sb1.toString());
 			output.add(json);
 			
-			json = new GetCodeJson("Project1/simple4.py", code2);
-			output.add(json);
-			
-			json = new GetCodeJson("Project2/simple1.py", code1);
-			output.add(json);
-			
-			json = new GetCodeJson("Project2/simple4.py", code1);
+			json = new GetCodeJson("Project2", sb2.toString());
 			output.add(json);
 			
 		} catch (FileNotFoundException e) {
