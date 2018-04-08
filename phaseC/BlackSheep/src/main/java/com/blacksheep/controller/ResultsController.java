@@ -182,7 +182,7 @@ public class ResultsController {
 
 				fileText.append(Utility.streamToText(file.getStream()));
 
-				fileText.append("\n @@TOPAATMABI@@# ");
+				fileText.append("\n # @@TOPAATMABI@@ ");
 				fileText.append(file.getFileName());
 				fileText.append(" end\n");
 			}
