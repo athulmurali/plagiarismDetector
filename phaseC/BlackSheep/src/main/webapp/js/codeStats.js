@@ -2,21 +2,19 @@
 
 //  changed Comments match -> Comment Match (api produces different data now )
 
+var getMetaDataURL = "/getResults3";
 
 
-var globalMetadata;
 
 window.onload= function() {
 
 
-
     var userId = localStorage.getItem("user");
-    console.log("getting user's code")
-
-    newAjaxGet("/getCode",userId);
 
 
-    var RESULT = getMatches(userId);
+    var RESULT =    getMatches(userId);
+
+    localStorage.setItem("metData",RESULT) // storing metadata in local storage
 
     console.log(getFileDict(RESULT));
 
@@ -118,7 +116,7 @@ function getTypeCount(matchPairArray){
     console.log("getTypeCount");
     var newObj = {};
     newObj["Structure Match"] = 0;
-    newObj["Comments Match"] = 0;
+    newObj["Comment Match"] = 0;
     newObj["CodeMovement Match"] = 0;
     newObj["CRC Match"] = 0;
 
@@ -215,7 +213,7 @@ function addUniqueElements(newLi,oldLi){
 }
 
 function getMatches(userId) {
-    const RESULT1 =     newAjaxGet("/getResults3",userId);
+    const RESULT1 =     newAjaxGet(getMetaDataURL,userId);
 
     console.log(" Result below  /....   ");
 
