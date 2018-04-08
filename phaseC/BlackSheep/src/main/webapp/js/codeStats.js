@@ -1,4 +1,11 @@
+// update :
+
+//  changed Comments match -> Comment Match (api produces different data now )
+
+
+
 var globalMetadata;
+
 window.onload= function() {
 
 
@@ -75,7 +82,7 @@ function getPercentageArray(matchPairArray){
     console.log("getPercentageArray");
     var newObj = {};
     newObj["Structure Match"] = 0;
-    newObj["Comments Match"] = 0;
+    newObj["Comment Match"] = 0; //  changed Comments match -> Comment Match
     newObj["CodeMovement Match"] = 0;
     newObj["CRC Match"] = 0;
 
