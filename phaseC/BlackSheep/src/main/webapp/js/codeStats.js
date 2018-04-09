@@ -108,7 +108,7 @@ function avgOfList(avgList)
     for(var i = 0; i < avgList.length; i++) {
         total += avgList[i];
     }
-    return avg = total / avgList.length;
+    return total / avgList.length;
 }
 
 function getTypeCount(matchPairArray){
@@ -297,28 +297,6 @@ function redirectToCodeMatch()
 }
 
 
-
-
-
-// old json request
-
-
-// function getUrlJsonSync(url){
-//     var getResultObj = $.ajax({
-//         type: "GET",
-//         url: url,
-//         dataType: 'json',
-//         cache: false,
-//         async: false
-//     });
-//     // 'async' has to be 'false' for this to work
-//     console.log(getResultObj.data);
-//     var response = {valid: getResultObj.statusText,  data: getResultObj.responseJSON};
-//
-//     console.log("response,.,..");
-//     console.log(response.data);
-//     return response.data;
-// };
 
 
 
