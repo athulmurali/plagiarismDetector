@@ -5,8 +5,8 @@
 
 
 body {
-    background-color: #cc0000;
-    color: white;
+    background-color:     #EBE5DF;
+    color: black;
     font-family: 'Dosis', sans-serif;"
 
 }
@@ -78,7 +78,6 @@ li {
     text-align: left;
     padding: 3%;
 }
-
 
 #exactMatch{
     border-left: 10px solid #dc3545;
