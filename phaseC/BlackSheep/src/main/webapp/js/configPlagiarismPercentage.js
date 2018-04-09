@@ -1,6 +1,8 @@
 $(document).ready(function () {
 
 
+
+
     function getUrlVars() {
         var vars = [], hash;
         var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
@@ -15,7 +17,6 @@ $(document).ready(function () {
                 vars[hash[0]] = hash[1];
             }
         }
-
         return vars;
     }
 
@@ -78,7 +79,7 @@ elem.addEventListener("input", rangeValue);
 
                 success: function (response) {
                     console.log("Success");
-                    window.location = "../templates/multipleSubmissionUpload.html";
+                    window.location = "../templates/upload.html";
 
                 },
                 error: function (e) {

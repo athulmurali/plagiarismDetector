@@ -9,13 +9,42 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-
     <link rel="stylesheet" type="text/css" href="configPlagiarismPercentage.css"  />
 
     <script src = "../js/configPlagiarismPercentage.js"></script>
 </head>
 <body>
-<div class="container justify-content-center" style="margin-bottom: 20px">
+<nav class="navbar navbar-expand-md  navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Plagiarism Detector</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#" id="configure">Configure <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="upload">Upload <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="codeStats" href="#">Code Stats</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="codeMatch">Code Match<span class="sr-only">(current)</span></a>
+            </li>
+
+
+
+        </ul>
+        <span class="navbar-nav ml-auto navbar-item">
+        <a class="nav-link" href="#">Log out</a>
+        </span>
+    </div>
+</nav>
+
+<div class="container justify-content-center"  id="mainContent" style="margin-bottom: 20px">
 
     <p id="p1">
 
@@ -31,14 +60,12 @@
 </div>
 
 <br>
-<br>
-<br>
 <div class="container justify-content-center">
 
     <div class="row justify-content-center" >
         <h5>Turn em' on to detect!</h5>
         </div>
-    <br><br>
+
     <div class="row" >
 
         <div class = "col-md-6">
