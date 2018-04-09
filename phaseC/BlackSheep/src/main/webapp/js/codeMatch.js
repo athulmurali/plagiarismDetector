@@ -58,6 +58,10 @@ var CodeMatchData = {
 window.onload= function()
 {
     //redirects  to code stats on click of div id codeStats
+    $("#configure").click(function(){redirectToConfigure()});
+
+    $("#codeMatch").click(function(){redirectToCodeMatch()});
+
     $("#codeStats").click(function(){redirectToCodeStats()});
 
     $("#upload").click(function(){redirectToUpload()});
@@ -410,6 +414,10 @@ function redirectToUpload()
 
 
 
+function redirectToConfigure()
+{
+    window.location = "../templates/multipleSubmissionUpload.html"
+}
 
 
 
