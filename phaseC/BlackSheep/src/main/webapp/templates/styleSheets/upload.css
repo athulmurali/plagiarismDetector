@@ -23,7 +23,18 @@
 @import url(https://fonts.googleapis.com/css?family=Dosis:700);
 body {
     font-family:  Arial, sans-serif;
-    background: #cc0000;
-    color: white;
-    padding-top: 40px;
+    background-color:     #EBE5DF;
+    color: black;
+    padding-bottom: 40px;
+}
+
+
+.btn-circle {
+    width: 90px;
+    height: 90px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.42;
+    border-radius: 60px;
 }

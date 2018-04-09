@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
     $("#login").click(function () {
+        localStorage.clear();
 
         ///var password2 = $("#password").val();
         var user2 = $("#uname").val();
@@ -24,13 +25,14 @@ $(document).ready(function () {
                 if(response == "TA")
                 {
                     localStorage.setItem("role","TA");
-                    location.href = "./multipleSubmissionUpload.html?userId="+user2;
+                    location.href = "./upload.html";
                 }
                 else{
                     localStorage.setItem("role","PROFESSOR");
                     redirect1();
                 }
             },
+
             error: function (e) {
                 localStorage.clear();
                 console.log('page not found' + e);
@@ -40,9 +42,8 @@ $(document).ready(function () {
         });
 
         function redirect1() {
-
             console.log("in redirect");
-            window.location.href = "../templates/configPlagiarismPercentage.html?userId="+user2;
+            window.location.href = "../templates/configure.html";
         }
 
         function redirect2() {

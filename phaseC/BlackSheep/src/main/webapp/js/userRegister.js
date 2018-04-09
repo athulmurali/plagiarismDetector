@@ -1,4 +1,7 @@
 $(document).ready(function () {
+
+    $("#home").click(function(){redirectToWelcome();});
+
     // checks bootstrap import
     var bootstrap_enabled = (typeof $().emulateTransitionEnd == 'function');
     console.log("bootstrap loaded : " + bootstrap_enabled);
@@ -47,10 +50,6 @@ $(document).ready(function () {
         });
     });
 
-    $("#home").click(function(){
-        console.log("hi");
-        window.location = "../templates/welcome.html";
-    });
 });
 
 function ifFormValid() {
