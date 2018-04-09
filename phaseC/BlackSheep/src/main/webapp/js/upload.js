@@ -18,10 +18,24 @@
 var user    = localStorage.getItem("user");
 var project = "proj1";
 
-window.onload =function () {
+$(document).ready(function () {
+
+
+    $("#configure").click(function(){redirectToConfigure()});
+
+    $("#upload").click(function(){redirectToUpload()});
+
+    $("#codeMatch").click(function(){redirectToCodeMatch()});
+
+    $("#codeStats").click(function(){redirectToCodeStats()});
+
+    $("#done").click(function(){redirectToCodeStats()});
+
+
+
     console.log("JS loaded");
 
-}
+});
 
 
     function uploadMultipleFiles() {
@@ -119,14 +133,7 @@ window.onload =function () {
             }
         });
     }
-//
-    function redirectToCodeStats(){
-        location.href = "../templates/codeStats.html";
-    }
 
-    function redirectToWelcome(){
-        location.href = "../templates/welcome.html";
-    }
 //
 // get random string for project Id
     function makeid() {

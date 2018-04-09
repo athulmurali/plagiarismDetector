@@ -1,18 +1,51 @@
-
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon"
+          type="image/png"
+          href="./img/blackSheep.jpg">
     <script src="https://code.jquery.com/jquery-3.2.1.min.js" ></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css"          href="./upload.css"  />
+    <link rel="stylesheet" type="text/css"          href="styleSheets/upload.css"  />
+
+    <script src="../js/common.js" type="text/javascript"></script>
     <script src="../js/upload.js" type="text/javascript"></script>
-    <title> Multiple Submission</title>
+    <title> Black Sheep : Upload </title>
 </head>
 <body>
+<nav class="navbar navbar-expand-md  navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Plagiarism Detector</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="configure">Configure <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="#" id="upload">Upload <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="codeStats" href="#">Code Stats</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="#" id="codeMatch">Code Match<span class="sr-only">(current)</span></a>
+            </li>
+
+
+
+        </ul>
+        <span class="navbar-nav ml-auto navbar-item">
+        <a class="nav-link" href="#" id="logOut">Log out</a>
+        </span>
+    </div>
+</nav>
 
 <div class = container">
     <br>
@@ -26,38 +59,33 @@
         <div class ="col-md-4">
         <h2>Directory  </h2>
 
-            <input type="file" id="directoryFiles"  name="file_input_folder[]"
+            <input type="file" id="directoryFiles"  name="file_input_folder[]" accept=".py"
                    multiple webkitdirectory="" mozdirectory="true" directory="" />
 
         </div>
-        <button onclick="uploadDirectory()" type="button" class="btn btn-light">Upload</button>
+        <button onclick="uploadDirectory()" type="button" class="btn btn-secondary">Upload</button>
     </div>
         </div>
 
-    <br><br>
+<br><br>
 
-    <div class = "row justify-content-center">
-        <div class ="col-md-4">
-            <h2> Multiple Files </h2>
-            <input type="file"  id= "multipleFiles" multiple="multiple" />
-        </div>
-        <button type="button" onclick="uploadMultipleFiles()" class="btn btn-light">Upload</button>
-
+<div class = "row justify-content-center">
+    <div class ="col-md-4 justify-content-center">
+        <h2> Multiple Files </h2>
+        <input type="file"  id= "multipleFiles" multiple="multiple" />
     </div>
-    <br>
+    <button type="button" onclick="uploadMultipleFiles()" class="btn btn-secondary">Upload</button>
+
 </div>
-
-<br><br><br>
-
-<div class="row justify-content-center">
-    <button type="button"  onclick="redirectToCodeStats()" class="btn btn-secondary btn-lg"> View Code Stats</button>
-</div>
-
 <br>
-<div class="row justify-content-center">
-    <button type="button" onclick="redirectToWelcome()" class="btn btn-secondary btn-lg"> Home </button>
-</div>
 
+
+<div class = "row justify-content-center">
+<button  type="button" id="done" class="btn btn-secondary btn-circle" >
+    <span id="buttonText" style="line-height:40px"> Done!</span>
+</button>
+</div>
+</div>
 
 
 

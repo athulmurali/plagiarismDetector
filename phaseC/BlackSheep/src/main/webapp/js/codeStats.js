@@ -6,15 +6,19 @@ var getMetaDataURL = "/getResults3";
 
 
 
-window.onload= function() {
+$(document).ready(function (){
 
 
-    //redirects  to code stats on click of div id codeStats
-    $("#codeMatch").click(function(){redirectToCodeMatch()});
+    $("#configure").click(function(){redirectToConfigure()});
 
     $("#upload").click(function(){redirectToUpload()});
 
-    $("#configure").click(function(){redirectToConfig()});
+    $("#codeMatch").click(function(){redirectToCodeMatch()});
+
+    $("#codeStats").click(function(){redirectToCodeStats()});
+
+    $("#logOut").click(function(){logOut()});
+
 
 
 
@@ -30,18 +34,18 @@ window.onload= function() {
     var perList = getPercentageArray(RESULT);
     var avg = avgOfList(perList);
     console.log("avg" + avg);
-    changeOverallPercentage(avg.toFixed(2));
+    // changeOverallPercentage(avg.toFixed(2));
 
 
    var typeCountDict = getTypeCount(RESULT);
-
-   //building table 1
-    var keys = Object.keys(typeCountDict);
-    for(i in keys){
-        addRow('myTable',keys[i],typeCountDict[keys[i]]);
-        console.log(keys[i] + typeCountDict[keys[i]]);
-    }
-
+   //
+   // //building table 1
+   //  var keys = Object.keys(typeCountDict);
+   //  for(i in keys){
+   //      addRow('myTable',keys[i],typeCountDict[keys[i]]);
+   //      console.log(keys[i] + typeCountDict[keys[i]]);
+   //  }
+   //
 
     // getMatches();s
     var fileDict = getFileDict(RESULT);
@@ -54,7 +58,7 @@ window.onload= function() {
     }
     var obj =getMatches();
 
-}
+});
 
 
 function addRow(tableId,type,count)
@@ -222,11 +226,9 @@ function addUniqueElements(newLi,oldLi){
 }
 
 function getMatches(userId) {
+    console.log("ajax request for get Meta Data sent");
     const RESULT1 =     newAjaxGet(getMetaDataURL,userId);
 
-    console.log(" Result below  /....   ");
-
-    console.log(RESULT1);
 
     return RESULT1;
 }
@@ -271,13 +273,6 @@ function getFileDict(matchPairArray)
     return fileDict;
 }
 
-function redirectToCodeMatch()
-{
-
-    console.log(" logged redirection ");
-    window.location = "../templates/codeMatch.html"
-}
-
 
     function newAjaxGet(urlTo,userId)
 {
@@ -307,16 +302,28 @@ function redirectToCodeMatch()
 
 
 
-
 // functions for redirection
+function redirectToConfigure()
+{
+    window.location = "../templates/configure.html"
+}
+
 function redirectToUpload()
 {
     window.location = "../templates/upload.html"
 }
 
-function redirectToConfig()
+function redirectToCodeStats()
 {
-    window.location = "../templates/configPlagiarismPercentage.html"
+    window.location = "../templates/codeStats.html"
+}
+
+
+function redirectToCodeMatch()
+{
+
+    console.log(" logged redirection ");
+    window.location = "../templates/codeMatch.html"
 }
 
 

@@ -8,8 +8,8 @@
 }
 
 body {
-    background: #cc0000;
-    color: white;
+    background: white;
+    color: black;
 }
 
 .navbar {
@@ -17,10 +17,7 @@ body {
     /*border-color: transparent;*/
 }
 
-input[type="text"], input[type="password"]
-{
-    border-radius: 5px;
-}
+
 
 fieldset{
     padding-top: 50px;
@@ -29,4 +26,11 @@ fieldset{
 .emailError {
     visibility: hidden;
     display: none;
+}
+
+input {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    border-bottom:  2px solid black;
 }

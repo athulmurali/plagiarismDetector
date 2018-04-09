@@ -3,12 +3,11 @@
 // Date created : March 12, 2018
 // Date edited :  March 22, 2018
 
-
-
 const metaDataURL = "/getResults3";
 const userId      =  localStorage.getItem("user");
 
 
+const SIMILARITY_ID = "similarity";
 var back = "back"; // back button for match iteration
 var next = "next"; // next button for match iteration
 var leftStudentTableId  = "leftTable";
@@ -21,6 +20,10 @@ var filePairArray = [];
 var TABLEHEADERLEFT = "leftFileName";   //  class name in HTML
 var TABLEHEADERRIGHT = "rightFileName";// class  name in HTML
 
+
+// Other Constants:
+
+const DECIMAL_NUM_LIMIT =  2;
 
 // types
 // 1. exactMatch
@@ -55,26 +58,26 @@ var CodeMatchData = {
     codeData: ""
 }
 
-window.onload= function()
-{
-    //redirects  to code stats on click of div id codeStats
+$(document).ready(function (){
+
     $("#configure").click(function(){redirectToConfigure()});
+
+    $("#upload").click(function(){redirectToUpload()});
 
     $("#codeMatch").click(function(){redirectToCodeMatch()});
 
     $("#codeStats").click(function(){redirectToCodeStats()});
 
-    $("#upload").click(function(){redirectToUpload()});
-
+    $("#logOut").click(function(){logOut()});
 
 
     console.log("Logged in as :"+ userId);
     var CodeMatchData;
 
-    // CodeMatchData = getCodeMatchData();
+    CodeMatchData = getCodeMatchData();
 
     // uncomment the below line and comment the above line to test the UI of codeMatch
-    CodeMatchData = getTestCodeMatchData();
+    // CodeMatchData = getTestCodeMatchData();
 
     console.log("Code match data : Metadata & Code Data(below)");
     console.log(CodeMatchData);
@@ -90,7 +93,7 @@ window.onload= function()
     processMatch(CodeMatchData.metadata[0]);
     // FilePairMatchesTable(filePairArray);
 
-}
+});
 
 function createTable(fileContent,tableId) {
     console.log("deleting existing rows");
@@ -253,14 +256,19 @@ function processMatch(objMatch)
     var file2Name = objMatch.file2;
     console.log("file 2 Name : " + file2Name );
 
+    // modify table header  of left side table :
+
+    modifyTableHeader(TABLEHEADERLEFT,file1Name);
+    // modify table header  of right side table :
+    modifyTableHeader(TABLEHEADERRIGHT,file2Name);
+
+    console.log("updating similarity");
+    updateSimilarity(SIMILARITY_ID,objMatch.percentage);
 
     // .file to be replaced with function : fileNameToContent(filename);
-
-
     var file1Content = getFileContent(file1Name,CodeMatchData.codeData);
     console.log("file 1 Content  :");
     console.log(file1Content);
-
 
     var file2Content = getFileContent(file2Name,CodeMatchData.codeData);
     console.log("file 2 Content : " )
@@ -274,11 +282,7 @@ function processMatch(objMatch)
     createTable(file2Content,rightStudentTableId);
 
 
-    // modify table header  of left side table :
 
-    modifyTableHeader(TABLEHEADERLEFT,file1Name);
-    // modify table header  of right side table :
-    modifyTableHeader(TABLEHEADERRIGHT,file2Name);
 
     for( var match in objMatch.matches)
     {
@@ -400,25 +404,12 @@ function newAjaxGet(urlTo,userId)
     return resultTemp;
 }
 
+function updateSimilarity(similaritySpanId, percentage){
+    console.log("updating similarity - in function");
+    percentage = parseFloat(percentage).toFixed(DECIMAL_NUM_LIMIT);
 
-// functions for redirection
-function redirectToCodeStats()
-{
-    window.location = "../templates/codeStats.html"
+    document.getElementById(similaritySpanId).innerHTML=percentage;
 }
-
-function redirectToUpload()
-{
-    window.location = "../templates/upload.html"
-}
-
-
-
-function redirectToConfigure()
-{
-    window.location = "../templates/upload.html"
-}
-
 
 
 // test data for Code match | use the following for testing
