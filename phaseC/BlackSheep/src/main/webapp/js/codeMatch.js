@@ -409,14 +409,14 @@ function redirectToCodeStats()
 
 function redirectToUpload()
 {
-    window.location = "../templates/multipleSubmissionUpload.html"
+    window.location = "../templates/upload.html"
 }
 
 
 
 function redirectToConfigure()
 {
-    window.location = "../templates/multipleSubmissionUpload.html"
+    window.location = "../templates/upload.html"
 }
 
 

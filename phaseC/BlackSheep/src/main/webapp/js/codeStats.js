@@ -311,7 +311,7 @@ function redirectToCodeMatch()
 // functions for redirection
 function redirectToUpload()
 {
-    window.location = "../templates/multipleSubmissionUpload.html"
+    window.location = "../templates/upload.html"
 }
 
 function redirectToConfig()
