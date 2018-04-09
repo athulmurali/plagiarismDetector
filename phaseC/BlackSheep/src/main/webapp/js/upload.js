@@ -1,138 +1,148 @@
-$(document).ready(function () {
+// Info :
+// THe following script is designed to send the data to upload Controller
+// @RequestMapping(method = RequestMethod.POST, value = "/upload")
+// public ResponseEntity<?> uploadFileSource(@RequestParam("userid") String userId,
+// 			@RequestParam("project") String projectName,
+// 			@RequestParam("files") MultipartFile[] files)
 
-    $("#results").hide();
+// Reference:
+// https://github.ccs.neu.edu/cs5500/team-104/blob/multiple-submissions/phaseC/BlackSheep/src/main/java/com/blacksheep/controller/UploadController.java
 
-    $("#btnChkPlg").click(function (event) {
-        event.preventDefault();
+// file addition is being added based on this :
+// http://blog.teamtreehouse.com/uploading-files-ajax
 
-        var StructureChange = $('#StructureChange:checked').val();
-        if(StructureChange==undefined)
-            StructureChange=null;
 
-        var CodeChange = $('#CodeChange:checked').val();
-        if(CodeChange==undefined)
-            CodeChange=null;
+//     // may be from a text box called project name
+//     // || can be derived from the first part of file Name
 
-        var CommentChange = $('#CommentChange:checked').val();
-        if(CommentChange==undefined)
-            CommentChange=null;
+var user    = localStorage.getItem("user");
+var project = "proj1";
 
-        var type = {
+window.onload =function () {
+    console.log("JS loaded");
 
-            "c1":StructureChange,
-            "c2":CodeChange,
-            "c3":CommentChange
+}
+
+
+    function uploadMultipleFiles() {
+    console.log("uploadMultipleFiles()");
+
+    var fileSelect = document.getElementById('multipleFiles');
+    var files = fileSelect.files;
+
+    var data = new FormData();
+    data.append("userid", user);
+    data.append("project", project + makeid());
+
+    // Loop through each of the selected files.
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+
+        // Check the file type.
+        // // if required - only python can allowed
+        // if (!file.type.match('image.*')) {
+        //     continue;
+        // }
+
+        console.log("fileName : " + file.webkitRelativePath);
+
+        // Add the file to the request.
+        data.append('files[]', file, file.name);
+    }
+    console.log("data : multipleFiles to Post");
+
+    console.log("printing form data : ");
+    printFormData(data);
+
+    $.ajax({
+        type: "POST",
+        enctype: 'multipart/form-data',
+        url: "/upload",
+        data: data,
+        processData: false,
+        contentType: false,
+        cache: false,
+        timeout: 600000,
+        success: function (data) {
+            console.log("SUCCESS : ", data);
+        },
+        error: function (e) {
+            console.log("ERROR : ", e);
         }
+    });
+}
+
+    function uploadDirectory() {
+
+        console.log("uploadDirectory()");
+
+        var data = new FormData();
+
+        data.append("userid",user);
+        data.append("project",project+makeid());
+        var fileSelect = document.getElementById('directoryFiles');
+        var files = fileSelect.files;
+
+        // Loop through each of the selected files.
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+
+            // Check the file type.
+            // // if required - only python can allowed
+            // if (!file.type.match('image.*')) {
+            //     continue;
+            // }
+
+            console.log("fileName : " + file.webkitRelativePath);
+
+            // Add the file to the request.
+            data.append('files[]', file, file.name);
+        }
+        console.log("printing form data : ");
+        console.log(printFormData(data));
+
 
         $.ajax({
             type: "POST",
-            url: "/PostChoices",
-            data: JSON.stringify(type),
-            contentType: 'application/json',
-
-            success: function (response) {
-                console.log("Success");
-                fire_ajax_source_upload();
-
+            enctype: 'multipart/form-data',
+            url: "/upload",
+            data: data,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+                console.log("SUCCESS : ", data);
             },
             error: function (e) {
-                console.log('page not found' + e);
-
+                console.log("ERROR : ", e);
             }
         });
-    });
+    }
+//
+    function redirectToCodeStats(){
+        location.href = "../templates/codeStats.html";
+    }
+
+    function redirectToWelcome(){
+        location.href = "../templates/welcome.html";
+    }
+//
+// get random string for project Id
+    function makeid() {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < 5; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+    }
 
 
-});
-
-function fire_ajax_source_upload() {
-
-    var form = $('#sourceForm')[0];
-    var data = new FormData(form);
-
-    $.ajax({
-        type: "POST",
-        enctype: 'multipart/form-data',
-        url: "/upload/student1",
-        data: data,
-        processData: false,
-        contentType: false,
-        cache: false,
-        timeout: 600000,
-        success: function (data) {
-            fire_ajax_suspect_upload();
-            console.log("SUCCESS : ", data);
-        },
-        error: function (e) {
-            console.log("ERROR : ", e);
+    function printFormData(formData){
+        // Display the key/value pairs
+        for(var pair of formData.entries()) {
+            console.log(pair[0]+ ', '+ pair[1]);
         }
-    });
-}
-
-function fire_ajax_suspect_upload() {
-
-    var form = $('#suspectForm')[0];
-    var data = new FormData(form);
-
-    $.ajax({
-        type: "POST",
-        enctype: 'multipart/form-data',
-        url: "/upload/student2",
-        data: data,
-        processData: false,
-        contentType: false,
-        cache: false,
-        timeout: 600000,
-        success: function (data) {
-
-            $.ajax({
-                type: "GET",
-                enctype: 'multipart/form-data',
-                url: "/getResults3",
-
-                success: function (data1) {
-
-                    $("#upload").hide();
-                    $("#results").show();
-
-                    //console.log(data1[0].file1);
-                    $.each(data1, function (i, f) {
-
-                        var mtchRow = " ";
-
-                        $.each(f.matches, function (i, f2) {
-
-                            mtchRow = "<table>" + "<td>"+ f2.type+ "</td>"
-                                + "<td>"+ f2.file1MatchLines+ "</td>"
-                                + "<td>"+ f2.file2MatchLines+ "</td>" + "</table>"
-
-                        });
-
-                        var tblRow = "<tr>" + "<td>" + f.file1 + "</td>" +
-                            "<td>" + f.file2 + "</td>" + "<td>" +
-                            mtchRow + "</td>" + "<td>" + f.percentage + "</td>" + "</tr>"
-
-
-                        $(tblRow).appendTo("#userdata tbody");
-
-                        // document.getElementById("tst").innerHTML = tblRow;
-                        console.log(tblRow);
-                    });
-
-                },
-
-                error: function (data1){
-                    console.log("Error");
-
-                }
-
-            });
-
-            console.log("SUCCESS : ", data);
-            //window.location = "../templates/testResults.html";
-        },
-        error: function (e) {
-            console.log("ERROR : ", e);
-        }
-    });
-}
+    }
