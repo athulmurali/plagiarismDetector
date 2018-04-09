@@ -9,6 +9,15 @@ var getMetaDataURL = "/getResults3";
 window.onload= function() {
 
 
+    //redirects  to code stats on click of div id codeStats
+    $("#codeMatch").click(function(){redirectToCodeMatch()});
+
+    $("#upload").click(function(){redirectToUpload()});
+
+    $("#configure").click(function(){redirectToConfig()});
+
+
+
     var userId = localStorage.getItem("user");
 
 
@@ -296,6 +305,19 @@ function redirectToCodeMatch()
     return resultTemp;
 }
 
+
+
+
+// functions for redirection
+function redirectToUpload()
+{
+    window.location = "../templates/multipleSubmissionUpload.html"
+}
+
+function redirectToConfig()
+{
+    window.location = "../templates/configPlagiarismPercentage.html"
+}
 
 
 
