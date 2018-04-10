@@ -13,8 +13,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.blacksheep.controller.UploadController;
-import com.blacksheep.util.AWSConfigUtil;
-import com.blacksheep.util.AWSConnection;
+import com.blacksheep.util.AWSutil;
 
 import static org.junit.Assert.assertEquals;
 
@@ -33,12 +32,11 @@ public class UploadTests {
 
 	@Test
 	public void testFolderCreate() {
-		AWSConfigUtil util = new AWSConfigUtil();
-		AWSConnection con = new AWSConnection();
+		AWSutil util = new AWSutil();
 		AmazonS3 s3 = createAWSClient(util);
 
 		String bucketName = util.getAwsBucketName();
-		AWSConnection.createFolder(bucketName, TEST, s3);
+		AWSutil.createFolder(bucketName, TEST, s3);
 
 		List<S3ObjectSummary> fileList = s3.listObjects(bucketName, TEST)
 				.getObjectSummaries();
@@ -51,11 +49,11 @@ public class UploadTests {
 
 	@Test
 	public void testFolderDelete() {
-		AWSConfigUtil util = new AWSConfigUtil();
+		AWSutil util = new AWSutil();
 		AmazonS3 s3 = createAWSClient(util);
 
 		String bucketName = util.getAwsBucketName();
-		AWSConnection.deleteFolder(bucketName, TEST, s3);
+		AWSutil.deleteFolder(bucketName, TEST, s3);
 
 		List<S3ObjectSummary> fileList = s3.listObjects(bucketName, TEST)
 				.getObjectSummaries();
@@ -68,7 +66,7 @@ public class UploadTests {
 
 	@Test
 	public void testUploadSourceFiles() throws FileNotFoundException, IOException {
-		AWSConfigUtil util = new AWSConfigUtil();
+		AWSutil util = new AWSutil();
 		AmazonS3 s3 = createAWSClient(util);
 
 		UploadController uploadController = new UploadController();
@@ -103,7 +101,7 @@ public class UploadTests {
 
 	@Test
 	public void testUploadEmptyFiles() throws FileNotFoundException, IOException {
-		AWSConfigUtil util = new AWSConfigUtil();
+		AWSutil util = new AWSutil();
 		AmazonS3 s3 = createAWSClient(util);
 
 		UploadController uploadController = new UploadController();
@@ -138,7 +136,7 @@ public class UploadTests {
 
 	@Test
 	public void testUploadNoFiles() throws FileNotFoundException, IOException {
-		AWSConfigUtil util = new AWSConfigUtil();
+		AWSutil util = new AWSutil();
 		AmazonS3 s3 = createAWSClient(util);
 
 		UploadController uploadController = new UploadController();
@@ -163,7 +161,7 @@ public class UploadTests {
 	 * @param util
 	 * @return
 	 */
-	private AmazonS3 createAWSClient(AWSConfigUtil util) {
+	private AmazonS3 createAWSClient(AWSutil util) {
 		AWSCredentials credentials = new BasicAWSCredentials(util.getAwsAccessKey(),
 				util.getAwsSecretKey());
 
@@ -175,7 +173,7 @@ public class UploadTests {
 	
 	@Test
 	public void exceptionTest() throws FileNotFoundException, IOException {
-		AWSConfigUtil util = new AWSConfigUtil();
+		AWSutil util = new AWSutil();
 		AmazonS3 s3 = createAWSClient(util);
 
 		UploadController uploadController = new UploadController();

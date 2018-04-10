@@ -6,8 +6,7 @@ import com.blacksheep.controller.ResultsController;
 import com.blacksheep.controller.UploadController;
 import com.blacksheep.services.CreateJson;
 import com.blacksheep.services.Matches;
-import com.blacksheep.util.AWSConfigUtil;
-import com.blacksheep.util.AWSConnection;
+import com.blacksheep.util.AWSutil;
 import com.blacksheep.util.Utility;
 
 import org.junit.AfterClass;
@@ -346,8 +345,8 @@ public class ResultControllerTest {
 	
 	@AfterClass
 	public static void cleaup() throws FileNotFoundException, IOException {
-		AWSConfigUtil config = new AWSConfigUtil();
-		AmazonS3 s3 = AWSConnection.getS3Client();
-		AWSConnection.deleteFolder(config.getAwsBucketName(), TESTUSER, s3);
+		AWSutil config = new AWSutil();
+		AmazonS3 s3 = AWSutil.getS3Client();
+		AWSutil.deleteFolder(config.getAwsBucketName(), TESTUSER, s3);
 	}
 }
