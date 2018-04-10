@@ -74,5 +74,5 @@ $(document).ready(function (){
         // on failure:
         // $(this).parent()[0].innerHTML= '<img src="img/circleWrong.png" />'
 
-    });
+    });:
 });
