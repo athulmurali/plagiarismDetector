@@ -3,81 +3,96 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="icon"
+          type="image/png"
+          href="./img/blackSheep.jpg">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
+    <script src="../js/common.js" type="text/javascript"></script>
     <script src="../js/codeStats.js" type="text/javascript"></script>
 
 
-    <link rel="stylesheet" type="text/css" href="codeStats.css"  />
+    <link rel="stylesheet" type="text/css" href="styleSheets/codeStats.css"  />
     <link href="https://fonts.googleapis.com/css?family=Dosis" rel="stylesheet">
 
-    <title>CodeStats</title>
+    <title>Black Sheep : Code Stats</title>
 </head>
 <body>
-<h4>
-<div>
+
+    <nav class="navbar navbar-expand-md  navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Plagiarism Detector</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarText">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="configure">Configure <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="upload">Upload <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" id="codeStats" href="#">Code Stats</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="codeMatch">Code Match<span class="sr-only">(current)</span></a>
+                </li>
+
+            </ul>
+            <span class="navbar-nav ml-auto navbar-item">
+        <a class="nav-link" href="#" id="logOut">Log out</a>
+        </span>
+        </div>
+    </nav>
 
 <div class="container" style="width: 60%">
     <div class = "Container" >
         <br>
     <h2 style ="text-align: center">Report</h2>
 
-        <div> <h4  style ="text-align: center">Plagiarism: <span id = "percent">0</span>%</h4>
-            <div class = "legends">
-                <div class = "row justify-content-center">
-                <button type="button" class="btn btn-success">Moved Code</button>
-                <button type="button" class="btn btn-danger"> Exact match</button>
-                <button type="button" class="btn btn-warning">Comments match</button>
-                <button type="button" class="btn btn-info">Structure match</button>
-            </div>
-            </div>
-
-            <table  class="table table-striped table-bordered table-hover" id ="myTable">
-        <thead>
-        <tr>
-        <th class="col-md-8 leftFileName">Type</th>
-        <th >Count</th>
-
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-        </table>
+        <!--<div> <h4  style ="text-align: center">Plagiarism: <span id = "percent">0</span>%</h4>-->
 
 
-            <h2> File matches</h2>
 
-        <table  class="table table-striped table-bordered table-hover " id ="fileTable">
-        <thead>
-        <tr>
-        <th class="col-md-8 leftFileName">fileName</th>
-        <th >Matches</th>
+            <h2> Project matches</h2>
 
-        </tr>
-        </thead>
-        <tbody>
-        </tbody>
-        </table>
+            <table  class="table table-striped table-bordered table-hover " id ="fileTable">
+                <thead>
+                <tr>
+                    <th class="col-md-8 leftFileName">Project Name</th>
+                    <th >Matches</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+
+
+            <!--<h2> All projects Analysis</h2>-->
+            <!--<table  class="table table-striped table-bordered table-hover" id ="myTable">-->
+        <!--<thead>-->
+        <!--<tr>-->
+        <!--<th class="col-md-8 leftFileName">Type</th>-->
+        <!--<th >Line Count</th>-->
+
+        <!--</tr>-->
+        <!--</thead>-->
+        <!--<tbody>-->
+        <!--</tbody>-->
+        <!--</table>-->
 
 
 </div>
 
-    </div>
-
-    <div class="row justify-content-center" >
-
-            <button onclick="redirectToCodeMatch()" type="button"
-                    class="btn btn-secondary" id ="codeButton">Code</button>
-
-    </div>
-
 </div>
-<br>
 
-</div>
-</h4>
+
+
 </body>
 </html>

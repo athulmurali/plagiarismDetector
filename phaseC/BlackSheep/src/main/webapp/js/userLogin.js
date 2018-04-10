@@ -9,12 +9,17 @@ window.onclick = function(event) {
     }
 }
 
-window.onload = function(){
 
-    document.getElementById("TAContinue").onclick = function () {
-        console.log(window.location.pathname);
-        location.href = "./uploadFiles.html";
-    };
+$(document).ready(function (){
+    // document.getElementById("TAContinue").onclick = function () {
+    //     console.log(window.location.pathname);
+    //     location.href = "./uploadFiles.html";
+    // };
 
 
-};
+    $("#loginScreen").click(function (){redirectToLogin()} );
+    $("#register").click(function (){redirectToRegister()} );
+    $("#welcome").click(function (){redirectToWelcome()} );
+
+
+});

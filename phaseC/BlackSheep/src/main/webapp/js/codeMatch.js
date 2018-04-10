@@ -1,8 +1,13 @@
 // Author : Athul
-// Version : 3
+// Version : 4
 // Date created : March 12, 2018
 // Date edited :  March 22, 2018
-// Please replace the ids if the ids are changed in html;
+
+const metaDataURL = "/getResults3";
+const userId      =  localStorage.getItem("user");
+
+
+const SIMILARITY_ID = "similarity";
 var back = "back"; // back button for match iteration
 var next = "next"; // next button for match iteration
 var leftStudentTableId  = "leftTable";
@@ -15,6 +20,10 @@ var filePairArray = [];
 var TABLEHEADERLEFT = "leftFileName";   //  class name in HTML
 var TABLEHEADERRIGHT = "rightFileName";// class  name in HTML
 
+
+// Other Constants:
+
+const DECIMAL_NUM_LIMIT =  2;
 
 // types
 // 1. exactMatch
@@ -32,231 +41,46 @@ var plagiarismCSSClasses = {
     "CRC Match"             : "exactMatch",
     "CodeMovement Match"    : "movedMatch",
     "Structure Match"       : "renamedMatch",
-    "Comments Match"        : "commentsMatch"
+    "Comments Match"        : "commentsMatch",
+
+
+    //Added after backend data format change
+
+
+    "Comment Match"        : "commentsMatch"
 
 };
 
+//variable that stores metadata and Code
 
 var CodeMatchData = {
     metadata: "",
     codeData: ""
 }
 
+$(document).ready(function (){
+
+    $("#configure").click(function(){redirectToConfigure()});
+
+    $("#upload").click(function(){redirectToUpload()});
+
+    $("#codeMatch").click(function(){redirectToCodeMatch()});
+
+    $("#codeStats").click(function(){redirectToCodeStats()});
+
+    $("#logOut").click(function(){logOut()});
 
 
-const RESULT = [
-    {
-        "file1": "simple1.py",
-        "file2": "simple1.py",
-        "percentage": 100,
-        "matches": [
-            {
-                "type": "CRC Match",
-                "file1MatchLines": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6,
-                    7,
-                    8
-                ],
-                "file2MatchLines": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6,
-                    7,
-                    8
-                ]
-            }
-        ]
-    },
-    {
-        "file1": "simple1.py",
-        "file2": "simple2.py",
-        "percentage": 100,
-        "matches": [
-            {
-                "type": "CRC Match",
-                "file1MatchLines": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6,
-                    7,
-                    8
-                ],
-                "file2MatchLines": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6,
-                    7,
-                    8
-                ]
-            }
-        ]
-    },
-    {
-        "file1": "simple1.py",
-        "file2": "simple3.py",
-        "percentage": 60,
-        "matches": [
-            {
-                "type": "CodeMovement Match",
-                "file1MatchLines": [
-                    1,
-                    2,
-                    3,
-                    5,
-                    6,
-                    8
-                ],
-                "file2MatchLines": [
-                    1,
-                    3,
-                    4,
-                    5,
-                    7,
-                    8
-                ]
-            },
-            {
-                "type": "Structure Match",
-                "file1MatchLines": [
-                    1,
-                    3
-                ],
-                "file2MatchLines": [
-                    1,
-                    5
-                ]
-            },
-            {
-                "type": "Comments Match",
-                "file1MatchLines": [],
-                "file2MatchLines": []
-            }
-        ]
-    },
-    {
-        "file1": "simple2.py",
-        "file2": "simple1.py",
-        "percentage": 100,
-        "matches": [
-            {
-                "type": "CRC Match",
-                "file1MatchLines": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6,
-                    7,
-                    8
-                ],
-                "file2MatchLines": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6,
-                    7,
-                    8
-                ]
-            }
-        ]
-    },
-    {
-        "file1": "simple2.py",
-        "file2": "simple2.py",
-        "percentage": 100,
-        "matches": [
-            {
-                "type": "CRC Match",
-                "file1MatchLines": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6,
-                    7,
-                    8
-                ],
-                "file2MatchLines": [
-                    1,
-                    2,
-                    3,
-                    4,
-                    5,
-                    6,
-                    7,
-                    8
-                ]
-            }
-        ]
-    },
-    {
-        "file1": "simple2.py",
-        "file2": "simple3.py",
-        "percentage": 60,
-        "matches": [
-            {
-                "type": "CodeMovement Match",
-                "file1MatchLines": [
-                    1,
-                    2,
-                    3,
-                    5,
-                    6,
-                    8
-                ],
-                "file2MatchLines": [
-                    1,
-                    3,
-                    4,
-                    5,
-                    7,
-                    8
-                ]
-            },
-            {
-                "type": "Structure Match",
-                "file1MatchLines": [
-                    1,
-                    3
-                ],
-                "file2MatchLines": [
-                    1,
-                    5
-                ]
-            },
-            {
-                "type": "Comments Match",
-                "file1MatchLines": [],
-                "file2MatchLines": []
-            }
-        ]
-    }
-]; // use this to test
-window.onload= function()
-{
-    const matchMetedata = getMatches();
-    console.log("printing metadata");
-    console.log(matchMetedata);
+    console.log("Logged in as :"+ userId);
+    var CodeMatchData;
 
-    getCodeMatchData();
+    CodeMatchData = getCodeMatchData();
+
+    // uncomment the below line and comment the above line to test the UI of codeMatch
+    // CodeMatchData = getTestCodeMatchData();
+
+    console.log("Code match data : Metadata & Code Data(below)");
+    console.log(CodeMatchData);
 
 
     // to be replaced with the ajax all instead of static values
@@ -266,13 +90,10 @@ window.onload= function()
     updateMatchNumberStatus();
     console.log("Navigation update success");
 
-
-    console.log("Metadata to process ;");
-    console.log(CodeMatchData.metadata[0]);
     processMatch(CodeMatchData.metadata[0]);
     // FilePairMatchesTable(filePairArray);
 
-}
+});
 
 function createTable(fileContent,tableId) {
     console.log("deleting existing rows");
@@ -282,7 +103,7 @@ function createTable(fileContent,tableId) {
 
     console.log("creating  new rows");
 
-    for ( i =0; i < arr.length; i++)
+    for ( let i =0; i < arr.length; i++)
     {
         var row = table.insertRow(i); // +1 to preserve the header
         var cell0 = row.insertCell(0);
@@ -373,7 +194,7 @@ function updateBackButtonStatus(){
 }
 
 function updateMatchNumberStatus(){
-    var newStatus = (currentMatchIndex + 1 ) + "/" +   ( getLastMatchIndex(CodeMatchData.metadata) +1);
+    var newStatus = (currentMatchIndex + 1 ) + "/" +   ( getLastMatchIndex() +1);
     console.log("new status : " +  newStatus);
     document.getElementById(matchNumberStatus).innerHTML = newStatus;
 
@@ -393,13 +214,12 @@ function deleteTableRows(tableId)
     }
 }
 
-
 function getFileContent(fileName,fileContentTable) {
 
     if (fileName in fileContentTable)
         return fileContentTable[fileName];
     else{
-        console.log("fileName does note exist in the content table");
+        console.log("Code not found in code dict for  : " + fileName);
         return null;
     }
 
@@ -436,10 +256,16 @@ function processMatch(objMatch)
     var file2Name = objMatch.file2;
     console.log("file 2 Name : " + file2Name );
 
+    // modify table header  of left side table :
+
+    modifyTableHeader(TABLEHEADERLEFT,file1Name);
+    // modify table header  of right side table :
+    modifyTableHeader(TABLEHEADERRIGHT,file2Name);
+
+    console.log("updating similarity");
+    updateSimilarity(SIMILARITY_ID,objMatch.percentage);
 
     // .file to be replaced with function : fileNameToContent(filename);
-
-
     var file1Content = getFileContent(file1Name,CodeMatchData.codeData);
     console.log("file 1 Content  :");
     console.log(file1Content);
@@ -448,16 +274,15 @@ function processMatch(objMatch)
     console.log("file 2 Content : " )
     console.log(file2Content);
 
+    // if the file content is not found it is returned
+    if (file1Content == null || file2Content == null) return;
+
 
     createTable(file1Content,leftStudentTableId);
     createTable(file2Content,rightStudentTableId);
 
 
-    // modify table header  of left side table :
 
-    modifyTableHeader(TABLEHEADERLEFT,file1Name);
-    // modify table header  of right side table :
-    modifyTableHeader(TABLEHEADERRIGHT,file2Name);
 
     for( var match in objMatch.matches)
     {
@@ -506,7 +331,6 @@ function modifyTableBorderOnType(tableId, lineNoArray, matchType)
         //header is the first Row no
         //hence i +1 in row number for contents
 
-         lineNoToColor  = lineNoToColor;
 
         //number of rows present in the table
         const rowCount = document.getElementById(tableId).rows.length;
@@ -526,7 +350,7 @@ function modifyTableBorderOnType(tableId, lineNoArray, matchType)
         console.log("row after modification : ");
         console.log(document.getElementById(tableId).rows.item(lineNoToColor).innerHTML);
 
-    };
+    }
 
 }
 
@@ -539,76 +363,59 @@ function modifyTableHeader(headerID, fileName ){
 }
 
 // function to get the match metadata and code
-
 function getCodeMatchData()
 {
 
-    const receivedFilePair = getMatches();
-
-    filePairArray = removeEmptyMatchPair(receivedFilePair);
     // get metdata of match
+    const receivedFilePair = newAjaxGet(metaDataURL,userId);
+    filePairArray = removeEmptyMatchPair(receivedFilePair);
     CodeMatchData.metadata =filePairArray;
 
     //get  code
-    CodeMatchData.codeData = codeObj;
+    const codeDictObj =  newAjaxGet("/getCode",userId);
+    console.log("obtained code :")
+    CodeMatchData.codeData = codeDictObj;
 
-//
-// // comment the above and uncomment the below to test for multiple matches
-//     // filePairArray = removeEmptyMatchPair(RESULT);
-//
-//     filePairArray = removeEmptyMatchPair(RESULT)
-//     // get metdata of match
-//     CodeMatchData.metadata =filePairArray;
-//
-//     //get  code
-//     CodeMatchData.codeData = codeObj;
+    return CodeMatchData;
 
 }
 
 
+function newAjaxGet(urlTo,userId)
+{
+    var paramData = 'userid='+encodeURI(userId);
 
-/**
- * gets the matches using an ajax request
- * As of now only the metadata is received from the ajax response
- * once the endpoint is available for code , obj should be replaced with the corresponding data
- * @returns {*}
- */
-function getMatches() {
-
-    console.log("getMatches : ");
-    const ajaxObj = getUrlJsonSync("/getResults3");
-    console.log("/getResults3: received object");
-    console.log(ajaxObj);
-    console.log("Received data : Metadata for code match");
-    console.log(ajaxObj.data);
-    return ajaxObj.data;
-}
-
-
-/**
- * method containing ajax request
- * @param url
- * @returns {{valid: *|string, data: *}}
- */
-function getUrlJsonSync(url){
-    var jqxhr = $.ajax({
+    var resultTemp = null;
+    $.ajax({
+        url: urlTo,
+        data: paramData,
         type: "GET",
-        url: url,
-        dataType: 'json',
-        cache: false,
-        async: false
+        async: false,
+
+        success: function (response) {
+            resultTemp = response;
+            return response;
+        },
+        error: function (xhr, status, error) {
+            alert(xhr.responseText);
+        }
     });
 
-    // 'async' has to be 'false' for this to work
-    var response = {valid: jqxhr.statusText,  data: jqxhr.responseJSON};
-    console.log(response);
-    return response;
+    return resultTemp;
+}
+
+function updateSimilarity(similaritySpanId, percentage){
+    console.log("updating similarity - in function");
+    percentage = parseFloat(percentage).toFixed(DECIMAL_NUM_LIMIT);
+
+    document.getElementById(similaritySpanId).innerHTML=percentage;
 }
 
 
+// test data for Code match | use the following for testing
 
-var codeObj = {};
-codeObj["simple1.py"] = "def sum(a, b):\n" +
+var testCodeDict = {};
+testCodeDict["simple1ProjectName"] = "def sum(a, b):\n" +
     "    mul(a,b,1)\n" +
     "    a+b\n" +
     "\n" +
@@ -618,7 +425,7 @@ codeObj["simple1.py"] = "def sum(a, b):\n" +
     "print(\"hello world\")";
 
 
-codeObj["simple2.py"] = "def sum(a, b):\n" +
+testCodeDict["simple2ProjectName"] = "def sum(a, b):\n" +
     "    mul(a,b,1)\n" +
     "    a+b\n" +
     "\n" +
@@ -628,7 +435,7 @@ codeObj["simple2.py"] = "def sum(a, b):\n" +
     "print(\"hello world\")";
 
 
-codeObj["simple3.py"] = "print(\"hello world\")\n" +
+testCodeDict["simple3ProjectName"] = "print(\"hello world\")\n" +
     "\n" +
     "def sum(a, b):\n" +
     "    a+b\n" +
@@ -637,7 +444,7 @@ codeObj["simple3.py"] = "print(\"hello world\")\n" +
     "def mul(a,b,c):\n" +
     "    a*b*c";
 
-codeObj["simple4.py"] = "# keep part of code compare to 1, 2, 3\n" +
+testCodeDict["simple4ProjectName"] = "# keep part of code compare to 1, 2, 3\n" +
     "\n" +
     "def sum(a, b):\n" +
     "    a+b\n" +
@@ -645,7 +452,7 @@ codeObj["simple4.py"] = "# keep part of code compare to 1, 2, 3\n" +
     "\n" +
     "print(\"hello world\")\n";
 
-codeObj["simple5.py"] = "# has part of code from simple 1, and part of extra code\n" +
+testCodeDict["simple5ProjectName"] = "# has part of code from simple 1, and part of extra code\n" +
     "\n" +
     "def mul(a,b,c):\n" +
     "    a*b*c\n" +
@@ -653,7 +460,7 @@ codeObj["simple5.py"] = "# has part of code from simple 1, and part of extra cod
     "print(\"The sum of %i and %i is %i\" % (5, 3, sum(5, 3)))\n";
 
 
-codeObj["simple6.py"] = "# totally different from previous simples\n" +
+testCodeDict["simple6ProjectName"] = "# totally different from previous simples\n" +
     "temperature = 115\n" +
     "while temperature > 112:\n" +
     "    print(temperature)\n" +
@@ -661,36 +468,232 @@ codeObj["simple6.py"] = "# totally different from previous simples\n" +
 
 
 
-// later to use
-//
-// var filePathId = {};
-//
-// function addPathFileId(path){
-//     var countMapsCreated =  Object.keys(filePathId).length;
-//     filePathId[countMapsCreated] = path;
-//     console.log(filePathId);
-// }
-
-
-
-// /**
-//  * the following function  iterates over the array of file pair matches available
-//  * @param filePairMatchArr
-//  *
-//  * Note : this require filePairMatch variable to be set in the current namespace
-//  */
-// function FilePairMatchesTable(filePairMatchArr){
-//     console.log("Processing : multiple...filePairs ");
-//     console.log("Iterating over each file pair match :");
-//
-//
-//     for (i = 0; i < filePairMatchArr.length; i++) {
-//         console.log(" Obj " + filePairMatchArr[i]);
-//
-//     }
-//
-// }
-function redirectToCodeStats()
+// function to  test the code  match metadata and code
+function getTestCodeMatchData()
 {
-    window.location = "../templates/codeStats.html"
+
+    // const receivedFilePair = newAjaxGet(metaDataURL,userId);
+
+    filePairArray = removeEmptyMatchPair(testMetaData);
+    // get metdata of match
+    CodeMatchData.metadata =testMetaData;
+
+    //get  code
+    // const codeDictObj =  newAjaxGet("/getCode",userId);
+    console.log("obtained code :")
+    // console.log(codeDictObj);
+
+    CodeMatchData.codeData = testCodeDict;
+
+    return CodeMatchData;
+
 }
+
+
+
+const testMetaData = [
+    {
+        "file1": "simple1ProjectName",
+        "file2": "simple1ProjectName",
+        "percentage": 100,
+        "matches": [
+            {
+                "type": "CRC Match",
+                "file1MatchLines": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                ],
+                "file2MatchLines": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                ]
+            }
+        ]
+    },
+    {
+        "file1": "simple1ProjectName",
+        "file2": "simple2ProjectName",
+        "percentage": 100,
+        "matches": [
+            {
+                "type": "CRC Match",
+                "file1MatchLines": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                ],
+                "file2MatchLines": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                ]
+            }
+        ]
+    },
+    {
+        "file1": "simple1ProjectName",
+        "file2": "simple3ProjectName",
+        "percentage": 60,
+        "matches": [
+            {
+                "type": "CodeMovement Match",
+                "file1MatchLines": [
+                    1,
+                    2,
+                    3,
+                    5,
+                    6,
+                    8
+                ],
+                "file2MatchLines": [
+                    1,
+                    3,
+                    4,
+                    5,
+                    7,
+                    8
+                ]
+            },
+            {
+                "type": "Structure Match",
+                "file1MatchLines": [
+                    1,
+                    3
+                ],
+                "file2MatchLines": [
+                    1,
+                    5
+                ]
+            },
+            {
+                "type": "Comments Match",
+                "file1MatchLines": [],
+                "file2MatchLines": []
+            }
+        ]
+    },
+    {
+        "file1": "simple2ProjectName",
+        "file2": "simple1ProjectName",
+        "percentage": 100,
+        "matches": [
+            {
+                "type": "CRC Match",
+                "file1MatchLines": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                ],
+                "file2MatchLines": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                ]
+            }
+        ]
+    },
+    {
+        "file1": "simple2ProjectName",
+        "file2": "simple2ProjectName",
+        "percentage": 100,
+        "matches": [
+            {
+                "type": "CRC Match",
+                "file1MatchLines": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                ],
+                "file2MatchLines": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8
+                ]
+            }
+        ]
+    },
+    {
+        "file1": "simple2ProjectName",
+        "file2": "simple3ProjectName",
+        "percentage": 60,
+        "matches": [
+            {
+                "type": "CodeMovement Match",
+                "file1MatchLines": [
+                    1,
+                    2,
+                    3,
+                    5,
+                    6,
+                    8
+                ],
+                "file2MatchLines": [
+                    1,
+                    3,
+                    4,
+                    5,
+                    7,
+                    8
+                ]
+            },
+            {
+                "type": "Structure Match",
+                "file1MatchLines": [
+                    1,
+                    3
+                ],
+                "file2MatchLines": [
+                    1,
+                    5
+                ]
+            },
+            {
+                "type": "Comments Match",
+                "file1MatchLines": [],
+                "file2MatchLines": []
+            }
+        ]
+    }
+]; // use this to test

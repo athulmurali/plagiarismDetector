@@ -1,33 +1,51 @@
-var globalMetadata;
-window.onload= function() {
+// update :
+
+//  changed Comments match -> Comment Match (api produces different data now )
+
+var getMetaDataURL = "/getResults3";
+
+
+
+$(document).ready(function (){
+
+
+    $("#configure").click(function(){redirectToConfigure()});
+
+    $("#upload").click(function(){redirectToUpload()});
+
+    $("#codeMatch").click(function(){redirectToCodeMatch()});
+
+    $("#codeStats").click(function(){redirectToCodeStats()});
+
+    $("#logOut").click(function(){logOut()});
+
 
 
 
     var userId = localStorage.getItem("user");
-    console.log("getting user's code")
-
-    newAjaxGet("/getCode",userId);
 
 
-    var RESULT = getMatches(userId);
+    var RESULT =    getMatches(userId);
+
+    localStorage.setItem("metData",RESULT) // storing metadata in local storage
 
     console.log(getFileDict(RESULT));
 
     var perList = getPercentageArray(RESULT);
     var avg = avgOfList(perList);
     console.log("avg" + avg);
-    changeOverallPercentage(avg.toFixed(2));
+    // changeOverallPercentage(avg.toFixed(2));
 
 
    var typeCountDict = getTypeCount(RESULT);
-
-   //building table 1
-    var keys = Object.keys(typeCountDict);
-    for(i in keys){
-        addRow('myTable',keys[i],typeCountDict[keys[i]]);
-        console.log(keys[i] + typeCountDict[keys[i]]);
-    }
-
+   //
+   // //building table 1
+   //  var keys = Object.keys(typeCountDict);
+   //  for(i in keys){
+   //      addRow('myTable',keys[i],typeCountDict[keys[i]]);
+   //      console.log(keys[i] + typeCountDict[keys[i]]);
+   //  }
+   //
 
     // getMatches();s
     var fileDict = getFileDict(RESULT);
@@ -40,7 +58,7 @@ window.onload= function() {
     }
     var obj =getMatches();
 
-}
+});
 
 
 function addRow(tableId,type,count)
@@ -75,7 +93,7 @@ function getPercentageArray(matchPairArray){
     console.log("getPercentageArray");
     var newObj = {};
     newObj["Structure Match"] = 0;
-    newObj["Comments Match"] = 0;
+    newObj["Comment Match"] = 0; //  changed Comments match -> Comment Match
     newObj["CodeMovement Match"] = 0;
     newObj["CRC Match"] = 0;
 
@@ -103,7 +121,7 @@ function avgOfList(avgList)
     for(var i = 0; i < avgList.length; i++) {
         total += avgList[i];
     }
-    return avg = total / avgList.length;
+    return total / avgList.length;
 }
 
 function getTypeCount(matchPairArray){
@@ -111,7 +129,7 @@ function getTypeCount(matchPairArray){
     console.log("getTypeCount");
     var newObj = {};
     newObj["Structure Match"] = 0;
-    newObj["Comments Match"] = 0;
+    newObj["Comment Match"] = 0;
     newObj["CodeMovement Match"] = 0;
     newObj["CRC Match"] = 0;
 
@@ -208,11 +226,9 @@ function addUniqueElements(newLi,oldLi){
 }
 
 function getMatches(userId) {
-    const RESULT1 =     newAjaxGet("/getResults3",userId);
+    console.log("ajax request for get Meta Data sent");
+    const RESULT1 =     newAjaxGet(getMetaDataURL,userId);
 
-    console.log(" Result below  /....   ");
-
-    console.log(RESULT1);
 
     return RESULT1;
 }
@@ -257,13 +273,6 @@ function getFileDict(matchPairArray)
     return fileDict;
 }
 
-function redirectToCodeMatch()
-{
-
-    console.log(" logged redirection ");
-    window.location = "../templates/codeMatch.html"
-}
-
 
     function newAjaxGet(urlTo,userId)
 {
@@ -293,27 +302,30 @@ function redirectToCodeMatch()
 
 
 
+// functions for redirection
+function redirectToConfigure()
+{
+    window.location = "../templates/configure.html"
+}
+
+function redirectToUpload()
+{
+    window.location = "../templates/upload.html"
+}
+
+function redirectToCodeStats()
+{
+    window.location = "../templates/codeStats.html"
+}
 
 
-// old json request
+function redirectToCodeMatch()
+{
 
+    console.log(" logged redirection ");
+    window.location = "../templates/codeMatch.html"
+}
 
-// function getUrlJsonSync(url){
-//     var getResultObj = $.ajax({
-//         type: "GET",
-//         url: url,
-//         dataType: 'json',
-//         cache: false,
-//         async: false
-//     });
-//     // 'async' has to be 'false' for this to work
-//     console.log(getResultObj.data);
-//     var response = {valid: getResultObj.statusText,  data: getResultObj.responseJSON};
-//
-//     console.log("response,.,..");
-//     console.log(response.data);
-//     return response.data;
-// };
 
 
 

@@ -1,12 +1,10 @@
-#header{
-    font-family: "Al Bayan";
+.header{
+    padding-bottom: 0px;
 }
 
-
-
 body {
-    background-color: #cc0000;
-    color: white;
+    background-color:     #EBE5DF;
+    color: black;
     font-family: 'Dosis', sans-serif;"
 
 }
@@ -23,6 +21,7 @@ body {
     padding-top: 20px;
     padding-bottom: 0px;
     text-align: center;
+    margin-bottom: 0px;
 }
 .navigationBar{
     height: 80px;
@@ -55,7 +54,6 @@ li {
     max-width: 90%;
     margin: auto;
     text-align:center;
-    background: #777676;
 
 }
 #tableLeft{
@@ -78,7 +76,6 @@ li {
     text-align: left;
     padding: 3%;
 }
-
 
 #exactMatch{
     border-left: 10px solid #dc3545;
