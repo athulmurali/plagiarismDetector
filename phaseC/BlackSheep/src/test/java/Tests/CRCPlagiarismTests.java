@@ -68,7 +68,7 @@ public class CRCPlagiarismTests {
     	File inputFile1 = new File(classloader.getResource("python/simple1.py").getFile());
     	File inputFile2 = new File(classloader.getResource("python/simple5.py").getFile());
     	Context c = new Context(new CRCPlagiarism());
-    	assertEquals(null,c.executeStrategy(inputFile1,inputFile2));
+    	assertEquals(new ArrayList<>(),c.executeStrategy(inputFile1,inputFile2));
     }
     
     @Test
@@ -81,7 +81,7 @@ public class CRCPlagiarismTests {
     	RuleContext ruleContext1 = parser.parse(inputFile1);
     	RuleContext ruleContext2 = parser.parse(inputFile2);
     	Context c = new Context(new CRCPlagiarism());
-    	assertEquals(null,c.executeStrategy(ruleContext1,ruleContext2));
+    	assertEquals(new ArrayList<>(),c.executeStrategy(ruleContext1,ruleContext2));
     }
     
     @Test
@@ -97,7 +97,7 @@ public class CRCPlagiarismTests {
 			Context c = new Context(new CRCPlagiarism());
 			InputStream stream2 = new FileInputStream(inputFile2);
 			List<List<String>> result = c.executeStrategy(null, stream2);
-			assertEquals(null, result);
+			assertEquals(new ArrayList<>(), result);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

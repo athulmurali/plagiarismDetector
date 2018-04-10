@@ -21,8 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.amazonaws.services.s3.AmazonS3;
 import com.blacksheep.controller.GetCodeController;
 import com.blacksheep.controller.UploadController;
-import com.blacksheep.util.AWSConfigUtil;
-import com.blacksheep.util.AWSConnection;
+import com.blacksheep.util.AWSutil;
 import com.blacksheep.util.GetCodeJson;
 
 public class GetCodeControllerTests {
@@ -76,9 +75,9 @@ public class GetCodeControllerTests {
 	
 	@AfterClass
 	public static void cleaup() throws FileNotFoundException, IOException {
-		AWSConfigUtil config = new AWSConfigUtil();
-		AmazonS3 s3 = AWSConnection.getS3Client();
-		AWSConnection.deleteFolder(config.getAwsBucketName(), TESTUSER, s3);
+		AWSutil config = new AWSutil();
+		AmazonS3 s3 = AWSutil.getS3Client();
+		AWSutil.deleteFolder(config.getAwsBucketName(), TESTUSER, s3);
 	}
 	
 	private List<GetCodeJson> getExpectedOutput() {
