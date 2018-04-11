@@ -25,31 +25,24 @@ $(document).ready(function () {
                 if(response == "TA")
                 {
                     localStorage.setItem("role","TA");
-                    location.href = "./upload.html";
+                    redirectToUpload();
                 }
                 else{
                     localStorage.setItem("role","PROFESSOR");
-                    redirect1();
+                    redirectToConfigure();
                 }
             },
 
             error: function (e) {
                 localStorage.clear();
                 console.log('page not found' + e);
-                redirect2();
+                redirectToLogin();
 
             }
         });
 
-        function redirect1() {
-            console.log("in redirect");
-            window.location.href = "../templates/configure.html";
-        }
 
-        function redirect2() {
-            alert("Invalid login credentials!");
-            window.location = "../templates/userLogin.html";
-        }
+
     });
 
 
