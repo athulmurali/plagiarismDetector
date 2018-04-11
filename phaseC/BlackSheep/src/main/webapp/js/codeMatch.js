@@ -368,18 +368,54 @@ function getCodeMatchData()
 
     // get metdata of match
     const receivedFilePair = newAjaxGet(metaDataURL,userId);
-    filePairArray = removeEmptyMatchPair(receivedFilePair);
+    filePairArray          = removeEmptyMatchPair(receivedFilePair);
     CodeMatchData.metadata =filePairArray;
 
     //get  code
-    const codeDictObj =  newAjaxGet("/getCode",userId);
+    // processing the input to fit ui input requirements
+    const codeArray = newAjaxGet("/getCode",userId);
+    const codeDictObj = codeArrayToCodeDict(codeArray);
+
     console.log("obtained code :")
     CodeMatchData.codeData = codeDictObj;
-
     return CodeMatchData;
 
 }
 
+/**
+ * Purpose : Converts the code obtained from the api for getting code to a dict
+ * of file names with code  to dict with string filename as key and code as value
+ *
+ * example :
+ * input :
+ * [
+ *  0 : {fileName: "proj16zMJE", code: "↵ # @@TOPAATM },
+ *  1 : {fileName: "proj16zMJE", code: "↵ # @@TOPAATM }
+ * ]
+ */
+function codeArrayToCodeDict( codeArray)
+{
+    // the output dict
+    var dict = {}; // create an empty array
+
+    for ( let i =0; i < codeArray.length; i++)
+    {
+        // file Name is the name of the param
+        const fileName = codeArray[i]["fileName"];
+        const code = codeArray[i]["code"];
+
+        console.log("iter       : " + i);
+        console.log("fileName   : " + fileName);
+        console.log("code       : " + code);
+
+        dict[fileName]=code;
+    }
+
+    console.log("output dict below this ");
+    console.log(dict);
+
+    return dict
+}
 
 function newAjaxGet(urlTo,userId)
 {
@@ -463,7 +499,7 @@ testCodeDict["simple5ProjectName"] = "# has part of code from simple 1, and part
 testCodeDict["simple6ProjectName"] = "# totally different from previous simples\n" +
     "temperature = 115\n" +
     "while temperature > 112:\n" +
-    "    print(temperature)\n" +
+    "    print(temperature)\netC" +
     "    temperature = temperature - 1";
 
 
