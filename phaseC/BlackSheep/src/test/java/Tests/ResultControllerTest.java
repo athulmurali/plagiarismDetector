@@ -54,6 +54,32 @@ public class ResultControllerTest {
 	}
 
 	@Test
+	public void exceptionTest1() {
+
+		try {
+			ResultsController rc = new ResultsController();
+			setFlagsForTesting(false, false, true);
+			List<String> l1 = new ArrayList<>();
+			l1.add("1");
+
+			List<List<String>> list1 = new ArrayList<>();
+			list1.add(l1);
+
+			List<Integer> listInt = new ArrayList<>();
+			listInt.add(1);
+
+			Matches m = new Matches("abc", listInt, listInt);
+
+			List<Matches> matches = new ArrayList<>();
+			matches.add(m);
+
+			rc.createMatches(null, "test", null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
 	public void Notempty() {
 		ResultsController rc = new ResultsController();
 		setFlagsForTesting(true, false, true);
@@ -533,6 +559,33 @@ public class ResultControllerTest {
 		lcj.add(cj);
 		
 		rc.initPlagiarismDetection(TESTUSER);
+	}
+	
+	@Test
+	public void exceptionTest() {
+		setFlagsForTesting(false, true, false);
+		ResultsController rc = new ResultsController();
+		
+		List<String> l1 = new ArrayList<>();
+		l1.add("1");
+
+		List<List<String>> list1 = new ArrayList<>();
+		list1.add(l1);
+
+		List<Integer> listInt = new ArrayList<>();
+		listInt.add(1);
+
+		Matches m = new Matches("abc", listInt, listInt);
+
+		List<Matches> matches = new ArrayList<>();
+		matches.add(m);
+
+		CreateJson cj = new CreateJson("file1", "file2", 80.0, matches);
+
+		List<CreateJson> lcj = new ArrayList<>();
+		lcj.add(cj);
+		
+		rc.initPlagiarismDetection(null);
 	}
 
 	@BeforeClass

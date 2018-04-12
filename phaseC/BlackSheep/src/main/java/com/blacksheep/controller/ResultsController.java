@@ -280,7 +280,7 @@ public class ResultsController {
 			}
 
 			return "All went fine";
-		} catch (ArrayIndexOutOfBoundsException exception) {
+		} catch (Exception exception) {
 			logger.error("", exception);
 			throw exception;
 		}
