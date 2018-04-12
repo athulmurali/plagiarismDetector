@@ -41,3 +41,16 @@ function logOut(){
     localStorage.clear();
     window.location = "../templates/welcome.html"
 }
+
+function  redirectIfNotLoggedIn(userId)
+{
+    var userId = localStorage.getItem("user");
+    if (userId == null)
+    {
+        console.log("Please login and come back! ");
+        alert("Not logged in ! Please login");
+        redirectToLogin();
+
+    }
+
+}
