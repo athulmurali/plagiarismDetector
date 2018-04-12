@@ -330,23 +330,17 @@ public class ResultsController {
 			commentWeight = 0;
 			structWeight += COMMENT_WEIGHT/2;
 		}
-		else if(codemove && !structure && comment) {
+		else if(comment && codemove && !structure) {
 			codeWeight += STRUCTURE_WEIGHT/2;
 			commentWeight += STRUCTURE_WEIGHT/2;
 			structWeight = 0;
 		}
-		else if(!codemove && structure && comment) {
+		else if(structure && comment && !codemove) {
 			codeWeight = 0;
 			commentWeight += CODEMOVE_WEIGHT/2;
 			structWeight += CODEMOVE_WEIGHT/2;
 		}
 		
 		return (codeWeight * codeMatch) + (structWeight * structureMatch) + (commentWeight * commentMatch);
-	}
-
-	public void setFlagsForTesting(boolean comment, boolean codemove, boolean structure) {
-		this.comment = comment;
-		this.codemove = codemove;
-		this.structure = structure;
 	}
 }
