@@ -15,6 +15,7 @@ import java.util.Scanner;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,21 +31,21 @@ public class GetCodeControllerTests {
 	@Test
 	public void getDataTest() {
 		GetCodeController controller = new GetCodeController();
-		List<GetCodeJson> actual = controller.getCode(TESTUSER);
+		ResponseEntity<List<GetCodeJson>> actual = controller.getCode(TESTUSER);
 		
 		List<GetCodeJson> expected = getExpectedOutput();
 		
-		assertEquals(expected.size(), actual.size());		
+		assertEquals(expected.size(), actual.getBody().size());		
 	}
 	
 	@Test
 	public void exceptionTest() {
 		GetCodeController controller = new GetCodeController();
-		List<GetCodeJson> actual = controller.getCode(TESTUSER);
+		ResponseEntity<List<GetCodeJson>> actual = controller.getCode(TESTUSER);
 		
 		List<GetCodeJson> expected = getExpectedOutput();
 		
-		assertEquals(expected.size(), actual.size());		
+		assertEquals(expected.size(), actual.getBody().size());
 	}
 	
 	@BeforeClass

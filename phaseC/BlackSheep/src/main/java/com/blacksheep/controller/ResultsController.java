@@ -10,6 +10,8 @@ import com.blacksheep.util.AWSutil;
 import com.blacksheep.util.Utility;
 import org.antlr.v4.runtime.RuleContext;
 import org.apache.log4j.Logger;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -19,21 +21,46 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/***
- * 
+/**
  * Controller to get the results of the matches for between submissions
- *
  */
 @RestController
 public class ResultsController {
 
+	/**
+	 * String for comment match in the response json
+	 */
 	private static final String COMMENT_MATCH = "Comment Match";
 
+	/**
+	 * String for code movement match in the response json
+	 */
 	private static final String CODEMOVE_MATCH = "CodeMovement Match";
 
+	/**
+	 * String for structure match in the response json
+	 */
 	private static final String STRUCTURE_MATCH = "Structure Match";
 
+	/**
+	 * String for the CRC match in the response json
+	 */
 	private static final String CRC = "CRC Match";
+
+	/**
+	 * Weight for code movement match in the response json
+	 */
+	private static final double CODEMOVE_WEIGHT = 0.68;
+
+	/**
+	 * Weight for structure match in the response json
+	 */
+	private static final double STRUCTURE_WEIGHT = 0.20;
+
+	/**
+	 * Weight for comment match in the response json
+	 */
+	private static final double COMMENT_WEIGHT = 0.12;
 
 	/**
 	 * Logger instance
@@ -58,12 +85,11 @@ public class ResultsController {
 	/**
 	 * An API to send the eventual results in form of a JSON
 	 * 
-	 * @return List of CreateJson
-	 *  added RequestBody to get response
+	 * @return List of CreateJson added RequestBody to get response
 	 */
-	@RequestMapping(value = "/getResults3",  method = RequestMethod.GET)
+	@RequestMapping(value = "/getResults3", method = RequestMethod.GET)
 	@ResponseBody
-	public List<CreateJson> initPlagiarismDetection(@RequestParam("userid") String userId) {
+	public ResponseEntity<List<CreateJson>> initPlagiarismDetection(@RequestParam("userid") String userId) {
 		List<CreateJson> ljson = new ArrayList<>();
 		Map<String, List<FileStreams>> allSubmissionStreams = new HashMap<>();
 
@@ -104,15 +130,12 @@ public class ResultsController {
 						ljson.add(cj1);
 					}
 				}
-
 			}
-
-			return ljson;
+			return new ResponseEntity<>(ljson,HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			return ljson;
+			return new ResponseEntity<>(ljson,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
 	}
 
 	/**
@@ -125,10 +148,12 @@ public class ResultsController {
 		boolean[] configFlags = Utility.getConfigFlags();
 		comment = configFlags[0];
 		codemove = configFlags[1];
-		structure = configFlags[2];		
+		structure = configFlags[2];
 	}
 
 	/**
+	 * Starts plagiarism detection
+	 * 
 	 * @param string1
 	 * @param sourceContext1
 	 * @param string2
@@ -173,6 +198,8 @@ public class ResultsController {
 	}
 
 	/**
+	 * Checks plagiarism using ASTS
+	 * 
 	 * @param sourceContext1
 	 * @param sourceContext2
 	 * @param plagiarism
@@ -192,6 +219,8 @@ public class ResultsController {
 	}
 
 	/**
+	 * Checks plagiarism using strings
+	 * 
 	 * @param string1
 	 * @param string2
 	 * @param plagiarism
@@ -210,6 +239,7 @@ public class ResultsController {
 	}
 
 	/**
+	 * Initializes the response arrays
 	 * @param matches
 	 */
 	private void initMatches(List<List<String>> matches) {
@@ -220,7 +250,7 @@ public class ResultsController {
 	}
 
 	/**
-	 * Helper Method to Create Match Array in JSON
+	 * Creates Match Array in JSON
 	 * 
 	 * @param list1
 	 *            An List of List containing line matches and percentage match
@@ -258,18 +288,62 @@ public class ResultsController {
 	}
 
 	/**
-	 * calculateWeightedPercentage calculates the weighted percentage
+	 * Calculates the weighted percentage
 	 * 
-	 * @param value1
+	 * @param structureMatch
 	 *            the percentage from first comparison strategy
-	 * @param value2
+	 * @param codeMatch
 	 *            the percentage from second comparison strategy
-	 * @return double, returns the weighted percentage
+	 * @param commentMatch
+	 *            : percentage from comment match strategy
+	 * 
+	 * @return the weighted percentage
 	 */
-	public double calculateWeightedPercentage(double value1, double value2, double value3) {
-		return (0.33 * value1) + (0.33 * value2) + (0.33 * value3);
+	public double calculateWeightedPercentage(double structureMatch, double codeMatch, double commentMatch) {
+
+		double codeWeight = CODEMOVE_WEIGHT;
+		double commentWeight = COMMENT_WEIGHT;
+		double structWeight = STRUCTURE_WEIGHT;
+		
+		if(!codemove && !structure && !comment) {
+			codeWeight = 0;
+			commentWeight = 0;
+			structWeight = 0;
+		}
+		else if(codemove && !structure && !comment) {
+			codeWeight = 1;
+			commentWeight = 0;
+			structWeight = 0;
+		}
+		else if(!codemove && structure && !comment) {
+			codeWeight = 0;
+			commentWeight = 0;
+			structWeight = 1;
+		}
+		else if(!codemove && !structure && comment) {
+			codeWeight = 0;
+			commentWeight = 1;
+			structWeight = 0;
+		}
+		else if(codemove && structure && !comment) {
+			codeWeight += COMMENT_WEIGHT/2;
+			commentWeight = 0;
+			structWeight += COMMENT_WEIGHT/2;
+		}
+		else if(codemove && !structure && comment) {
+			codeWeight += STRUCTURE_WEIGHT/2;
+			commentWeight += STRUCTURE_WEIGHT/2;
+			structWeight = 0;
+		}
+		else if(!codemove && structure && comment) {
+			codeWeight = 0;
+			commentWeight += CODEMOVE_WEIGHT/2;
+			structWeight += CODEMOVE_WEIGHT/2;
+		}
+		
+		return (codeWeight * codeMatch) + (structWeight * structureMatch) + (commentWeight * commentMatch);
 	}
-	
+
 	public void setFlagsForTesting(boolean comment, boolean codemove, boolean structure) {
 		this.comment = comment;
 		this.codemove = codemove;

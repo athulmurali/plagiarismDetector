@@ -8,6 +8,8 @@ import com.blacksheep.util.Utility;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ public class GetCodeController {
 	 */
 	@RequestMapping(value = "/getCode", method = RequestMethod.GET)
 	@ResponseBody
-	public List<GetCodeJson> getCode(@RequestParam("userid") String userId) {
+	public ResponseEntity<List<GetCodeJson>> getCode(@RequestParam("userid") String userId) {
 		List<GetCodeJson> ljson = new ArrayList<>();
 		Map<String, List<FileStreams>> allSubmissionStreams = new HashMap<>();
 
@@ -50,10 +52,10 @@ public class GetCodeController {
 				ljson.add(json);
 			}
 
-			return ljson;
+			return new ResponseEntity<>(ljson,HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-			return ljson;
+			return new ResponseEntity<>(ljson,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }
