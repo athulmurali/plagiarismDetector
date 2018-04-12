@@ -188,7 +188,7 @@ public class CommentsPlagiarismTest {
     	File inputFile1 = new File(classloader.getResource("python/simple1.py").getFile());
     	File inputFile2 = new File(classloader.getResource("python/simple5.py").getFile());
     	Context c = new Context(new CommentPlagiarism());
-    	assertEquals(null,c.executeStrategy(inputFile1,inputFile2));
+    	assertEquals(new ArrayList<>(),c.executeStrategy(inputFile1,inputFile2));
     }
     
     @Test
@@ -201,7 +201,7 @@ public class CommentsPlagiarismTest {
     	RuleContext ruleContext1 = parser.parse(inputFile1);
     	RuleContext ruleContext2 = parser.parse(inputFile2);
     	Context c = new Context(new CommentPlagiarism());
-    	assertEquals(null,c.executeStrategy(ruleContext1,ruleContext2));
+    	assertEquals(new ArrayList<>(),c.executeStrategy(ruleContext1,ruleContext2));
     }
     
     @Test

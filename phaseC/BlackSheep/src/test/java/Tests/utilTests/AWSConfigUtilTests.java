@@ -1,12 +1,12 @@
 package Tests.utilTests;
-import com.blacksheep.util.AWSConfigUtil;
+import com.blacksheep.util.AWSutil;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
 public class AWSConfigUtilTests {
 
-    AWSConfigUtil awsConfigUtil = new AWSConfigUtil();
+    AWSutil awsConfigUtil = new AWSutil();
 
     @Test
     public void TestAWSUTIL(){

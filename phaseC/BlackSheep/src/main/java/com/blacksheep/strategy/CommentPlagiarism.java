@@ -14,6 +14,22 @@ import java.util.*;
  * two source files
  */
 public class CommentPlagiarism implements Plagiarism {
+
+	/**
+	 * The separator between multiple files in a submission
+	 */
+	private static final String FILESEPARATOR = "@@TOPAATMABI@@";
+
+	/**
+	 * Marker for single line comments in python
+	 */
+	private static final String SINGLELINECOMMENTMARKER = "#";
+
+	/**
+	 * Marker for multi-line comments in python
+	 */
+	private static final String MULTILINECOMMENTMARKER = "\"\"\"";
+
 	/**
 	 * The threshold to acceptable plagiarism
 	 */
@@ -88,7 +104,7 @@ public class CommentPlagiarism implements Plagiarism {
 			int comments2Size = comments2.size();
 
 			for (int i = 0; i < comments1Size; i++) {
-				
+
 				String comment1 = comments1.get(i);
 				double comment1Length = comment1.length();
 
@@ -126,7 +142,7 @@ public class CommentPlagiarism implements Plagiarism {
 		} catch (Exception e) {
 			logger.error("Comment Plagiarism error", e);
 			return result;
-		} 
+		}
 	}
 
 	/***
@@ -154,21 +170,18 @@ public class CommentPlagiarism implements Plagiarism {
 			String codeLine = lines[index];
 
 			if (multipleCommentFound) {
-				if (codeLine.contains("\"\"\"")) {
+				if (codeLine.contains(MULTILINECOMMENTMARKER)) {
 					multipleCommentFound = false;
 				} else {
-					if(!codeLine.contains("@@TOPAATMABI@@")) {
-						code.add(codeLine.trim());
-						lineNum.add(String.valueOf(index + 1));	
-					}					
+					code.add(codeLine.trim());
+					lineNum.add(String.valueOf(index + 1));
 				}
 			} else {
-				if (codeLine.contains("#")) {
-					if(!codeLine.contains("@@TOPAATMABI@@")) {
-						code.add(codeLine.substring(codeLine.indexOf('#') + 1).trim());
-						lineNum.add(String.valueOf(index + 1));
-					}
-				} else if (codeLine.contains("\"\"\"")) {
+				if (codeLine.contains(SINGLELINECOMMENTMARKER) 
+						&& !codeLine.contains(FILESEPARATOR)) {
+					code.add(codeLine.substring(codeLine.indexOf(SINGLELINECOMMENTMARKER) + 1).trim());
+					lineNum.add(String.valueOf(index + 1));
+				} else if (codeLine.contains(MULTILINECOMMENTMARKER)) {
 					multipleCommentFound = true;
 				}
 			}
@@ -176,7 +189,7 @@ public class CommentPlagiarism implements Plagiarism {
 		return multipleCommentFound;
 	}
 
-	/***
+	/**
 	 * This method takes the input streams from 2 files and converts them to strings
 	 * which is then converted to array of strings
 	 * 
@@ -186,7 +199,7 @@ public class CommentPlagiarism implements Plagiarism {
 	 *            : String of the second source file
 	 */
 	private void processInputStream(String input1, String input2) {
-		
+
 		String[] codeLines1 = input1.split("\\r?\\n");
 		String[] codeLines2 = input2.split("\\r?\\n");
 
@@ -212,7 +225,7 @@ public class CommentPlagiarism implements Plagiarism {
 	 *         codes in two files and the similar percentage
 	 */
 	public List<List<String>> getDetectResult(RuleContext f1, RuleContext f2) throws IOException {
-		return null;
+		return new ArrayList<>();
 	}
 
 	/**
@@ -226,17 +239,20 @@ public class CommentPlagiarism implements Plagiarism {
 	 *         codes in two files and the similar percentage
 	 */
 	public List<List<String>> getDetectResult(File f1, File f2) throws IOException {
-		return null;
+		return new ArrayList<>();
 	}
-	
+
 	/**
-     * get the detect result
-     * @param f1 A file that needs to detect
-     * @param f2 A file that needs to compare with
-     * @return a list of three string lists that contain the line numbers of
-     *   similar codes in two files and the similar percentage
-     */
-    public List<List<String>> getDetectResult(InputStream f1, InputStream f2) throws IOException{
-        return null;
-    }
+	 * get the detect result
+	 * 
+	 * @param f1
+	 *            A file that needs to detect
+	 * @param f2
+	 *            A file that needs to compare with
+	 * @return a list of three string lists that contain the line numbers of similar
+	 *         codes in two files and the similar percentage
+	 */
+	public List<List<String>> getDetectResult(InputStream f1, InputStream f2) throws IOException {
+		return new ArrayList<>();
+	}
 }

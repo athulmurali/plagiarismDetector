@@ -70,7 +70,7 @@ public class CRCPlagiarism implements Plagiarism {
 	 *         codes in two files and the similar percentage
 	 */
 	public List<List<String>> getDetectResult(File f1, File f2) throws IOException {
-		return null;
+		return new ArrayList<>();
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class CRCPlagiarism implements Plagiarism {
 	 *         codes in two files and the similar percentage
 	 */
 	public List<List<String>> getDetectResult(RuleContext f1, RuleContext f2) throws IOException {
-		return null;
+		return new ArrayList<>();
 	}
 
 	/**
@@ -98,6 +98,6 @@ public class CRCPlagiarism implements Plagiarism {
 	 *         codes in two files and the similar percentage
 	 */
 	public List<List<String>> getDetectResult(InputStream f1, InputStream f2) throws IOException {
-		return null;
+		return new ArrayList<>();
 	}
 }

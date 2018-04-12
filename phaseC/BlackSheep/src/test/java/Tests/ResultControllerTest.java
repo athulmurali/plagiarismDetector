@@ -2,12 +2,12 @@ package Tests;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.blacksheep.Types;
+import com.blacksheep.controller.ConfigPlagiarismController;
 import com.blacksheep.controller.ResultsController;
 import com.blacksheep.controller.UploadController;
 import com.blacksheep.services.CreateJson;
 import com.blacksheep.services.Matches;
-import com.blacksheep.util.AWSConfigUtil;
-import com.blacksheep.util.AWSConnection;
+import com.blacksheep.util.AWSutil;
 import com.blacksheep.util.Utility;
 
 import org.junit.AfterClass;
@@ -32,7 +32,7 @@ public class ResultControllerTest {
 
 		try {
 			ResultsController rc = new ResultsController();
-			rc.setFlagsForTesting(false, false, true);
+			setFlagsForTesting(false, false, true);
 			List<String> l1 = new ArrayList<>();
 			l1.add("1");
 
@@ -54,9 +54,35 @@ public class ResultControllerTest {
 	}
 
 	@Test
+	public void exceptionTest1() {
+
+		try {
+			ResultsController rc = new ResultsController();
+			setFlagsForTesting(false, false, true);
+			List<String> l1 = new ArrayList<>();
+			l1.add("1");
+
+			List<List<String>> list1 = new ArrayList<>();
+			list1.add(l1);
+
+			List<Integer> listInt = new ArrayList<>();
+			listInt.add(1);
+
+			Matches m = new Matches("abc", listInt, listInt);
+
+			List<Matches> matches = new ArrayList<>();
+			matches.add(m);
+
+			rc.createMatches(null, "test", null);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
 	public void Notempty() {
 		ResultsController rc = new ResultsController();
-		rc.setFlagsForTesting(true, false, true);
+		setFlagsForTesting(true, false, true);
 		List<String> l1 = new ArrayList<>();
 		l1.add("1");
 
@@ -81,12 +107,13 @@ public class ResultControllerTest {
 
 	@Test
 	public void CheckPercentage() {
+		setFlagsForTesting(true, true, true);
 		ResultsController rc = new ResultsController();
-		rc.setFlagsForTesting(true, true, true);
 
 		double v1 = 40, v2 = 40, v3 = 40;
+		rc.initPlagiarismDetection(TESTUSER);
 
-		assertEquals(39.6, rc.calculateWeightedPercentage(v1, v2, v3), 0);
+		assertEquals(40, rc.calculateWeightedPercentage(v1, v2, v3), 0);
 
 	}
 
@@ -317,6 +344,249 @@ public class ResultControllerTest {
 		// assertEquals(lcj.toString(),rc.PostChoices(t).toString());
 
 	}
+	
+	@Test
+	public void TestPostChoices4() {
+		setFlagsForTesting(true, true, true);
+		ResultsController rc = new ResultsController();
+		
+		List<String> l1 = new ArrayList<>();
+		l1.add("1");
+
+		List<List<String>> list1 = new ArrayList<>();
+		list1.add(l1);
+
+		List<Integer> listInt = new ArrayList<>();
+		listInt.add(1);
+
+		Matches m = new Matches("abc", listInt, listInt);
+
+		List<Matches> matches = new ArrayList<>();
+		matches.add(m);
+
+		CreateJson cj = new CreateJson("file1", "file2", 80.0, matches);
+
+		List<CreateJson> lcj = new ArrayList<>();
+		lcj.add(cj);
+		
+		rc.initPlagiarismDetection(TESTUSER);
+	}
+	
+	@Test
+	public void TestPostChoices5() {
+		setFlagsForTesting(false, false, false);
+		ResultsController rc = new ResultsController();
+		
+		List<String> l1 = new ArrayList<>();
+		l1.add("1");
+
+		List<List<String>> list1 = new ArrayList<>();
+		list1.add(l1);
+
+		List<Integer> listInt = new ArrayList<>();
+		listInt.add(1);
+
+		Matches m = new Matches("abc", listInt, listInt);
+
+		List<Matches> matches = new ArrayList<>();
+		matches.add(m);
+
+		CreateJson cj = new CreateJson("file1", "file2", 80.0, matches);
+
+		List<CreateJson> lcj = new ArrayList<>();
+		lcj.add(cj);
+		
+		rc.initPlagiarismDetection(TESTUSER);
+	}
+	
+	@Test
+	public void TestPostChoices6() {
+		setFlagsForTesting(true, true, false);
+		ResultsController rc = new ResultsController();
+		
+		List<String> l1 = new ArrayList<>();
+		l1.add("1");
+
+		List<List<String>> list1 = new ArrayList<>();
+		list1.add(l1);
+
+		List<Integer> listInt = new ArrayList<>();
+		listInt.add(1);
+
+		Matches m = new Matches("abc", listInt, listInt);
+
+		List<Matches> matches = new ArrayList<>();
+		matches.add(m);
+
+		CreateJson cj = new CreateJson("file1", "file2", 80.0, matches);
+
+		List<CreateJson> lcj = new ArrayList<>();
+		lcj.add(cj);
+		
+		rc.initPlagiarismDetection(TESTUSER);
+	}
+	
+	@Test
+	public void TestPostChoices7() {
+		setFlagsForTesting(true, false, true);
+		ResultsController rc = new ResultsController();
+		
+		List<String> l1 = new ArrayList<>();
+		l1.add("1");
+
+		List<List<String>> list1 = new ArrayList<>();
+		list1.add(l1);
+
+		List<Integer> listInt = new ArrayList<>();
+		listInt.add(1);
+
+		Matches m = new Matches("abc", listInt, listInt);
+
+		List<Matches> matches = new ArrayList<>();
+		matches.add(m);
+
+		CreateJson cj = new CreateJson("file1", "file2", 80.0, matches);
+
+		List<CreateJson> lcj = new ArrayList<>();
+		lcj.add(cj);
+		
+		rc.initPlagiarismDetection(TESTUSER);
+	}
+	
+	@Test
+	public void TestPostChoices8() {
+		setFlagsForTesting(false, true, true);
+		ResultsController rc = new ResultsController();
+		
+		List<String> l1 = new ArrayList<>();
+		l1.add("1");
+
+		List<List<String>> list1 = new ArrayList<>();
+		list1.add(l1);
+
+		List<Integer> listInt = new ArrayList<>();
+		listInt.add(1);
+
+		Matches m = new Matches("abc", listInt, listInt);
+
+		List<Matches> matches = new ArrayList<>();
+		matches.add(m);
+
+		CreateJson cj = new CreateJson("file1", "file2", 80.0, matches);
+
+		List<CreateJson> lcj = new ArrayList<>();
+		lcj.add(cj);
+		
+		rc.initPlagiarismDetection(TESTUSER);
+	}
+	
+	@Test
+	public void TestPostChoices9() {
+		setFlagsForTesting(true, false, false);
+		ResultsController rc = new ResultsController();
+		
+		List<String> l1 = new ArrayList<>();
+		l1.add("1");
+
+		List<List<String>> list1 = new ArrayList<>();
+		list1.add(l1);
+
+		List<Integer> listInt = new ArrayList<>();
+		listInt.add(1);
+
+		Matches m = new Matches("abc", listInt, listInt);
+
+		List<Matches> matches = new ArrayList<>();
+		matches.add(m);
+
+		CreateJson cj = new CreateJson("file1", "file2", 80.0, matches);
+
+		List<CreateJson> lcj = new ArrayList<>();
+		lcj.add(cj);
+		
+		rc.initPlagiarismDetection(TESTUSER);
+	}
+	
+	@Test
+	public void TestPostChoices10() {
+		setFlagsForTesting(false, false, true);
+		ResultsController rc = new ResultsController();
+		
+		List<String> l1 = new ArrayList<>();
+		l1.add("1");
+
+		List<List<String>> list1 = new ArrayList<>();
+		list1.add(l1);
+
+		List<Integer> listInt = new ArrayList<>();
+		listInt.add(1);
+
+		Matches m = new Matches("abc", listInt, listInt);
+
+		List<Matches> matches = new ArrayList<>();
+		matches.add(m);
+
+		CreateJson cj = new CreateJson("file1", "file2", 80.0, matches);
+
+		List<CreateJson> lcj = new ArrayList<>();
+		lcj.add(cj);
+		
+		rc.initPlagiarismDetection(TESTUSER);
+	}
+	
+	@Test
+	public void TestPostChoice11() {
+		setFlagsForTesting(false, true, false);
+		ResultsController rc = new ResultsController();
+		
+		List<String> l1 = new ArrayList<>();
+		l1.add("1");
+
+		List<List<String>> list1 = new ArrayList<>();
+		list1.add(l1);
+
+		List<Integer> listInt = new ArrayList<>();
+		listInt.add(1);
+
+		Matches m = new Matches("abc", listInt, listInt);
+
+		List<Matches> matches = new ArrayList<>();
+		matches.add(m);
+
+		CreateJson cj = new CreateJson("file1", "file2", 80.0, matches);
+
+		List<CreateJson> lcj = new ArrayList<>();
+		lcj.add(cj);
+		
+		rc.initPlagiarismDetection(TESTUSER);
+	}
+	
+	@Test
+	public void exceptionTest() {
+		setFlagsForTesting(false, true, false);
+		ResultsController rc = new ResultsController();
+		
+		List<String> l1 = new ArrayList<>();
+		l1.add("1");
+
+		List<List<String>> list1 = new ArrayList<>();
+		list1.add(l1);
+
+		List<Integer> listInt = new ArrayList<>();
+		listInt.add(1);
+
+		Matches m = new Matches("abc", listInt, listInt);
+
+		List<Matches> matches = new ArrayList<>();
+		matches.add(m);
+
+		CreateJson cj = new CreateJson("file1", "file2", 80.0, matches);
+
+		List<CreateJson> lcj = new ArrayList<>();
+		lcj.add(cj);
+		
+		rc.initPlagiarismDetection(null);
+	}
 
 	@BeforeClass
 	public static void setUp() throws FileNotFoundException, IOException {
@@ -346,8 +616,20 @@ public class ResultControllerTest {
 	
 	@AfterClass
 	public static void cleaup() throws FileNotFoundException, IOException {
-		AWSConfigUtil config = new AWSConfigUtil();
-		AmazonS3 s3 = AWSConnection.getS3Client();
-		AWSConnection.deleteFolder(config.getAwsBucketName(), TESTUSER, s3);
+		AWSutil config = new AWSutil();
+		AmazonS3 s3 = AWSutil.getS3Client();
+		AWSutil.deleteFolder(config.getAwsBucketName(), TESTUSER, s3);
+	}
+	
+	public void setFlagsForTesting(boolean comment, boolean codemove, boolean structure) {
+		ConfigPlagiarismController controller = new ConfigPlagiarismController();
+		Types config = new Types();
+		if(comment)
+			config.setC3("comment");
+		if(codemove)
+			config.setC2("codemove");
+		if(structure)
+			config.setC1("structure");
+		controller.configPercentageController(config );
 	}
 }

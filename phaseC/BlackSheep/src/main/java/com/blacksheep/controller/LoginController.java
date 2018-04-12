@@ -1,4 +1,5 @@
 package com.blacksheep.controller;
+
 import com.blacksheep.services.UsageStats;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.blacksheep.Cred;
@@ -20,64 +21,56 @@ import static java.sql.DriverManager.*;
 @RestController
 public class LoginController {
 
-    private static final  BCryptPasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
-    private final Logger logger = Logger.getLogger(LoginController.class);
+	private static final BCryptPasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
+	private final Logger logger = Logger.getLogger(LoginController.class);
 
-    /**
-     * Dummy method to test the whether the server is running or not
-     */
-    @RequestMapping("/hello")
-    public String hello() {
-        return "hello";
-    }
+	/**
+	 * Dummy method to test the whether the server is running or not
+	 */
+	@RequestMapping("/hello")
+	public String hello() {
+		return "hello";
+	}
 
+	// Added by Athul
+	@RequestMapping(value = "/userLogin", method = RequestMethod.POST)
+	public ResponseEntity<Object> process(@RequestBody Cred cred) throws SQLException, IOException {
 
-    //Added by Athul
-    @RequestMapping(
-            value = "/userLogin",
-            method = RequestMethod.POST)
-    public ResponseEntity<Object> process(@RequestBody Cred cred) throws SQLException, IOException {
+		logger.info("endpoint : userLogin");
 
-        logger.info("endpoint : userLogin");
+		String userId = cred.getUser().trim();
+		String password = cred.getPassword().trim();
 
-        String userId   = cred.getUser().trim();
-        String password = cred.getPassword().trim();
+		IDBConfigUtil dbConfigUtil = new DBConfigUtil();
+		try (Connection connection = getConnection(dbConfigUtil.getDbURL(), dbConfigUtil.getDbUser(),
+				dbConfigUtil.getDbPass())) {
+			String query = "SELECT  * FROM credentials where userid = ?";
 
-        IDBConfigUtil dbConfigUtil = new DBConfigUtil();
-        try (Connection connection = getConnection(dbConfigUtil.getDbURL(),
-                dbConfigUtil.getDbUser(), dbConfigUtil.getDbPass()))
-        {
-            String query = "SELECT  * FROM credentials where userid = ?";
+			try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
-            try (PreparedStatement preparedStatement =
-                         connection.prepareStatement(query)) {
+				preparedStatement.setString(1, userId);
+				try (ResultSet results = preparedStatement.executeQuery()) {
 
-                preparedStatement.setString(1, userId);
-                try (ResultSet results = preparedStatement.executeQuery())
-                {
+					String hashedPassword = null;
+					String role = "";
+					while (results.next()) {
+						logger.info("query executed :  User account with given userId exits");
+						hashedPassword = results.getString("password");
+						role = results.getString("role");
+					}
+					if (PASSWORD_ENCODER.matches(password, hashedPassword)) {
+						UsageStats.incrementUsageCount();
 
-                    String hashedPassword = null;
-                    String role = "";
-                    while (results.next()) {
-                        logger.info("query executed :  User account with given userId exits");
-                        hashedPassword = results.getString("password");
-                        role = results.getString("role");
-                    }
-                    if ( PASSWORD_ENCODER.matches(password, hashedPassword))
-                    {
-                        UsageStats.incrementUsageCount();
+						logger.info("userId & password matched ");
+						return new ResponseEntity<>(role, HttpStatus.OK);
 
-                        logger.info("userId & password matched ");
-                        return new ResponseEntity<>(role, HttpStatus.OK);
+					} else {
+						logger.info("login check: userId & password pair not found");
+						return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+					}
+				}
 
-                    }
-                    else {
-                        logger.info("login check: userId & password pair not found");
-                        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
-                    }
-                }
-
-            }
-        }
-    }
+			}
+		}
+	}
 }
