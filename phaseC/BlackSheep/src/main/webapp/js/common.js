@@ -7,7 +7,7 @@ function redirectToConfigure()
 
 function redirectToUpload()
 {
-    window.location = "../templates/upload.html"
+    window.location = "../templates/upload.html";
 }
 
 function redirectToCodeStats()
