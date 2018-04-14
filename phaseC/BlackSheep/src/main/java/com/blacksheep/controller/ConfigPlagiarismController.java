@@ -5,7 +5,7 @@ package com.blacksheep.controller;
 
 import com.blacksheep.DBConfigUtil;
 import com.blacksheep.IDBConfigUtil;
-import com.blacksheep.Types;
+import com.blacksheep.Strategies;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +36,7 @@ public class ConfigPlagiarismController {
 	 */
 	@RequestMapping(value = "/config", method = RequestMethod.POST)
 	public ResponseEntity<Object> configPercentageController(
-			@RequestBody Types config) {
+			@RequestBody Strategies config) {
 		try {
 			logger.info("Config update start");
 
@@ -56,7 +56,7 @@ public class ConfigPlagiarismController {
 	 *            : Configuration values selected by the user
 	 * @throws MessagingException
 	 */
-	private void updateConfig(Types config) throws SQLException, IOException {
+	private void updateConfig(Strategies config) throws SQLException, IOException {
 		IDBConfigUtil dbConfigUtil = new DBConfigUtil();
 
 		String updateTableSQL = "UPDATE configPlagiarism SET COMMENT = ?, STRUCTURE = ?, CODEMOVEMENT = ?, PERCENT = ?";
@@ -65,9 +65,9 @@ public class ConfigPlagiarismController {
 				dbConfigUtil.getDbUser(), dbConfigUtil.getDbPass())) {
 			try (PreparedStatement preparedStatement = connection
 					.prepareStatement(updateTableSQL)) {
-				preparedStatement.setString(1, config.getC3());
-				preparedStatement.setString(2, config.getC1());
-				preparedStatement.setString(3, config.getC2());
+				preparedStatement.setString(1, config.getComment());
+				preparedStatement.setString(2, config.getStructure());
+				preparedStatement.setString(3, config.getCodeMove());
 				preparedStatement.setInt(4, config.getPercentage());
 				preparedStatement.executeUpdate();
 			}
