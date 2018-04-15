@@ -42,7 +42,7 @@ function logOut(){
     window.location = "../templates/welcome.html"
 }
 
-function  redirectIfNotLoggedIn(userId)
+function  redirectIfNotLoggedIn()
 {
     var userId = localStorage.getItem("user");
     if (userId == null)
@@ -54,3 +54,14 @@ function  redirectIfNotLoggedIn(userId)
     }
 
 }
+
+function redirectTAToUpload(ROLE)
+{
+
+    if (ROLE != "PROFESSOR") {
+        redirectToUpload();
+
+    }
+
+}
+

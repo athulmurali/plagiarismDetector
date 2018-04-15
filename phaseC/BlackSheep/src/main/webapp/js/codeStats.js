@@ -3,9 +3,20 @@
 //  changed Comments match -> Comment Match (api produces different data now )
 
 var getMetaDataURL = "/getResults3";
+var ROLE = localStorage.getItem("role");
 
 $(document).ready(function (){
 
+    redirectIfNotLoggedIn();
+
+
+    if (ROLE != "PROFESSOR")
+    {
+        console.log("No access to configure window for TA");
+        document.getElementById("configure").style.display ="none";
+        // hide config option
+        // $('#configure').hide;
+    }
 
     $("#configure").click(function(){redirectToConfigure()});
 
@@ -20,15 +31,6 @@ $(document).ready(function (){
     var userId = localStorage.getItem("user");
 
 
-    if (userId == null)
-    {
-        console.log("Please login and come back! ");
-        alert("Not logged in ! Please login");
-        redirectToLogin();
-
-    }
-
-
     var RESULT =    getMatches(userId);
 
 
@@ -40,7 +42,6 @@ $(document).ready(function (){
     metaData = JSON.parse(metaData);
 
     createMatchTable(metaData);
-
 
 });
 

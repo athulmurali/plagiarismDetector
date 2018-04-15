@@ -5,6 +5,7 @@
 
 const metaDataURL = "/getResults3";
 const userId      =  localStorage.getItem("user");
+const ROLE       = localStorage.getItem("role");
 
 
 const SIMILARITY_ID = "similarity";
@@ -59,6 +60,16 @@ var CodeMatchData = {
 }
 
 $(document).ready(function (){
+
+    redirectIfNotLoggedIn();
+
+    if (ROLE != "PROFESSOR")
+    {
+        console.log("No access to configure window for TA");
+        document.getElementById("configure").style.display ="none";
+        // hide config option
+        // $('#configure').hide;
+    }
 
     $("#configure").click(function(){redirectToConfigure()});
 

@@ -1,8 +1,20 @@
-const UPLOAD_URL = "/upload"
+const UPLOAD_URL    = "/upload"
 const USER_ID       = localStorage.getItem("user");
+const ROLE          = localStorage.getItem("role");
 
 
 $(document).ready(function() {
+
+    if (USER_ID === null || ROLE === null )
+        redirectToWelcome();
+
+    if (ROLE != "PROFESSOR")
+    {
+        console.log("No access to configure window for TA");
+        document.getElementById("configure").style.display ="none";
+        // hide config option
+        // $('#configure').hide;
+    }
 
     $("#configure").click(function(){redirectToConfigure()});
 
@@ -15,9 +27,6 @@ $(document).ready(function() {
     $("#done").click(function(){redirectToCodeStats()});
 
     $("#logOut").click(function(){logOut()});
-
-
-
 
 
     /* Variables */
@@ -186,9 +195,6 @@ $(document).ready(function() {
         });
     }
 
-
-
-
 });
 /* Functions */
 function getP() {
@@ -199,3 +205,4 @@ function getP() {
 function removeRow(button) {
     button.closest("tr").remove();
 }
+
