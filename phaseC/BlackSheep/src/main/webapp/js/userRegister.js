@@ -1,4 +1,24 @@
+var emailValidated = false;
+function registerOnFormChange()
+{
+    const formValidated = ifFormValid();
+    console.log(formValidated);
+
+    if (formValidated){
+        $("#register").prop("disabled",false);
+    }
+    else{
+        $("#register").prop("disabled",true);
+    }
+    return;
+
+}
+
 $(document).ready(function () {
+
+    $("#register").prop("disabled",true);
+
+    $('input').change(registerOnFormChange).keyup(registerOnFormChange);
 
     $("#home").click(function(){redirectToWelcome();});
 
@@ -8,16 +28,16 @@ $(document).ready(function () {
 
     $('#password_confirm,#password').keyup(
         function () {
-        if (isPasswordConfirmed())
-        {
-            $('#message').html('<img id="passwordStatus" src="../templates/img/circleCheck.png" />')
+            if (isPasswordConfirmed())
+            {
+                $('#message').html('<img id="passwordStatus" src="../templates/img/circleCheck.png" />')
 
-        } else
-            $('#message').html('<img id="passwordStatus" src="../templates/img/wrong.png" />')
+            } else
+                $('#message').html('<img id="passwordStatus" src="../templates/img/wrong.png" />')
         }
     );
 
-    $("#email").keyup(emailValidate);
+    $("#email").keyup(emailValidate).change(emailValidate);
 
     $('#password').keyup(isPasswordLengthValid);
 
@@ -50,27 +70,34 @@ $(document).ready(function () {
         });
     });
 
+    ifFormValid();
+
 });
 
 function ifFormValid() {
-    return  emailValidate()             &&
-        isPasswordLengthValid()     &&
+    return  emailValidated             &&
+        isPasswordLengthValid()         &&
         isPasswordConfirmed();
 }
 
 function emailValidate() {
     var $emailAvailable = $("#emailAvailable");
     var email = $("#email").val();
-    $emailAvailable.text("");
 
     if (validateEmail(email))
     {
-        $emailAvailable.prepend('<img id="theImg" src="../templates/img/circleCheck.png" />')
-        return true;
+        emailValidated = true;
+        console.log("existing email check");
+        checkIfEmailNotTaken(email);
+        registerOnFormChange()
+        return emailValidated;
     }
     else {
+
         $emailAvailable.text("invalid");
-        $emailAvailable.css("color", "white");
+        $emailAvailable.css("color", "red");
+        registerOnFormChange()
+
         return false;
     }
 }
@@ -111,17 +138,25 @@ function redirect2() {
 }
 
 function checkIfEmailNotTaken(email){
-    // return false if not taken (send request to server)
-    // $.ajax({
-    //     url: '/emailAvaliable',
-    //     data: {email : email},
-    //     success: function(data) {
-    //         //Do Something
-    //         if (data.available == false)
-    //         {
-    //             return false;
-    //         }
-    //     }
-    // });
-    return true;
+    // return success if not taken (send request to server)
+    $.ajax({
+        url : "/isEmailTaken",
+        data: {email : email},
+        type : "GET",
+
+        success : function(response) {
+            console.log("email -available");
+            emailValidated = true;
+            $("#emailAvailable").text("");
+            $("#emailAvailable").prepend('<img id="theImg" src="../templates/img/circleCheck.png" />');
+        },
+        error : function(xhr, status, error) {
+            console.log("in error of email");
+            $("#emailAvailable").text("email Taken");
+            $("#emailAvailable").css("color", "red");
+            emailValidated  = false;
+        }
+
+    });
+
 };
