@@ -3,8 +3,9 @@
 // Date created : March 12, 2018
 // Date edited :  March 22, 2018
 
-const metaDataURL = "/getResults3";
-const userId      =  localStorage.getItem("user");
+const metaDataURL   = "/getResults3";
+const userId        =  localStorage.getItem("user");
+const ROLE          =  localStorage.getItem("role");
 
 
 const SIMILARITY_ID = "similarity";
@@ -59,6 +60,16 @@ var CodeMatchData = {
 }
 
 $(document).ready(function (){
+
+    redirectIfNotLoggedIn();
+
+    if (ROLE != "PROFESSOR")
+    {
+        console.log("No access to configure window for TA");
+        document.getElementById("configure").style.display ="none";
+        // hide config option
+        // $('#configure').hide;
+    }
 
     $("#configure").click(function(){redirectToConfigure()});
 
@@ -228,7 +239,7 @@ function getFileContent(fileName,fileContentTable) {
 function removeEmptyMatchPair(filePairMatchArray)
 {
     var tempMatchArray =[];
-    for (i in filePairMatchArray)
+    for (let i in filePairMatchArray)
     {
         if (! filePairMatchArray[i].matches.length == 0)
         {
@@ -322,7 +333,7 @@ function modifyTableBorderOnType(tableId, lineNoArray, matchType)
     console.log("plagiarism css class id : " + plagiarismCSSClasses[matchType]);
 
     var rows = document.getElementById(tableId).rows;
-    for( i in lineNoArray){
+    for(let  i in lineNoArray){
         console.log("changing type :  " + matchType + " line no : " + lineNoArray[i]);
 
         // line number to change the border color (without + 1 for table header)
@@ -369,7 +380,8 @@ function getCodeMatchData()
     // get metdata of match
     const receivedFilePair = newAjaxGet(metaDataURL,userId);
     filePairArray          = removeEmptyMatchPair(receivedFilePair);
-    CodeMatchData.metadata =filePairArray;
+    filePairArray          = sortMatchTable(filePairArray);
+    CodeMatchData.metadata = filePairArray;
 
     //get  code
     // processing the input to fit ui input requirements

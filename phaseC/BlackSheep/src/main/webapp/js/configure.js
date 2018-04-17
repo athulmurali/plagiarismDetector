@@ -1,7 +1,14 @@
-
-var elem = document.getElementById('rangeSelector');
+const USER_ID       = localStorage.getItem("user");
+const ROLE          = localStorage.getItem("role");
 
 $(document).ready(function () {
+
+    if (USER_ID === null || ROLE === null )
+        redirectToWelcome();
+
+
+    // IF TA is trying access this page redirect to Upload
+    redirectTAToUpload();
 
     $("#configure").click(function(){redirectToConfigure()});
 
