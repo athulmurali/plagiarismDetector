@@ -8,7 +8,7 @@
 package Tests;
 
 
-import com.blacksheep.Types;
+import com.blacksheep.Strategies;
 import com.blacksheep.controller.ConfigPlagiarismController;
 
 import org.junit.Test;
@@ -29,9 +29,9 @@ public class ConfigPlagiarismControllerTest {
     @Test
     public void configPercentageController() throws SQLException, IOException {
         ConfigPlagiarismController configController = new ConfigPlagiarismController();
-        Types testData = new Types();
+        Strategies testData = new Strategies();
 
-        testData.setC2("codeMovement");
+        testData.setCodeMove("codeMovement");
         testData.setPercentage(80);
 
         assertEquals( ResponseEntity.status(HttpStatus.OK).build(),
@@ -46,9 +46,9 @@ public class ConfigPlagiarismControllerTest {
     public void configPercentageControllerThrow() {
         try {
             ConfigPlagiarismController configController = new ConfigPlagiarismController();
-            Types testData = new Types();
+            Strategies testData = new Strategies();
 
-            testData.setC2("codeMovement");
+            testData.setCodeMove("codeMovement");
             testData.setPercentage(80);
 
             assertEquals( ResponseEntity.status(HttpStatus.BAD_REQUEST).build(),

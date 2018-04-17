@@ -1,7 +1,7 @@
 package Tests;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.blacksheep.Types;
+import com.blacksheep.Strategies;
 import com.blacksheep.controller.ConfigPlagiarismController;
 import com.blacksheep.controller.ResultsController;
 import com.blacksheep.controller.UploadController;
@@ -177,32 +177,32 @@ public class ResultControllerTest {
 	@Test
 	public void TestTypes() {
 
-		Types t = new Types();
+		Strategies t = new Strategies();
 
-		t.setC1("CodeMovement");
-		assertEquals("CodeMovement", t.getC1());
+		t.setStructure("CodeMovement");
+		assertEquals("CodeMovement", t.getStructure());
 
-		t.setC2("StructureChange");
-		assertEquals("StructureChange", t.getC2());
+		t.setCodeMove("StructureChange");
+		assertEquals("StructureChange", t.getCodeMove());
 
-		t.setC3("CommentChange");
-		assertEquals("CommentChange", t.getC3());
+		t.setComment("CommentChange");
+		assertEquals("CommentChange", t.getComment());
 
 	}
 
 	@Test
 	public void TestPostChoices() {
 
-		Types t = new Types();
+		Strategies t = new Strategies();
 
-		t.setC1("CodeMovement");
-		assertEquals("CodeMovement", t.getC1());
+		t.setStructure("CodeMovement");
+		assertEquals("CodeMovement", t.getStructure());
 
-		t.setC2("StructureChange");
-		assertEquals("StructureChange", t.getC2());
+		t.setCodeMove("StructureChange");
+		assertEquals("StructureChange", t.getCodeMove());
 
-		t.setC3("CommentChange");
-		assertEquals("CommentChange", t.getC3());
+		t.setComment("CommentChange");
+		assertEquals("CommentChange", t.getComment());
 
 		ResultsController rc = new ResultsController();
 
@@ -233,13 +233,13 @@ public class ResultControllerTest {
 
 	@Test
 	public void TestPostChoices1() {
-		Types t = new Types();
+		Strategies t = new Strategies();
 		
-		t.setC2("StructureChange");
-		assertEquals("StructureChange", t.getC2());
+		t.setCodeMove("StructureChange");
+		assertEquals("StructureChange", t.getCodeMove());
 
-		t.setC3("CommentChange");
-		assertEquals("CommentChange", t.getC3());
+		t.setComment("CommentChange");
+		assertEquals("CommentChange", t.getComment());
 
 		ResultsController rc = new ResultsController();
 
@@ -271,13 +271,13 @@ public class ResultControllerTest {
 	@Test
 	public void TestPostChoices2() {
 
-		Types t = new Types();
+		Strategies t = new Strategies();
 
-		t.setC1("CodeMovement");
-		assertEquals("CodeMovement", t.getC1());
+		t.setStructure("CodeMovement");
+		assertEquals("CodeMovement", t.getStructure());
 		
-		t.setC3("CommentChange");
-		assertEquals("CommentChange", t.getC3());
+		t.setComment("CommentChange");
+		assertEquals("CommentChange", t.getComment());
 
 		ResultsController rc = new ResultsController();
 
@@ -310,13 +310,13 @@ public class ResultControllerTest {
 	public void TestPostChoices3() {
 		Utility util = new Utility();
 
-		Types t = new Types();
+		Strategies t = new Strategies();
 
-		t.setC1("CodeMovement");
-		assertEquals("CodeMovement", t.getC1());
+		t.setStructure("CodeMovement");
+		assertEquals("CodeMovement", t.getStructure());
 
-		t.setC2("StructureChange");
-		assertEquals("StructureChange", t.getC2());
+		t.setCodeMove("StructureChange");
+		assertEquals("StructureChange", t.getCodeMove());
 
 		ResultsController rc = new ResultsController();
 
@@ -623,13 +623,13 @@ public class ResultControllerTest {
 	
 	public void setFlagsForTesting(boolean comment, boolean codemove, boolean structure) {
 		ConfigPlagiarismController controller = new ConfigPlagiarismController();
-		Types config = new Types();
+		Strategies config = new Strategies();
 		if(comment)
-			config.setC3("comment");
+			config.setComment("comment");
 		if(codemove)
-			config.setC2("codemove");
+			config.setCodeMove("codemove");
 		if(structure)
-			config.setC1("structure");
+			config.setStructure("structure");
 		controller.configPercentageController(config );
 	}
 }
