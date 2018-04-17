@@ -71,12 +71,13 @@ span.psw {
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    color:white;
     padding-top: 60px;
 }
 
 /* Modal Content/Box */
 .modal-content {
-    background-color:darkred;
+    background-color:#343a40;
     margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
     border: 1px solid #888;
     width: 30%; /* Could be more or less, depending on screen size */
