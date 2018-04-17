@@ -55,12 +55,11 @@ function  redirectIfNotLoggedIn()
 
 }
 
-function redirectTAToUpload(ROLE)
+function redirectTAToUpload()
 {
 
-    if (ROLE != "PROFESSOR") {
+    if (localStorage.getItem("role") != "PROFESSOR") {
         redirectToUpload();
-
     }
 
 }
