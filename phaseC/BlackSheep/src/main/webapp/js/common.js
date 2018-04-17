@@ -65,3 +65,32 @@ function redirectTAToUpload(ROLE)
 
 }
 
+
+/**
+ * Sorts the file Pair array given to be sorted.
+ * The result will be reversed to desc order.
+ * @param unsortedFilePairArray
+ * @returns {Uint8Array | Uint16Array | Int16Array | Float32Array | Uint8ClampedArray | Int32Array | any}
+ */
+function sortMatchTable(unsortedFilePairArray){
+    console.log("inside sortMatchTable():");
+    //adding reverse, as the requirement demands s ort -descending
+    return unsortedFilePairArray.sort(compare).reverse();
+}
+
+/**
+ * The compare function to be given as input to the sorting function
+ * @param filePair1 an obj containing 'percentage'
+ * @param filePair2 an obj containing 'percentage'
+ * @returns {number}
+ */
+function compare(filePair1,filePair2) {
+    filePair1.percentage = parseFloat(filePair1.percentage);
+    filePair2.percentage = parseFloat(filePair2.percentage);
+
+    if (filePair1.percentage < filePair2.percentage)
+        return -1;
+    if (filePair1.percentage > filePair2.percentage)
+        return 1;
+}
+
