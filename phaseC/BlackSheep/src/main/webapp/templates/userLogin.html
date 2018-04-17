@@ -73,11 +73,9 @@
         <div class="modal-content animate">
             <div class="imgcontainer">
                 <span onclick="document.getElementById('modalLogin').style.display='none'" class="close" title="Close Modal">&times;</span>
-                <img src="img/huskyPaw.jpg" alt="Avatar" class="avatar">
             </div>
 
             <div class="container">
-                <span id="passwordStatus" style="display: none">*Invalid credentials*</span>
 
                 <label for="uname"><b>Username</b></label>
                 <input type="text" placeholder="Enter Username" name="uname" id = "uname"required>
@@ -85,6 +83,9 @@
 
                 <label for="password" ><b>Password</b></label>
                 <input type="password" placeholder="Enter Password" name="password" id="password" required>
+
+                <span id="passwordStatus" style="display: none">*Error! Invalid credentials*</span>
+
 
                 <button type="submit" id="login">Login</button>
                 <label>
