@@ -16,11 +16,12 @@
     <!--<script src="../js/userLogin.js" type="text/javascript"></script>-->
 
     <script  type="text/javascript" src="../js/common.js"></script>
-    <script  type="text/javascript" src="../js/login.js"></script>
     <script  type="text/javascript" src="../js/userLogin.js"></script>
 
 </head>
 <body>
+
+
 
 <nav class="navbar navbar-expand-md  navbar-dark bg-dark">
     <a class="navbar-brand" href="#">Plagiarism Detector</a>
@@ -40,80 +41,65 @@
 
         </ul>
         <span class="navbar-nav ml-auto navbar-item active">
-               <li class="nav-item active">
-                <a class="nav-link" href="#" id="loginScreen">Log in </a>
-            </li>
-        </span>
+                   <li class="nav-item active">
+                    <a class="nav-link" href="#" id="loginScreen">Log in </a>
+                </li>
+            </span>
 
     </div>
 </nav>
 
-<h2 align="center" style="padding-top: 10%">Black Sheep </h2>
-<h3 align="center">Plagiarism Detector </h3>
+<div class="container splitScreenContent">
+
+    <div class="split left">
+        <div class="centered">
+            <img src="./img/ta.png" alt="Teaching Assistant" class = img-circle-ta>
+            <h2>Teaching Assistant</h2>
+            <button id="taSelect"  style="width:auto;"> Select</button>
+        </div>
+    </div>
+
+    <div class="split right">
+        <div class="centered">
+            <img src="./img/professor.png" alt="Professor" class = img-circle-ta>
+            <h2>Professor</h2>
+            <button id="professorSelect" style="width:auto;"> Select</button>
+        </div>
+    </div>
 
 
+    <div id="modalLogin" class="modal">
+
+        <div class="modal-content animate">
+            <div class="imgcontainer">
+                <span onclick="document.getElementById('modalLogin').style.display='none'" class="close" title="Close Modal">&times;</span>
+                <img src="img/huskyPaw.jpg" alt="Avatar" class="avatar">
+            </div>
+
+            <div class="container">
+                <span id="passwordStatus" style="display: none">*Invalid credentials*</span>
+
+                <label for="uname"><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" name="uname" id = "uname"required>
 
 
-<div class="container " style="width: 40%;">
+                <label for="password" ><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="password" id="password" required>
 
-    <label for="uname"><b>Username</b></label>
-    <input type="text" placeholder="Enter Username" name="uname" id = "uname"required>
+                <button type="submit" id="login">Login</button>
+                <label>
+                    <input type="checkbox" checked="checked" name="remember"> Remember me
+                </label>
+            </div>
 
-    <label for="password" ><b>Password</b></label>
-    <input type="password" placeholder="Enter Password" name="password" id="password" required>
 
-    <center><button type="submit" id="login" style="background-color: #555555;">Login</button>
-    </center>
+        </div>
+    </div>
+
 
 </div>
 
 
-
-<!--<div class="split left">-->
-<!--<div class="centered">-->
-<!--<img src="./img/ta.png" alt="Professor" class = img-circle-ta>-->
-<!--<h2>Teaching Assistant</h2>-->
-<!--<button  id="TAContinue" class="continueAsTA" style="width:auto;"> Continue</button>-->
-
-
-<!--</div>-->
-<!--</div>-->
-
-<!--<div class="split right">-->
-<!--<div class="centered">-->
-<!--<img src="./img/professor.png" alt="Teaching Assistant" class = img-circle-ta>-->
-<!--<h2>Professor</h2>-->
-<!--<button onclick="document.getElementById('id01').style.display='block'" style="width:auto;"> Login</button>-->
-<!--</div>-->
-<!--</div>-->
-
-<!--<div id="id01" class="modal">-->
-
-<!--<div class="modal-content animate">-->
-<!--<div class="imgcontainer">-->
-<!--<span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close Modal">&times;</span>-->
-<!--<img src="img/huskyPaw.jpg" alt="Avatar" class="avatar">-->
-<!--</div>-->
-
-<!--<div class="container">-->
-<!--<label for="uname"><b>Username</b></label>-->
-<!--<input type="text" placeholder="Enter Username" name="uname" id = "uname"required>-->
-
-<!--<label for="password" ><b>Password</b></label>-->
-<!--<input type="password" placeholder="Enter Password" name="password" id="password" required>-->
-
-<!--<button type="submit" id="login">Login</button>-->
-<!--<label>-->
-<!--<input type="checkbox" checked="checked" name="remember"> Remember me-->
-<!--</label>-->
-<!--</div>-->
-
-<!--&lt;!&ndash;<div class="container" style="background-color:#f1f1f1">&ndash;&gt;-->
-<!--&lt;!&ndash;<button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>&ndash;&gt;-->
-<!--&lt;!&ndash;<span class="psw">Forgot <a href="#">password?</a></span>&ndash;&gt;-->
-<!--&lt;!&ndash;</div>&ndash;&gt;-->
-<!--</div>-->
-<!--</div>-->
 
 </body>
 </html>
