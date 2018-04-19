@@ -105,7 +105,7 @@ $(document).ready(function() {
 
         if (files.length ==0)
         {
-            alert("student name is empty!")
+            alert("No files selected!")
             return;
         }
 
