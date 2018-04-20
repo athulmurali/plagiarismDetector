@@ -9,7 +9,7 @@ This repo contains code for a plagiarism detector software :developed and mainta
 4. Peng Tong            - tong.p@husky.neu.edu  
 
 # link to the live system
-
+http://blacksheep.us-east-2.elasticbeanstalk.com/templates/welcome.html
 
 # link to system demo
 
