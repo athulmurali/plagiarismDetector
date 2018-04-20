@@ -105,7 +105,7 @@ $(document).ready(function() {
 
         if (files.length ==0)
         {
-            alert("student name is empty!")
+            alert("No files selected!")
             return;
         }
 
@@ -144,8 +144,9 @@ $(document).ready(function() {
         // data.append("project",projectName+makeid());
         data.append("project",projectName);
 
-        var fileSelect = document.getElementById('directoryFiles');
-        var files = fileSelect.files;
+        //var fileSelect = document.getElementById('directoryFiles');
+        //var files = fileSelect.files;
+        var files = filesArray;
 
 
         // name to output s
