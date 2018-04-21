@@ -1,24 +1,27 @@
+# Black Sheep Plagiarism Detector : Spot the Blacksheep out!
+
+
 # team-104
 Team repo for Team 104 (Section 1, Team 4)
 
-# member names
+# Members
 This repo contains code for a plagiarism detector software :developed and maintained by the following people 
 1. Athul Muralidharan   - muralidharan.a@husky.neu.edu
 2. Manpreet Kaur        - lnu.m@husky.neu.edu
 3. Prashant Havanagi    - havanagi.p@husky.neu.edu
 4. Peng Tong            - tong.p@husky.neu.edu  
 
-# link to the live system
-http://blacksheep.us-east-2.elasticbeanstalk.com/templates/welcome.html
 
-# link to system demo
+# [Live System Link](http://blacksheep.us-east-2.elasticbeanstalk.com/templates/welcome.html)
 
 
-# link to system setup
+# Tutorials & Videos
 
+### [System Demo](https://youtu.be/jUKjM7mgczE)
 
-# link to final presentation
+### [System Setup](https://youtu.be/OVZ4Z5wvn2Q)
 
+### [Final Presentation](https://youtu.be/IKvGhTI7uoo)
 
 
 ### Project status : In Progress
