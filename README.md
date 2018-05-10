@@ -1,9 +1,6 @@
 # Black Sheep Plagiarism Detector : Spot the Blacksheep out!
 
 
-# team-104
-Team repo for Team 104 (Section 1, Team 4)
-
 # Members
 This repo contains code for a plagiarism detector software :developed and maintained by the following people 
 1. Athul Muralidharan   - muralidharan.a@husky.neu.edu
